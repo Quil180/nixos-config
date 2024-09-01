@@ -69,7 +69,7 @@
       updh = "home-manager switch --flake ~/.dotfiles#quil";
       updf = "nix flake update";
       upds = "sudo nixos-rebuild switch --flake ~/.dotfiles#nixos-quil";
-      updb = "source ~/.bashrc";
+      updb = "source ~/.zshrc";
       upda = "updf && upds && updh && updb";
       # editing file aliases
       edith = "nvim ~/.dotfiles/home.nix";
