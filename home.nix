@@ -62,7 +62,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuffestion.enable = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
       # update aliases
