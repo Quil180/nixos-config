@@ -62,11 +62,15 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    neovim
     fastfetch
     git
     wget
     looking-glass-client
     spice-vdagent
+
+    # desktop environments
+    hyprland
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
