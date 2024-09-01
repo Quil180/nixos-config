@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -53,7 +54,7 @@
     isNormalUser = true;
     description = "Quil";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    packages = with pkgs; [ ];
   };
 
   # Allow unfree packages
@@ -66,11 +67,15 @@
     fastfetch
     git
     wget
-    looking-glass-client
     spice-vdagent
+    zsh
 
     # desktop environments
     hyprland
+
+    # misc things that have to be system wide
+    steam
+    lutris
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -102,6 +107,11 @@
 
   # enabling flakes support
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # misc things
+  programs.steam.enable = true;
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   # enabling client virtual machine specific options
   services.spice-vdagentd.enable = true;

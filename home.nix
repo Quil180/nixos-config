@@ -16,6 +16,9 @@
 
   # user packages that I'd like installed no matter my imports
   home.packages = [
+    # bare essentials for all modules
+    pkgs.firefox
+    pkgs.zsh
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -55,9 +58,12 @@
     EDITOR = "neovim";
   };
 
-  # bash config
-  programs.bash = {
+  # shell config
+  programs.zsh = {
     enable = true;
+    enableCompletion = true;
+    autosuffestion.enable = true;
+    syntaxHighlighting.enable = true;
     shellAliases = {
       # update aliases
       updh = "home-manager switch --flake ~/.dotfiles#quil";
@@ -70,6 +76,10 @@
       edits = "nvim ~/.dotfiles/configuration.nix";
       editf = "nvim ~/.dotfiles/flake.nix";
     };
+    history = {
+      size = 10000;
+      path = "${config.xdg.dataHome}/zsh/history";
+    };
   };
 
   # git config
@@ -81,6 +91,9 @@
       init.defaultBranch = "main";
     };
   };
+
+  # firefox config
+  programs.firefox.enable = true;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
