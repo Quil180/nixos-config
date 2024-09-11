@@ -67,6 +67,7 @@
     fastfetch
     git
     wget
+    # spice-vdagent is only needed for the VM
     spice-vdagent
     zsh
 
@@ -107,6 +108,12 @@
 
   # enabling flakes support
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # stylix configuration
+  stylix = {
+    enable = true;
+    image = ./wallpapers/goddessoflight_godofdarkness_AoB.jpg;
+  };
 
   # misc things
   programs.steam.enable = true;

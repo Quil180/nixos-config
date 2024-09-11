@@ -1,14 +1,17 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   home.username = "quil";
   home.homeDirectory = "/home/quil";
 
-  # importing my custom external configs
+  # importing my custom external modules
   imports = [
+
     personal/neovim/nvim.nix # neovim config
     personal/hyprland/hyprland.nix # hyprland config
-    #personal/ranger/ranger.nix # ranger config
+    personal/ranger/ranger.nix # ranger config
+    personal/bash/bash.nix # bash config
+    personal/git/git.nix # git config
   ];
 
   # my original nixos install version
@@ -16,7 +19,7 @@
 
   # user packages that I'd like installed no matter my imports
   home.packages = [
-    # bare essentials for all modules
+    # bare essentials regardless of the imported modules
     pkgs.firefox
     pkgs.zsh
   ];
@@ -52,44 +55,10 @@
   #
   #  /etc/profiles/per-user/quil/etc/profile.d/hm-session-vars.sh
   #
-  
+
   # setting the editor of choice to neovim
   home.sessionVariables = {
     EDITOR = "neovim";
-  };
-
-  # shell config
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-    shellAliases = {
-      # update aliases
-      updh = "home-manager switch --flake ~/.dotfiles#quil";
-      updf = "nix flake update";
-      upds = "sudo nixos-rebuild switch --flake ~/.dotfiles#nixos-quil";
-      updb = "source ~/.zshrc";
-      upda = "updf && upds && updh && updb";
-      # editing file aliases
-      edith = "nvim ~/.dotfiles/home.nix";
-      edits = "nvim ~/.dotfiles/configuration.nix";
-      editf = "nvim ~/.dotfiles/flake.nix";
-    };
-    history = {
-      size = 10000;
-      path = "${config.xdg.dataHome}/zsh/history";
-    };
-  };
-
-  # git config
-  programs.git = {
-    enable = true;
-    userName = "Quil";
-    userEmail = "quil180gaming@gmail.com";
-    extraConfig = {
-      init.defaultBranch = "main";
-    };
   };
 
   # firefox config
