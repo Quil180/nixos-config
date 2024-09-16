@@ -23,11 +23,6 @@
     qt6.qtwayland
     qt5.qtwayland
 
-    # programs that are binded below
-    vesktop
-    spotify-player
-    gimp
-    polychromatic
   ]);
 
   wayland.windowManager.hyprland = {
@@ -71,8 +66,6 @@
     # systemd.enable = true;
   };
 
-  # enabling the programs
-  programs.spotify-player.enable = true;
 
   # customizing foot with a different font
   programs.foot = {
@@ -89,4 +82,5 @@
     };
   };
 
+  services.xserver.displayManager.sddm.enable = true;
 }

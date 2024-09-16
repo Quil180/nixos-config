@@ -18,6 +18,7 @@
       edith = "nvim ~/.dotfiles/home.nix";
       edits = "nvim ~/.dotfiles/configuration.nix";
       editf = "nvim ~/.dotfiles/flake.nix";
+      editv = "nvim ~/.dotfiles/personal/neovim/";
     };
     history = {
       size = 10000;
