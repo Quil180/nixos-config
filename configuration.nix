@@ -120,6 +120,13 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
+  # the following is for the G14 specifically for asusctl
+  services.supergfxd.enable = true;
+  services.asusd = {
+    enable = true;
+    enablelUserService = true;
+  };
+
   # enabling client virtual machine specific options
   services.spice-vdagentd.enable = true;
   services.qemuGuest.enable = true;
