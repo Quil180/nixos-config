@@ -8,7 +8,7 @@
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    mainBar = {
+    settings.mainBar = {
       spacing = 4;
       output = [
         "eDP-2"
@@ -105,7 +105,6 @@
         format-plugged = " {capacity}%";
         format-alt = "{icon} {time}";
         format-good = "";
-        format-full = "";
         format-icons = [
           ""
           ""

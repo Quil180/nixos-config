@@ -9,9 +9,8 @@
 
   home.packages = (with pkgs; [
     # bare essentials
-    #hyprland-protocols
+    hyprland-protocols
     wl-clipboard
-    sddm
     foot
     grim
     slurp
@@ -20,7 +19,7 @@
     pavucontrol
     rofi
     wlogout
-    qt6.qtwaylfigureand
+    qt6.qtwayland
     qt5.qtwayland
 
   ]);
@@ -181,5 +180,4 @@
     };
   };
 
-  services.xserver.displayManager.sddm.enable = true;
 }

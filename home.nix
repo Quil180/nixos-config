@@ -9,7 +9,7 @@
 
     personal/neovim/nvim.nix # neovim config
     personal/hyprland/hyprland.nix # hyprland config
-    personal/ranger/ranger.nix # ranger config
+    # personal/ranger/ranger.nix # ranger config
     personal/bash/bash.nix # bash config
     personal/git/git.nix # git config
   ];
@@ -20,7 +20,7 @@
   # user packages that I'd like installed no matter my imports
   home.packages = [
     # bare essentials regardless of the imported modules
-    pkgs.firefox
+    # pkgs.firefox
     pkgs.zsh
   ];
 

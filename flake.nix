@@ -7,12 +7,12 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
 
-      # stylix for auto-ricing
-      stylix.url = "github:danth/stylix";
     };
+    # stylix for auto-ricing
+    stylix.url = "github:danth/stylix";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, stylix, ... }@inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
@@ -30,12 +30,12 @@
       homeConfigurations = {
         quil = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          specialArgs = {
+          extraSpecialArgs = {
             inherit inputs;
           };
           modules = [
             ./home.nix
-            inputs.stylix.nixosModules.stylix
+            # inputs.stylix.nixosModules.stylix
           ];
         };
       };

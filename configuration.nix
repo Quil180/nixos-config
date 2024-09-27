@@ -12,8 +12,20 @@
     ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = false;
+      efi = {
+        canTouchEfiVariables = true;
+      };
+      grub = {
+        enable = true;
+	device = "nodev";
+	useOSProber = true;
+	efiSupport = true;
+      };
+    };
+  };
 
   networking.hostName = "nixos-quil"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -65,13 +77,13 @@
   environment.systemPackages = with pkgs; [
     neovim
     fastfetch
+    ranger
     git
     wget
-    # spice-vdagent is only needed for the VM
-    spice-vdagent
     zsh
 
     # desktop environments
+    sddm
     hyprland
 
     # misc things that have to be system wide
@@ -110,10 +122,10 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # stylix configuration
-  stylix = {
-    enable = true;
-    image = ./wallpapers/goddessoflight_godofdarkness_AoB.jpg;
-  };
+  #stylix = {
+  #  enable = true;
+  #  image = ./wallpapers/goddessoflight_godofdarkness_AoB.jpg;
+  #};
 
   # misc things
   programs.steam.enable = true;
@@ -121,15 +133,12 @@
   users.defaultUserShell = pkgs.zsh;
 
   # the following is for the G14 specifically for asusctl
-  services.supergfxd.enable = true;
-  services.asusd = {
-    enable = true;
-    enablelUserService = true;
-  };
+  #services.supergfxd.enable = true;
+  #services.asusd = {
+  #  enable = true;
+  #  enablelUserService = true;
+  #};
 
-  # enabling client virtual machine specific options
-  services.spice-vdagentd.enable = true;
-  services.qemuGuest.enable = true;
-  hardware.enableRedistributableFirmware = lib.mkDefault true;
+  services.displayManager.sddm.wayland.enable = true;
 
 }
