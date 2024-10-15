@@ -1,6 +1,9 @@
 {config, pkgs, ...}:
 
-{
+let
+  dotfiles="~/nixos-config";
+in
+  {
   # shell config
   programs.zsh = {
     enable = true;
@@ -9,16 +12,16 @@
     syntaxHighlighting.enable = true;
     shellAliases = {
       # update aliases
-      updh = "home-manager switch --flake ~/.dotfiles#quil";
+      updh = "home-manager switch --flake ${dotfiles}#quil";
       updf = "nix flake update";
-      upds = "sudo nixos-rebuild switch --flake ~/.dotfiles#nixos-quil";
+      upds = "sudo nixos-rebuild switch --flake ${dotfiles}#nixos-quil";
       updb = "source ~/.zshrc";
       upda = "updf && upds && updh && updb";
       # editing file aliases
-      edith = "nvim ~/.dotfiles/home.nix";
-      edits = "nvim ~/.dotfiles/configuration.nix";
-      editf = "nvim ~/.dotfiles/flake.nix";
-      editv = "nvim ~/.dotfiles/personal/neovim/";
+      edith = "nvim ${dotfiles}/home.nix";
+      edits = "nvim ${dotfiles}/configuration.nix";
+      editf = "nvim {$dotfiles}/flake.nix";
+      editv = "nvim ${dotfiles}/personal/neovim/";
     };
     initExtra = ''
       runa() {

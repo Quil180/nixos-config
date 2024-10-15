@@ -8,6 +8,7 @@
     spotify-player
     gimp
     polychromatic
+    neofetch
   ]);
 
   # enabling the programs

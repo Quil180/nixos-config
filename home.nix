@@ -9,7 +9,7 @@
 
     personal/neovim/nvim.nix # neovim config
     personal/hyprland/hyprland.nix # hyprland config
-    # personal/ranger/ranger.nix # ranger config
+    personal/ranger/ranger.nix # ranger config
     personal/bash/bash.nix # bash config
     personal/git/git.nix # git config
   ];
