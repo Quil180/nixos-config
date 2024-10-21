@@ -2,13 +2,13 @@
 
 # installing git into the bare system.
 echo "----------  Installing git onto the System  ----------"
-sed -i 's/^{$/{\n programs.git.enable = true;/' /etc/nixos/configuration.nix
+sudo sed -i 's/^{$/{\n programs.git.enable = true;/' /etc/nixos/configuration.nix
 sudo nixos-rebuild switch
 
 # cloning the configs from my personal github.
 echo "----------  Cloning configs from GitHub  ----------"
 cd
-git clone https://github.com/quil180/nixos-config
+git clone ssh://github.com/quil180/nixos-config
 
 # removing the old hardware-configuration thats in the github (if any), and copying the one for the current system.
 echo "----------  Replacing hardware-configuration.nix from cloned configs  ----------"
