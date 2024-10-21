@@ -58,7 +58,7 @@
 
   # setting the editor of choice to neovim
   home.sessionVariables = {
-    EDITOR = "neovim";
+    EDITOR = "nvim";
   };
 
   # firefox config

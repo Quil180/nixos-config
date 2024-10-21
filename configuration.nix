@@ -20,9 +20,9 @@
       };
       grub = {
         enable = true;
-	device = "nodev";
-	useOSProber = true;
-	efiSupport = true;
+	      device = "nodev";
+	      useOSProber = true;
+	      efiSupport = true;
       };
     };
   };
@@ -79,6 +79,7 @@
     fastfetch
     ranger
     git
+    gh
     wget
     zsh
 
@@ -140,5 +141,11 @@
   #};
 
   services.displayManager.sddm.wayland.enable = true;
-
+  
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 2w";
+  };
+  nix.settings.auto-optimise-store = true;
 }

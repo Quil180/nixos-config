@@ -8,7 +8,7 @@ sudo nixos-rebuild switch
 # cloning the configs from my personal github.
 echo "----------  Cloning configs from GitHub  ----------"
 cd
-git clone ssh://github.com/quil180/nixos-config
+git clone git@github.com:Quil180/nixos-config.git
 
 # removing the old hardware-configuration thats in the github (if any), and copying the one for the current system.
 echo "----------  Replacing hardware-configuration.nix from cloned configs  ----------"
