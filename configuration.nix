@@ -5,8 +5,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [
+  imports = [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
@@ -28,7 +27,6 @@
   };
 
   networking.hostName = "nixos-quil"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -90,6 +88,9 @@
     # misc things that have to be system wide
     steam
     lutris
+
+    # G14 specific packages
+    asusctl
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -132,13 +133,17 @@
   programs.steam.enable = true;
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
+  programs.neovim.enable = true;
+  programs.neovim.defaultEditor = true;
 
   # the following is for the G14 specifically for asusctl
-  #services.supergfxd.enable = true;
-  #services.asusd = {
-  #  enable = true;
-  #  enablelUserService = true;
-  #};
+  services.supergfxd.enable = true;
+  services.asusd = {
+    enable = true;
+    enableUserService = true;
+  };
+  programs.rog-control-center.enable = true;
+
 
   services.displayManager.sddm.wayland.enable = true;
   

@@ -10,6 +10,10 @@
     };
     # stylix for auto-ricing
     stylix.url = "github:danth/stylix";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, stylix, ... }@inputs:
@@ -36,6 +40,7 @@
           modules = [
             ./home.nix
             # inputs.stylix.nixosModules.stylix
+            inputs.nixvim.homeManagerModules.nixvim
           ];
         };
       };

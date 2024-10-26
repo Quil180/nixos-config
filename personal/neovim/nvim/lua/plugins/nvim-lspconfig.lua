@@ -18,7 +18,7 @@ return {
       end,
     })
     -- setting up the typescript language server
-    lspconfig.tsserver.setup({
+    lspconfig.ts_server.setup({
       capabilities = capabilities,
     })
     -- setting up the java typescript language server
