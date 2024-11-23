@@ -123,8 +123,12 @@
   programs.rog-control-center.enable = true;
 
   # for sddm/wayland
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    enableHidpi = true;
+    autoNumlock = true;
+  };
   
   nix.gc = {
     automatic = true;
@@ -143,6 +147,6 @@
     };
     pulse.enable = true;
     wireplumber.enable = true;
-    # jack.enable = true; # uncomment if I want jack support
+    jack.enable = true;
   };
 }

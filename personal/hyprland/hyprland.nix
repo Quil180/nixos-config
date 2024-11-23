@@ -24,9 +24,10 @@
     iosevka # font of choice
     networkmanagerapplet # network manager tray
     pavucontrol # volume control
+    swww # backgrounds
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
-    rofi # app selector
+    rofi-wayland # app selector
     wl-clipboard # for clipboard support
     wlogout # to easily logout
     xdg-desktop-portal-hyprland # xwayland support
@@ -42,7 +43,25 @@
     };
     # systemd.enable = true;
     systemd.variables = [ "--all" ];
+    systemd.enable = true;
+  };
+  
+  # enabling xdg
+  xdg.portal = {
+    enable = true;
+    config = {
+      common = {
+        default = [ "hyprland" ];
+      };
+      hyprland = {
+        default = [ "hyprland" ];
+      };
+    };
+    extraPortals = [
+      pkgs.xdg-desktop-portal-hyprland
+    ];
   };
 
+  # making it so ozone apps use wayland
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 }
