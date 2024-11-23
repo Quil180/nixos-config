@@ -19,7 +19,6 @@
 		"$mod SHIFT, F, fullscreen,0"
 
 		# binds to launch apps
-		"$mod, E, exec, $term -e $file"
 		"$mod, W, exec, $browser"
 		"$mod, D, exec, vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
 		"$mod, G, exec, steam"
