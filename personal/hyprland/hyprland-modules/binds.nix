@@ -38,9 +38,9 @@
 			"$mod ALT, R, exec, polychromatic-controller" # for razer center
 
 			# keybinds to screenshot
-			"$mod alt, P, exec, grimblast copy area | notify-send 'Zone Copied'"
-			"$mod, P, exec, grimblast copy output | notify-send 'Current Screen Copied'"
-			"$mod SHIFT, P, exec, grimblast screen output | notify-send 'All Screens Copied'"
+			"$mod alt, P, exec, grimblast copy area && notify-send 'Zone Copied'"
+			"$mod, P, exec, grimblast copy output && notify-send 'Current Screen Copied'"
+			"$mod SHIFT, P, exec, grimblast screen output && notify-send 'All Screens Copied'"
 
 			# volume control binds
 			", xf86audioraisevolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
