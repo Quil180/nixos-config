@@ -20,10 +20,6 @@
 		enable = true;
 		enableZshIntegration = true;
 	};
-	
-	programs.swww = {
-		enable = true;
-	};
 
 	services.network-manager-applet.enable = true;
 }
