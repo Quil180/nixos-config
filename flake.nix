@@ -10,6 +10,7 @@
     };
     # stylix for auto-ricing
     stylix.url = "github:danth/stylix";
+    # nixvim for neovim
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";

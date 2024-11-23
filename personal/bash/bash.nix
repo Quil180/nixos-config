@@ -11,6 +11,8 @@ in
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
+      # replacing cd with zoxide
+      cd = "z";
       # update aliases
       updh = "home-manager switch --flake ${dotfiles}#quil";
       updf = "nix flake update";

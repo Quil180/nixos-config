@@ -4,16 +4,22 @@
 
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
-    modules/waybar.nix
-    modules/binds.nix
-    modules/misc.nix
-    modules/monitors.nix
+    # app configs below
+    dependent-apps/waybar/waybar.nix
+    dependent-apps/dunst.nix
+
+    # Hyprland modules below
+    hyprland-modules/binds.nix
+    hyprland-modules/misc.nix
+    hyprland-modules/monitors.nix
+    hyprland-modules/startup.nix
   ];
 
   home.packages = (with pkgs; [
     # bare essentials
+    dunst # notification daemon
     foot # terminal of choice
-    grim # for screenshotting
+    grimblast # for screenshotting
     hyprland-protocols
     iosevka # font of choice
     networkmanagerapplet # network manager tray
@@ -21,7 +27,6 @@
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
     rofi # app selector
-    slurp # for screenshotting
     wl-clipboard # for clipboard support
     wlogout # to easily logout
     xdg-desktop-portal-hyprland # xwayland support
