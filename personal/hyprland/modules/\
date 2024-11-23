@@ -28,8 +28,8 @@
 		"$mod, H, exec, foot -e btop"
 		"$mod, I, exec, gimp"
 		"$mod, M, exec, spotify-launcher"
-		"$mod SHIFT, R, exec, rog-control-center" # for g14 control center
-		"$mod ALT, R, exec, polychromatic-controller" # for razer center
+		"$mod SHIFT, R, exec, rog-control-center"
+		"$mod ALT, R, exec, polychromatic-controller"
 
 		# keybinds to screenshot
 		" , Print, exec, grim - | wl-copy && wl-paste >  ~/Pictures/Screenshots/$(date + %Y-%m-%d_%H-%m-%s).png && notify-send 'Whole Screen Screenshotted, Saved, and Copied' -i ~/Pictures/Screenshots/$(date + %Y-%m-%d_%H-%m-%s).png"

@@ -12,19 +12,20 @@
 
   home.packages = (with pkgs; [
     # bare essentials
+    foot # terminal of choice
+    grim # for screenshotting
     hyprland-protocols
-    wl-clipboard
-    foot
-    grim
-    slurp
-    xdg-utils
-    xdg-desktop-portal-hyprland
-    pavucontrol
-    rofi
-    wlogout
-    qt6.qtwayland
-    qt5.qtwayland
-    iosevka
+    iosevka # font of choice
+    networkmanagerapplet # network manager tray
+    pavucontrol # volume control
+    qt5.qtwayland # graphics backend
+    qt6.qtwayland # graphics backend
+    rofi # app selector
+    slurp # for screenshotting
+    wl-clipboard # for clipboard support
+    wlogout # to easily logout
+    xdg-desktop-portal-hyprland # xwayland support
+    xdg-utils # xwayland support
 
   ]);
 
