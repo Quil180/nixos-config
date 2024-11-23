@@ -6,8 +6,6 @@
 
   # importing my custom external modules
   imports = [
-
-    personal/neovim/nvim.nix # neovim config
     personal/neovim/nixvim.nix
     personal/hyprland/hyprland.nix # hyprland config
     personal/ranger/ranger.nix # ranger config
@@ -22,6 +20,7 @@
   home.packages = [
     # bare essentials regardless of the imported modules
     pkgs.zsh
+    pkgs.zoxide
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
