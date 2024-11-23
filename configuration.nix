@@ -123,6 +123,7 @@
   programs.rog-control-center.enable = true;
 
   # for sddm/wayland
+  services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
   
   nix.gc = {

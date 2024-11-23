@@ -43,4 +43,6 @@
     # systemd.enable = true;
     systemd.variables = [ "--all" ];
   };
+
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 }
