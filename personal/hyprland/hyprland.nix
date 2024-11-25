@@ -14,14 +14,13 @@
     hyprland-modules/monitors.nix
     hyprland-modules/startup.nix
   ];
-
+  
   home.packages = (with pkgs; [
     # bare essentials
     dunst # notification daemon
     foot # terminal of choice
     grimblast # for screenshotting
     hyprland-protocols
-    iosevka # font of choice
     networkmanagerapplet # network manager tray
     pavucontrol # volume control
     swww # backgrounds
@@ -43,7 +42,6 @@
     };
     # systemd.enable = true;
     systemd.variables = [ "--all" ];
-    systemd.enable = true;
   };
   
   # enabling xdg

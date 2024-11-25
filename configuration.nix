@@ -79,7 +79,6 @@
     
     # audio support
     pulseaudioFull
-    plasma-pa
 
     # desktop environments
     sddm
@@ -91,6 +90,11 @@
 
     # G14 specific packages
     asusctl
+  ];
+
+  fonts.packages = with pkgs; [
+    iosevka
+    nerdfonts
   ];
 
   # Enable the OpenSSH daemon so I can SSH
@@ -113,6 +117,7 @@
   users.defaultUserShell = pkgs.zsh;
   programs.neovim.enable = true;
   programs.neovim.defaultEditor = true;
+  programs.hyprland.enable = true;
 
   # the following is for the G14 specifically for asusctl
   services.supergfxd.enable = true;
@@ -122,10 +127,10 @@
   };
   programs.rog-control-center.enable = true;
 
+  services.xserver.enable = true;
   # for sddm/wayland
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true;
     enableHidpi = true;
     autoNumlock = true;
   };
@@ -149,4 +154,7 @@
     wireplumber.enable = true;
     jack.enable = true;
   };
+
+  # disabling firefox wayland support
+  environment.sessionVariables.MOZ_ENABLE_WAYLAND = "0";
 }
