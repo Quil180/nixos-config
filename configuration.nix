@@ -9,7 +9,7 @@
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       # include stylix configuration
-      ./personal/stylix/stylix.nix
+      # ./personal/stylix/stylix.nix
     ];
 
   # Bootloader.
