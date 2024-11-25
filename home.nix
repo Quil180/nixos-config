@@ -19,7 +19,6 @@
   # user packages that I'd like installed no matter my imports
   home.packages = [
     # bare essentials regardless of the imported modules
-    pkgs.zsh
     pkgs.zoxide
   ];
 

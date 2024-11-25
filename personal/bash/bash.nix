@@ -8,7 +8,6 @@ in
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
       # replacing cd with zoxide
@@ -22,8 +21,8 @@ in
       # editing file aliases
       edith = "nvim ${dotfiles}/home.nix";
       edits = "nvim ${dotfiles}/configuration.nix";
-      editf = "nvim {$dotfiles}/flake.nix";
-      editv = "nvim ${dotfiles}/personal/neovim/";
+      editf = "nvim ${dotfiles}/flake.nix";
+      editb = "nvim ${dotfiles}/personal/bash.nix && source ~/.zshrc";
     };
     initExtra = ''
       runa() {
@@ -52,14 +51,14 @@ in
       }
 
       runc() {
-      temp=""
-      for arg in "$@"
-      do
-        temp+="$arg "
-      done
-      gcc $temp
-      ./a.out
-      rm a.out
+        temp=""
+        for arg in "$@"
+        do
+          temp+="$arg "
+        done
+        gcc $temp
+        ./a.out
+        rm a.out
       }
 
       runcpp() {

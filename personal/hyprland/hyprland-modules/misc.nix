@@ -1,7 +1,7 @@
 {pkgs, ...}:
 
 {
-# customizing foot with a different font
+  # customizing foot with a different font
 	programs.foot = {
 		enable = true;
 		settings = {

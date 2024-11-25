@@ -2,7 +2,11 @@
 
 {
 	wayland.windowManager.hyprland.settings.exec-once = [
-		"./personal/hyprland/hyprland-modules/scripts/startup.sh"
-		"xwaylandvideobridge" # for xwayland screensharing
+    "swww-daemon"
+    "nm-applet --indicator"
+    "asusctl -c 80"
+    "wl-paste --watch cliphist store"
+    "dunst"
+    "xwaylandvideobridge" # for xwayland screensharing
 	];
 }

@@ -1,4 +1,4 @@
-{config, ...}:
+{config, stylix, ...}:
 
 {
   programs.waybar.style = with config.lib.stylix.colors.withHashtag;
