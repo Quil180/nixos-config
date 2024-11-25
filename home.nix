@@ -11,6 +11,7 @@
     personal/ranger/ranger.nix # ranger config
     personal/bash/bash.nix # bash config
     personal/git/git.nix # git config
+    personal/stylix/stylix.nix
   ];
 
   # my original nixos install version

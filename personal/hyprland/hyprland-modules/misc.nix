@@ -6,8 +6,6 @@
 		enable = true;
 		settings = {
 			main = {
-				font = "iosevka-bold:size=10";
-				dpi-aware = "yes";
 			};
 
 			mouse = {

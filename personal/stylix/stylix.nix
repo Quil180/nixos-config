@@ -1,9 +1,10 @@
 {pkgs, ...}:
-
-{
+let
+  wallpaper = ../../wallpapers/frieren_reading.jpg;
+in {
   stylix = {
     enable = true;
-    image = ../../wallpapers/eepy_myne.png;
-    polarity="dark";
+    image = wallpaper;
+    polarity = "dark";
   };
 }

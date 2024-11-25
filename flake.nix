@@ -9,7 +9,11 @@
 
     };
     # stylix for auto-ricing
-    stylix.url = "github:danth/stylix";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.base16.follows = "base16";
+    };
+    base16.url = "github:Noodlez1232/base16.nix/slugify-fix";
     # nixvim for neovim
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -17,7 +21,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, stylix, ... }@inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
@@ -39,6 +43,7 @@
           modules = [
             ./home.nix
             inputs.nixvim.homeManagerModules.nixvim
+            inputs.stylix.homeManagerModules.stylix
           ];
         };
       };
