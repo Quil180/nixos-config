@@ -17,7 +17,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
@@ -29,6 +29,7 @@
           inherit system;
           modules = [
             ./configuration.nix # system config file
+            inputs.stylix.nixosModules.stylix
           ];
         };
       };
@@ -40,7 +41,6 @@
           };
           modules = [
             ./home.nix
-            # inputs.stylix.nixosModules.stylix
             inputs.nixvim.homeManagerModules.nixvim
           ];
         };

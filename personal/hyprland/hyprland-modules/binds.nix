@@ -46,6 +46,10 @@
 			", xf86audioraisevolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
 			", xf86audiolowervolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
 			", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
+      
+      # brightness controll binds
+      ", XF86MonBrightnessUp, exec, brightnessctl set +20%"
+      ", XF86MonBrightnessDown, exec, brightnessctl set 20%-"
 
 			# keybinds to move between workspaces
 			"$mod, 1, workspace, 1"

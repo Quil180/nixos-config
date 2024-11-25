@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-swww init &
+swww-daemon &
 swww img ~/nixos-config/wallpapers/eepy_myne.png &
 
 nm-applet --indicator &

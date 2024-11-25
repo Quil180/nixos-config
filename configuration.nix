@@ -8,6 +8,9 @@
   imports = [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+
+      # include stylix configuration
+      ./personal/stylix/stylix.nix
     ];
 
   # Bootloader.
@@ -69,6 +72,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    btop
     neovim
     fastfetch
     ranger
@@ -104,12 +108,6 @@
 
   # enabling flakes support
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # stylix configuration
-  #stylix = {
-  #  enable = true;
-  #  image = ./wallpapers/goddessoflight_godofdarkness_AoB.jpg;
-  #};
 
   # misc things
   programs.steam.enable = true;

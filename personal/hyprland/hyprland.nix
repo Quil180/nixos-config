@@ -17,6 +17,7 @@
   
   home.packages = (with pkgs; [
     # bare essentials
+    brightnessctl # brightness/backlight control
     dunst # notification daemon
     foot # terminal of choice
     grimblast # for screenshotting
