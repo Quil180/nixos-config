@@ -4,9 +4,7 @@
   stylix = {
     enable = true;
     image = ../../wallpapers/eepy_myne.png;
-  
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-
+    polarity = "dark";
     homeManagerIntegration = {
       autoImport = true;
       followSystem = true;
