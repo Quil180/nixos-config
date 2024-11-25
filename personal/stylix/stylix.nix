@@ -12,8 +12,8 @@
       followSystem = true;
     };
 
-    stylix.targets.console.enable = true;
-    stylix.targets.nixvim.enable = true;
+    targets.console.enable = true;
+    targets.nixvim.enable = true;
 
   };
 }
