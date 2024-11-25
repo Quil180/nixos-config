@@ -1,7 +1,7 @@
 {config, stylix, ...}:
 
 {
-  programs.waybar.style = with config.lib.stylix.colors.withHashtag;
+  programs.waybar.style = with stylix.colors.withHashtag;
     ''
     @define-color red       #cc241d;
     @define-color green     #98971a;

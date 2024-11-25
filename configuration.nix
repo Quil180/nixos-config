@@ -8,7 +8,6 @@
   imports = [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-
       # include stylix configuration
       ./personal/stylix/stylix.nix
     ];
@@ -133,6 +132,7 @@
     autoNumlock = true;
   };
   
+  # Enabling Nix Garbage Collector
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -146,7 +146,7 @@
     enable = true;
     alsa = {
     	enable = true;
-	support32Bit = true;
+      support32Bit = true;
     };
     pulse.enable = true;
     wireplumber.enable = true;
