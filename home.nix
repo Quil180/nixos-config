@@ -11,7 +11,8 @@
     personal/ranger/ranger.nix # ranger config
     personal/bash/bash.nix # bash config
     personal/git/git.nix # git config
-    personal/stylix/stylix.nix
+    personal/stylix/stylix.nix # stylix setup
+    personal/firefox/firefox.nix # firefox config
   ];
 
   # my original nixos install version
@@ -27,9 +28,6 @@
   home.sessionVariables = {
     EDITOR = "nvim";
   };
-
-  # firefox config
-  programs.firefox.enable = true;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
