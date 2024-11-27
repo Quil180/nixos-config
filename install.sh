@@ -8,7 +8,7 @@ sudo nixos-rebuild switch
 # cloning the configs from my personal github.
 echo "----------  Cloning configs from GitHub  ----------"
 cd
-git clone git@github.com:Quil180/nixos-config.git
+git clone https://github.com/Quil180/nixos-config
 
 # removing the old hardware-configuration thats in the github (if any), and copying the one for the current system.
 echo "----------  Replacing hardware-configuration.nix from cloned configs  ----------"
@@ -29,3 +29,13 @@ sudo nix-shell '<home-manager>' -A install
 # building the home-manager configs
 echo "----------  Switching to the new home.nix  ----------"
 home-manager switch --flake .#quil
+
+# sourcing zshrc
+source ~/.zdhrc
+
+# removing the install.sh in the home directory
+echo "----------  Deleting the original install.sh  ---------"
+ch ~
+rm install.sh
+
+
