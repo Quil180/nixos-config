@@ -1,0 +1,11 @@
+keys:
+  - &users: # specific people using secrets
+    - &quil # put age public key here
+  - &hosts: # computers using secrets
+    - &snowflake 
+creation_rules:
+  - path_regex: secrets/secrets.yaml$
+    key_groups:
+    - age:
+      - *quil
+      - *snowflake

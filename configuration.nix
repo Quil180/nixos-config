@@ -1,11 +1,17 @@
 { config, lib, pkgs, inputs, outputs, ... }:
+let
+  systemName = "snowflake";
+in {
+  imports = [
+      # importing sops for secrets management systemwide
+      inputs.sops-nix.nixosModules.sops
 
-{
-  imports =
-    [
       ./hardware-configuration.nix
       ./disko.nix
       # ./personal/stylix/stylix.nix
+
+      # select which user you want
+      users/quil/default.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -23,26 +29,13 @@
   };
 
   networking = {
-    hostName = "snowflake";
+    hostName = systemName;
     networkmanager.enable = true;
   };
 
   time.timeZone = "America/New_York";
 
-  # user packages
-  users = {
-    defaultUserShell = pkgs.zsh;
-    quil = {
-      isNormalUser = true;
-      initialPassword = "1234";
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-      ];
-    };
-  };
-
-  # system wide packages
+  # default packages regardless of user/host
   environment.systemPackages = with pkgs; [
     btop
     fastfetch
@@ -52,78 +45,28 @@
     neovim
     wget
     zsh
-
-    pulseaudioFull # audio support
-
-    # desktop environment I want
-    sddm
-    hyprland
-
-    # game stuff I have to add here
-    lutris
-    steam
-
-    # G14 Specific Packages
-    asusctl
   ];
 
-  fonts.packages = with pkgs; [
-    iosevka
-  ];
+  # default user settings regardless of host/user
+  users = {
+    defaultUserShell = pkgs.zsh;
+  };
 
   system.stateVersion = "24.05"; # KEEP THIS THE SAME
 
   # enabling programs to be managed by nixos
   programs = {
-    steam.enable = true;
     zsh.enable = true;
     neovim = {
       enable = true;
       defaultEditor = true;
     };
-    hyprland = true;
-
-    # G14 programs below
-    rog-control-center.enable = true;
   };
-
-  # for good sound quality
-  security.rtkit.enable = true;
 
   # enabling the services I need system wide
   services = {
     # ssh support
     openssh.enable = true;
-    # enabling X server
-    xserver.enable = true;
-    # Enable CUPS to print documents.
-    printing.enable = true;
-
-    # setting sddm as default login screen
-    displayManager.sddm = {
-      enable = true;
-      enableHidpi = true;
-      autoNumlock = true;
-    };
-
-    # enabling sound support
-    pipewire = {
-      enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
-      wireplumber.enable = true;
-      jack.enable = true;
-      pulse.enable = true;
-    };
-
-    #G14 specific services
-    supergfxd.enable = true;
-    asusd = {
-      enable = true;
-      enableUserService = true;
-    };
   };
 
   # system files we want to keep
@@ -136,6 +79,7 @@
       "/var/lib/bluetooth"
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
+      "/var/lib/sops-nix"
       "/etc/NetworkManager/system-connections"
       {
         directory = "/var/lib/colord";
