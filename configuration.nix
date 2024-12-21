@@ -5,7 +5,7 @@
     [
       ./hardware-configuration.nix
       ./disko.nix
-      ./personal/stylix/stylix.nix
+      # ./personal/stylix/stylix.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -15,9 +15,9 @@
       efi.canTouchEfiVariables = true;
       grub = {
         enable = true;
-	device = "nodev";
-	useOSProber = true;
-	efiSupport = true;
+        device = "nodev";
+        useOSProber = true;
+        efiSupport = true;
       };
     };
   };
@@ -29,19 +29,13 @@
 
   time.timeZone = "America/New_York";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # enabling sound
-  services.
-  
   # user packages
   users = {
     defaultUserShell = pkgs.zsh;
     quil = {
       isNormalUser = true;
       initialPassword = "1234";
-      extraGroups = [ 
+      extraGroups = [
         "networkmanager"
         "wheel"
       ];
@@ -75,11 +69,7 @@
 
   fonts.packages = with pkgs; [
     iosevka
-    nerdfonts
   ];
-
-  # Enable the OpenSSH daemon.
-  services.
 
   system.stateVersion = "24.05"; # KEEP THIS THE SAME
 
@@ -96,24 +86,32 @@
     # G14 programs below
     rog-control-center.enable = true;
   };
-  
+
   # for good sound quality
   security.rtkit.enable = true;
 
   # enabling the services I need system wide
   services = {
+    # ssh support
     openssh.enable = true;
+    # enabling X server
     xserver.enable = true;
+    # Enable CUPS to print documents.
+    printing.enable = true;
+
+    # setting sddm as default login screen
     displayManager.sddm = {
       enable = true;
       enableHidpi = true;
       autoNumlock = true;
     };
+
+    # enabling sound support
     pipewire = {
       enable = true;
       alsa = {
         enable = true;
-	support32Bit = true;
+        support32Bit = true;
       };
       wireplumber.enable = true;
       jack.enable = true;
@@ -141,9 +139,9 @@
       "/etc/NetworkManager/system-connections"
       {
         directory = "/var/lib/colord";
-	user = "colord";
-	group = "colord";
-	mode = "u=rwx,g=rx,o=";
+        user = "colord";
+        group = "colord";
+        mode = "u=rwx,g=rx,o=";
       }
     ];
     files = [

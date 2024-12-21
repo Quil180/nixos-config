@@ -7,7 +7,7 @@
     personal/git/git.nix
     personal/hyprland/hyprland.nix
     personal/neovim/neovim.nix
-    personal/stylix/stylix.nix
+    # personal/stylix/stylix.nix
     personal/vesktop/vesktop.nix
   ];
 

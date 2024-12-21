@@ -1,9 +1,9 @@
 {
   disko.devices = {
     disk = {
-      sda = {
+      sda = { # change this to the drive i want to format
         type = "disk";
-        device = "/dev/sda";
+        device = "/dev/sda"; # change this to the drive i want to format
         content = {
           type = "gpt";
           partitions = {
