@@ -1,40 +1,29 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, ...}:
 
 {
-  home.username = "quil";
-  home.homeDirectory = "/home/quil";
-
-  # importing my custom external modules
   imports = [
-    personal/neovim/neovim.nix # neovim config
-    personal/hyprland/hyprland.nix # hyprland config
-    personal/ranger/ranger.nix # ranger config
-    personal/bash/bash.nix # bash config
-    personal/git/git.nix # git config
-    personal/stylix/stylix.nix # stylix setup
-    personal/firefox/firefox.nix # firefox config
-    personal/vesktop/vesktop # vesktop config
+    personal/bash/bash.nix
+    personal/firefox/firefox.nix
+    personal/git/git.nix
+    personal/hyprland/hyprland.nix
+    personal/neovim/neovim.nix
+    personal/stylix/stylix.nix
+    personal/vesktop/vesktop.nix
   ];
 
-  # my original nixos install version
-  home.stateVersion = "24.05";
-
-  # user packages that I'd like installed no matter my imports
-  home.packages = ( with pkgs; [
-    # bare essentials regardless of the imported modules
-    zoxide # for better cd
-    networkmanagerapplet # network manager tray
-    pavucontrol # volume control
-    wl-clipboard # for clipboard support
-    foot # terminal of choice
-    brightnessctl # brightness/backlight control
-  ]);
-
-  # setting the editor of choice to neovim
-  home.sessionVariables = {
-    EDITOR = "nvim";
+  home = {
+    username = "quil";
+    homeDirectory = "/home/quil";
+    stateVersion = "24.05";
+    sessionVariables.EDITOR = "nvim";
+    packages = (with pkgs; [
+      brightnessctl # brightness control
+      foot # terminal emulator
+      networkmanagerapplet # network manager tray
+      pavucontrol # sound control GUI
+      wl-clipboard # clipboard
+      zoxide # better cd
+    ]);
   };
-
-  # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }

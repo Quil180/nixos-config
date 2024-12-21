@@ -1,97 +1,75 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, outputs, ... }:
 
 {
-  imports = [
-      # Include the results of the hardware scan.
+  imports =
+    [
       ./hardware-configuration.nix
-      # include stylix configuration
+      ./disko.nix
       ./personal/stylix/stylix.nix
     ];
 
-  # Bootloader.
+  # Use the systemd-boot EFI boot loader.
   boot = {
     loader = {
       systemd-boot.enable = false;
-      efi = {
-        canTouchEfiVariables = true;
-      };
+      efi.canTouchEfiVariables = true;
       grub = {
         enable = true;
-	      device = "nodev";
-	      useOSProber = true;
-	      efiSupport = true;
+	device = "nodev";
+	useOSProber = true;
+	efiSupport = true;
       };
     };
   };
 
-  networking.hostName = "nixos-quil"; # Define your hostname.
+  networking = {
+    hostName = "snowflake";
+    networkmanager.enable = true;
+  };
 
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
+  # enabling sound
+  services.
+  
+  # user packages
+  users = {
+    defaultUserShell = pkgs.zsh;
+    quil = {
+      isNormalUser = true;
+      initialPassword = "1234";
+      extraGroups = [ 
+        "networkmanager"
+        "wheel"
+      ];
+    };
   };
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.quil = {
-    isNormalUser = true;
-    description = "Quil";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [ ];
-  };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # system wide packages
   environment.systemPackages = with pkgs; [
     btop
-    neovim
     fastfetch
     ranger
     git
     gh
+    neovim
     wget
     zsh
-    
-    # audio support
-    pulseaudioFull
 
-    # desktop environments
+    pulseaudioFull # audio support
+
+    # desktop environment I want
     sddm
     hyprland
 
-    # misc things that have to be system wide
-    steam
+    # game stuff I have to add here
     lutris
+    steam
 
-    # G14 specific packages
+    # G14 Specific Packages
     asusctl
   ];
 
@@ -100,59 +78,118 @@
     nerdfonts
   ];
 
-  # Enable the OpenSSH daemon so I can SSH
-  services.openssh.enable = true;
+  # Enable the OpenSSH daemon.
+  services.
 
-  system.stateVersion = "24.05"; # Keep the same
+  system.stateVersion = "24.05"; # KEEP THIS THE SAME
 
-  # enabling flakes support
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # enabling programs to be managed by nixos
+  programs = {
+    steam.enable = true;
+    zsh.enable = true;
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+    };
+    hyprland = true;
 
-  # misc things
-  programs.steam.enable = true;
-  programs.zsh.enable = true;
-  users.defaultUserShell = pkgs.zsh;
-  programs.neovim.enable = true;
-  programs.neovim.defaultEditor = true;
-  programs.hyprland.enable = true;
-
-  # the following is for the G14 specifically for asusctl
-  services.supergfxd.enable = true;
-  services.asusd = {
-    enable = true;
-    enableUserService = true;
-  };
-  programs.rog-control-center.enable = true;
-
-  services.xserver.enable = true;
-  # for sddm/wayland
-  services.displayManager.sddm = {
-    enable = true;
-    enableHidpi = true;
-    autoNumlock = true;
+    # G14 programs below
+    rog-control-center.enable = true;
   };
   
-  # Enabling Nix Garbage Collector
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 2w";
-  };
-  nix.settings.auto-optimise-store = true;
-
-  # sound settings
+  # for good sound quality
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa = {
-    	enable = true;
-      support32Bit = true;
+
+  # enabling the services I need system wide
+  services = {
+    openssh.enable = true;
+    xserver.enable = true;
+    displayManager.sddm = {
+      enable = true;
+      enableHidpi = true;
+      autoNumlock = true;
     };
-    pulse.enable = true;
-    wireplumber.enable = true;
-    jack.enable = true;
+    pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+	support32Bit = true;
+      };
+      wireplumber.enable = true;
+      jack.enable = true;
+      pulse.enable = true;
+    };
+
+    #G14 specific services
+    supergfxd.enable = true;
+    asusd = {
+      enable = true;
+      enableUserService = true;
+    };
   };
 
-  # disabling firefox wayland support
-  environment.sessionVariables.MOZ_ENABLE_WAYLAND = "0";
+  # system files we want to keep
+  fileSystems."/persist".neededForBoot = true;
+  environment.persistence."/persist/system" = {
+    hideMounts = true;
+    directories = [
+      "/etc/nixos"
+      "/var/log"
+      "/var/lib/bluetooth"
+      "/var/lib/nixos"
+      "/var/lib/systemd/coredump"
+      "/etc/NetworkManager/system-connections"
+      {
+        directory = "/var/lib/colord";
+	user = "colord";
+	group = "colord";
+	mode = "u=rwx,g=rx,o=";
+      }
+    ];
+    files = [
+      "/etc/machine-id"
+    ];
+  };
+
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    mkdir /btrfs_tmp
+    mount /dev/root_vg/root /btrfs_tmp
+    if [[ -e /btrfs_tmp/root ]]; then
+        mkdir -p /btrfs_tmp/old_roots
+        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+        mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+    fi
+
+    delete_subvolume_recursively() {
+        IFS=$'\n'
+        for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+            delete_subvolume_recursively "/btrfs_tmp/$i"
+        done
+        btrfs subvolume delete "$1"
+    }
+
+    for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+        delete_subvolume_recursively "$i"
+    done
+
+    btrfs subvolume create /btrfs_tmp/root
+    umount /btrfs_tmp
+  '';
+
+  nixpkgs.config.allowUnfree = true;
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 2w";
+    };
+    settings = {
+      auto-optimise-store = true;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
+  };
 }
+
