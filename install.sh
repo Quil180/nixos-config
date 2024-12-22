@@ -24,5 +24,8 @@ if [ ${phase} == 2 ]; then
 	sudo nix-shell '<home-manager>' -A install
 
 	home-manager switch --flake ~/.dotfiles#${user}
+
+	git remote set-url origin git@github.com:Quil180/nixos-config
+
 	echo "please do the following command: source /home/${user}/.zshrc"
 fi
