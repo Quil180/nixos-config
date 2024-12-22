@@ -1,5 +1,7 @@
 # this script will install the nixos configuration files above, as well as home-manager.
 
+## This Script no longer works, will need to be updated
+
 # installing git into the bare system.
 echo "----------  Installing git onto the System  ----------"
 sudo sed -i 's/^{$/{\n programs.git.enable = true;/' /etc/nixos/configuration.nix
