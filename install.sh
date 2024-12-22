@@ -24,5 +24,5 @@ if [ ${phase} == 2 ]; then
 	sudo nix-shell '<home-manager>' -A install
 
 	home-manager switch --flake ~/.dotfiles#${user}
-	source ~/.zshrc
+	echo "please do the following command: source /home/${user}/.zshrc"
 fi

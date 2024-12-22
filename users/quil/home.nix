@@ -2,14 +2,14 @@
 
 {
   imports = [
-    ../universal/home-manager/bash.nix
-    ../universal/home-manager/firefox.nix
-    ../universal/home-manager/git.nix
-    ../universal/home-manager/hyprland.nix
-    # ../universal/home-manager/neovim.nix
-    # ../universal/home-manager/stylix.nix
-    ../universal/home-manager/vesktop.nix
-    ../universal/home-manager/music.nix
+    ../universal/bash.nix
+    ../universal/firefox.nix
+    ../universal/git.nix
+    ../universal/hyprland.nix
+    # ../universal/neovim.nix
+    # ../universal/stylix.nix
+    ../universal/vesktop.nix
+    ../universal/music.nix
   ];
 
   home = {
