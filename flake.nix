@@ -70,7 +70,7 @@
             # inputs.stylix.nixosModules.stylix
 
             system/snowflake/disko.nix
-            system/snoflake/configuration.nix
+            system/snowflake/configuration.nix
           ];
         };
       };

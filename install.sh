@@ -4,20 +4,19 @@
 echo "Which phase of the install are you in?"
 read -p "1 or 2? " phase
 
-if [ phase == 1 ]; then
+if [ ${phase} == 1 ]; then
 	# phase 1
-	
 	# asking the user what system you are installing onto...
 	read -p "What system are you installing onto? " systemChoice
 	read -p "What user is being installed? " userChoice
 
 	sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko system/${systemChoice}/disko.nix
-	sudo nixos-install --root /mnt --flake /home/nixos/nixos-config#${system}
+	sudo nixos-install --root /mnt --flake /home/nixos/nixos-config#${systemChoice}
 	cp -r ../nixos-config /mnt/home/${userChoice}/.dotfiles
 	echo "Phase 1 complete, please reboot and start Phase 2..."
 
 fi
-if [ phase == 2 ]; then
+if [ ${phase} == 2 ]; then
 	# phase 2
 	read -p "What user am I? " user
 	sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager

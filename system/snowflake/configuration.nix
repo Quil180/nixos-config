@@ -10,13 +10,13 @@
 
     # optional stuff
     # GUI I want (if any):
-    ../universal/system/hyprland.nix
+    ../universal/hyprland.nix
     # Sound?
-    ../universal/system/sound.nix
+    ../universal/sound.nix
     # Game Applications setup/installed?
-    ../universal/system/games.nix
+    ../universal/games.nix
     # Extra options...
-    ../universal/system/g14.nix
+    ../universal/g14.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
