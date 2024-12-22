@@ -58,6 +58,7 @@
     mutableUsers = true; # so that sops can set passwords
     users.quil = {
       isNormalUser = true;
+      initialPassword = "1234";
       # hashedPasswordFile = config.sops.secrets.quil-password.path;
       extraGroups = [
         "networkmanager"
