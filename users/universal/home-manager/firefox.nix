@@ -1,17 +1,13 @@
 {pkgs, lib, inputs, ...}:
 
 {
-  
+  home.packages = (with pkgs; [
+    firefox
+  ]);
   programs.firefox = {
     enable = true;
 
     profiles.quil = {
-      extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
-        bitwarden
-        ublock-origin
-        darkreader
-      ];
-
       settings = {
         "browser.startup.homepage" = "https://mynixos.com";
         "browser.search.region" = "US";

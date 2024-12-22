@@ -9,7 +9,7 @@
     iosevka
   ];
 
-  programs.hyprland = true;
+  programs.hyprland.enable = true;
 
   services = {
     xserver.enable = true;

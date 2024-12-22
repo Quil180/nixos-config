@@ -2,7 +2,7 @@
 {
   imports = [
     # importing sops for secrets management systemwide
-    inputs.sops-nix.nixosModules.sops
+    # inputs.sops-nix.nixosModules.sops
 
     ./hardware-configuration.nix
     ./disko.nix
@@ -55,10 +55,10 @@
   # default user settings regardless of host/user
   users = {
     defaultUserShell = pkgs.zsh;
-    mutableUsers = false; # so that sops can set passwords
-    quil = {
+    mutableUsers = true; # so that sops can set passwords
+    users.quil = {
       isNormalUser = true;
-      hashedPasswordFile = config.sops.secrets.quil-password.path;
+      # hashedPasswordFile = config.sops.secrets.quil-password.path;
       extraGroups = [
         "networkmanager"
         "wheel"
@@ -104,25 +104,25 @@
         mode = "u=rwx,g=rx,o=";
       }
     ];
-    files = [
-      "/etc/machine-id"
-    ];
+    # files = [
+    #   "/etc/machine-id"
+    # ];
   };
 
   # sops for user proper
-  sops = {
-    secrets.quil-password.neededForUsers = true;
-    defaultSopsFile = ../../secrets/secrets.yaml;
-    validateSopsFiles = false;
-    defaultSopsFormat = "yaml";
-
-    age = {
-      # automatically import host SSH keys as age key.
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      keyFile = "/var/lib/sops-nix/keys.txt";
-      generateKey = true;
-    };
-  };
+  # sops = {
+  #   secrets.quil-password.neededForUsers = true;
+  #   defaultSopsFile = ../../secrets/secrets.yaml;
+  #   validateSopsFiles = false;
+  #   defaultSopsFormat = "yaml";
+  # 
+  #   age = {
+  #     # automatically import host SSH keys as age key.
+  #     sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  #     keyFile = "/var/lib/sops-nix/keys.txt";
+  #     generateKey = true;
+  #   };
+  # };
 
 
   boot.initrd.postDeviceCommands = lib.mkAfter ''

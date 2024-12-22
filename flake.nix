@@ -34,7 +34,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # firefox declaration package
+    # firefox addons declaration package
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -77,9 +77,7 @@
       homeConfigurations = {
         quil = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {
-            inherit inputs;
-          };
+          extraSpecialArgs = { inherit inputs; };
           modules = [
             users/quil/home.nix
           ];
