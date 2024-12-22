@@ -6,7 +6,7 @@
     ../universal/home-manager/firefox.nix
     ../universal/home-manager/git.nix
     ../universal/home-manager/hyprland.nix
-    ../universal/home-manager/neovim.nix
+    # ../universal/home-manager/neovim.nix
     # ../universal/home-manager/stylix.nix
     ../universal/home-manager/vesktop.nix
     ../universal/home-manager/music.nix

@@ -1,7 +1,7 @@
 {config, pkgs, ...}:
 
 let
-  dotfiles="~/nixos-config";
+  dotfiles="~/.dotfiles";
 in
   {
   # shell config

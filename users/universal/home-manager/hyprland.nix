@@ -17,7 +17,6 @@
   
   home.packages = (with pkgs; [
     # bare essentials
-    dunst # notification daemon
     grimblast # for screenshotting
     hyprland-protocols # hyprland protocols
     swww # backgrounds

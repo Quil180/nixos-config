@@ -1,9 +1,6 @@
 {pkgs, lib, inputs, ...}:
 
 {
-  home.packages = (with pkgs; [
-    firefox
-  ]);
   programs.firefox = {
     enable = true;
 

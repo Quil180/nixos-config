@@ -44,10 +44,10 @@
   environment.systemPackages = with pkgs; [
     btop
     fastfetch
-    ranger
     git
     gh
     neovim
+    ranger
     wget
     zsh
   ];
