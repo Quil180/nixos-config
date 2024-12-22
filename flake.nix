@@ -61,7 +61,7 @@
     in
     {
       nixosConfigurations = {
-        nixos = lib.nixosSystem {
+        snowflake = lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
           modules = [
@@ -69,8 +69,8 @@
             inputs.impermanence.nixosModules.impermanence
             # inputs.stylix.nixosModules.stylix
 
-            ./disko.nix
-            ./configuration.nix
+            users/quil/disko.nix
+            users/quil/configuration.nix
           ];
         };
       };
@@ -81,7 +81,7 @@
             inherit inputs;
           };
           modules = [
-            ./home.nix
+            users/quil/home.nix
           ];
         };
       };

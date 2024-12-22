@@ -1,18 +1,23 @@
 { config, lib, pkgs, inputs, outputs, ... }:
-let
-  systemName = "snowflake";
-in {
+{
   imports = [
-      # importing sops for secrets management systemwide
-      inputs.sops-nix.nixosModules.sops
+    # importing sops for secrets management systemwide
+    inputs.sops-nix.nixosModules.sops
 
-      ./hardware-configuration.nix
-      ./disko.nix
-      # ./personal/stylix/stylix.nix
+    ./hardware-configuration.nix
+    ./disko.nix
+    # ./personal/stylix/stylix.nix
 
-      # select which user you want
-      users/quil/default.nix
-    ];
+    # optional stuff
+    # GUI I want (if any):
+    ../universal/system/hyprland.nix
+    # Sound?
+    ../universal/system/sound.nix
+    # Game Applications setup/installed?
+    ../universal/system/games.nix
+    # Extra options...
+    ../universal/system/g14.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot = {
@@ -29,7 +34,7 @@ in {
   };
 
   networking = {
-    hostName = systemName;
+    hostName = "snowflake";
     networkmanager.enable = true;
   };
 
@@ -50,6 +55,15 @@ in {
   # default user settings regardless of host/user
   users = {
     defaultUserShell = pkgs.zsh;
+    mutableUsers = false; # so that sops can set passwords
+    quil = {
+      isNormalUser = true;
+      hashedPasswordFile = config.sops.secrets.quil-password.path;
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ];
+    };
   };
 
   system.stateVersion = "24.05"; # KEEP THIS THE SAME
@@ -67,6 +81,8 @@ in {
   services = {
     # ssh support
     openssh.enable = true;
+    # printing support via CUPS
+    printing.enable = true;
   };
 
   # system files we want to keep
@@ -92,6 +108,22 @@ in {
       "/etc/machine-id"
     ];
   };
+
+  # sops for user proper
+  sops = {
+    secrets.quil-password.neededForUsers = true;
+    defaultSopsFile = ../../secrets/secrets.yaml;
+    validateSopsFiles = false;
+    defaultSopsFormat = "yaml";
+
+    age = {
+      # automatically import host SSH keys as age key.
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/var/lib/sops-nix/keys.txt";
+      generateKey = true;
+    };
+  };
+
 
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     mkdir /btrfs_tmp
