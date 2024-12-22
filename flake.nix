@@ -69,8 +69,8 @@
             inputs.impermanence.nixosModules.impermanence
             # inputs.stylix.nixosModules.stylix
 
-            users/quil/disko.nix
-            users/quil/configuration.nix
+            system/snowflake/disko.nix
+            system/snoflake/configuration.nix
           ];
         };
       };

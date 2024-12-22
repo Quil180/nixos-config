@@ -1,43 +1,29 @@
 # this script will install the nixos configuration files above, as well as home-manager.
 
-## This Script no longer works, will need to be updated
+# asking the user which phase of the install are you on?
+echo "Which phase of the install are you in?"
+read -p "1 or 2? " phase
 
-# installing git into the bare system.
-echo "----------  Installing git onto the System  ----------"
-sudo sed -i 's/^{$/{\n programs.git.enable = true;/' /etc/nixos/configuration.nix
-sudo nixos-rebuild switch
+if [ phase == 1 ]; then
+	# phase 1
+	
+	# asking the user what system you are installing onto...
+	read -p "What system are you installing onto? " systemChoice
+	read -p "What user is being installed? " userChoice
 
-# cloning the configs from my personal github.
-echo "----------  Cloning configs from GitHub  ----------"
-cd
-git clone https://github.com/Quil180/nixos-config
+	sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko system/${systemChoice}/disko.nix
+	sudo nixos-install --root /mnt --flake /home/nixos/nixos-config#${system}
+	cp -r ../nixos-config /mnt/home/${userChoice}/.dotfiles
+	echo "Phase 1 complete, please reboot and start Phase 2..."
 
-# removing the old hardware-configuration thats in the github (if any), and copying the one for the current system.
-echo "----------  Replacing hardware-configuration.nix from cloned configs  ----------"
-cd nixos-config
-rm hardware-configuration.nix
-cp /etc/nixos/hardware-configuration.nix .
+fi
+if [ phase == 2 ]; then
+	# phase 2
+	read -p "What user am I? " user
+	sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+	sudo nix-channel --update
+	sudo nix-shell '<home-manager>' -A install
 
-# building the configuration.nix from the github.
-echo "----------  Swtiching to the new configuration.nix  ----------"
-sudo nixos-rebuild switch --flake .#nixos-quil
-
-# installing home-manager
-echo "----------  Installing home-manager onto the system  ----------"
-sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-sudo nix-channel --update
-sudo nix-shell '<home-manager>' -A install
-
-# building the home-manager configs
-echo "----------  Switching to the new home.nix  ----------"
-home-manager switch --flake .#quil
-
-# sourcing zshrc
-source ~/.zdhrc
-
-# removing the install.sh in the home directory
-echo "----------  Deleting the original install.sh  ---------"
-ch ~
-rm install.sh
-
-
+	home-manager switch --flake ~/.dotfiles#${user}
+	source ~/.zshrc
+fi
