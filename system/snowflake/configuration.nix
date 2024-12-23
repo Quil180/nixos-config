@@ -151,7 +151,10 @@
     umount /btrfs_tmp
   '';
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = (_: true);
+  };
   nix = {
     gc = {
       automatic = true;

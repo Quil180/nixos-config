@@ -8,9 +8,14 @@
     ../universal/hyprland.nix
     # ../universal/neovim.nix
     # ../universal/stylix.nix
-    ../universal/vesktop.nix
+    ../universal/discord.nix
     ../universal/music.nix
   ];
+
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = (_: true);
+  };
 
   home = {
     username = "quil";

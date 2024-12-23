@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{config, pkgs, inputs, ...}:
 
 let
   dotfiles="~/.dotfiles";
@@ -13,16 +13,11 @@ in
       # replacing cd with zoxide
       cd = "z";
       # update aliases
-      updh = "home-manager switch --flake ${dotfiles}#quil";
-      updf = "nix flake update";
-      upds = "sudo nixos-rebuild switch --flake ${dotfiles}#nixos-quil";
+      updh = "home-manager switch --flake ${dotfiles}";
+      updf = "cd ${dotfiles} && nix flake update";
+      upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
       updb = "source ~/.zshrc";
       upda = "updf && upds && updh && updb";
-      # editing file aliases
-      edith = "nvim ${dotfiles}/home.nix";
-      edits = "nvim ${dotfiles}/configuration.nix";
-      editf = "nvim ${dotfiles}/flake.nix";
-      editb = "nvim ${dotfiles}/personal/bash.nix && source ~/.zshrc";
     };
     initExtra = ''
       runa() {

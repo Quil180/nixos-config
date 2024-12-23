@@ -9,7 +9,10 @@
     iosevka
   ];
 
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
 
   services = {
     xserver.enable = true;
@@ -21,4 +24,5 @@
       autoNumlock = true;
     };
   };
+  security.polkit.enable = true;
 }

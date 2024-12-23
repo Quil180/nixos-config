@@ -1,5 +1,8 @@
 { config, lib, pkgs, inputs, ... }:
 {
+  boot.kernelParams = [
+    "amdgpu"
+  ];
   environment.systemPackages = with pkgs; [
     asusctl
   ];
