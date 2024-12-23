@@ -21,13 +21,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # auto color ricing
-    # stylix = {
-    #   url = "github:danth/stylix";
-    #   inputs.base16.follows = "base16";
-    # };
-    # base16.url = "github:Noodlez1232/base16.nix/slugify-fix"; # dependency for stylix
-
     # neovim declaration package
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -51,9 +44,14 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # nix-colors for home-manager ricing
+    nix-colors = {
+      url = "github:misterio77/nix-colors";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... } @ inputs: # to enable stylix, put it into outputs
+  outputs = { self, nixpkgs, home-manager, ... } @ inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
@@ -67,7 +65,6 @@
           modules = [
             inputs.disko.nixosModules.default
             inputs.impermanence.nixosModules.impermanence
-            # inputs.stylix.nixosModules.stylix
 
             system/snowflake/disko.nix
             system/snowflake/configuration.nix

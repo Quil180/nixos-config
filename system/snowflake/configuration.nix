@@ -6,7 +6,6 @@
 
     ./hardware-configuration.nix
     ./disko.nix
-    # ./personal/stylix/stylix.nix
 
     # optional stuff
     # GUI I want (if any):
@@ -50,6 +49,15 @@
     ranger
     wget
     zsh
+  ];
+  
+  fonts.packages = with pkgs; [
+    font-awesome
+    font-awesome_5
+    font-awesome_4
+    powerline-fonts
+    nerd-fonts.iosevka
+    nerd-fonts.symbols-only
   ];
 
   # default user settings regardless of host/user

@@ -121,7 +121,6 @@
 	betterRoleContext.enable = true;
 	betterUploadButton.enable = true;
 	blurNSFW.enable = true;
-	callTimer.enable = true;
 	clearURLs.enable = true;
 	colorSighted.enable = true;
 	consoleJanitor = {

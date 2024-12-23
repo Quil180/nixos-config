@@ -27,13 +27,13 @@
 			# binds to launch apps
 			"$mod, E, exec, $term -e $file"
 			"$mod, W, exec, $browser"
-			"$mod, D, exec, vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
+			"$mod, D, exec, discordcanary --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
 			"$mod, G, exec, steam"
 			"$mod SHIFT, G, exec, lutris"
 			"$mod, O, exec, obs QT_QPA_PLATFORM=wayland"
 			"$mod, H, exec, foot -e btop"
 			"$mod, I, exec, gimp"
-			"$mod, M, exec, spotify-launcher"
+			"$mod, M, exec, foot spotify_player"
 			"$mod SHIFT, R, exec, rog-control-center" # for g14 control center
 			"$mod ALT, R, exec, polychromatic-controller" # for razer center
 

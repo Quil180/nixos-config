@@ -7,7 +7,6 @@
     ../universal/git.nix
     ../universal/hyprland.nix
     # ../universal/neovim.nix
-    # ../universal/stylix.nix
     ../universal/discord.nix
     ../universal/music.nix
   ];
@@ -29,6 +28,8 @@
       pavucontrol # sound control GUI
       wl-clipboard # clipboard
       zoxide # better cd
+
+      obs-studio
     ]);
   };
   programs.home-manager.enable = true;

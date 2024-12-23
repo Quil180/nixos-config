@@ -1,7 +1,7 @@
 {config, stylix, ...}:
 
 {
-  programs.waybar.style = with stylix.colors.withHashtag;
+  programs.waybar.style = with config.colorScheme.palette;
     ''
     @define-color red       #cc241d;
     @define-color green     #98971a;
@@ -27,13 +27,13 @@
 
     tooltip {
         font-family: Iosevka Nerd Font Propo, monospace;
-        background-color: ${base00};
+        background-color: #${base01};
         border-radius: 5px;
-        border: 1px solid ${base02};
+        border: 1px solid #${base02};
     }
 
     tooltip label {
-        color: ${base01};
+        color: #${base04};
         text-shadow: none;
     }
 
@@ -42,7 +42,7 @@
         font-family: Iosevka Nerd Font Propo, monospace;
         background-color: transparent;
         border-bottom: 0px;
-        color: ${base05};
+        color: #${base05};
         transition-property: background-color;
         transition-duration: .5s;
     }
@@ -71,13 +71,13 @@
     }
 
     #workspaces {
-        background-color: ${base00};
+        background-color: #${base01};
     }
 
     #workspaces button {
         padding: 0 5px;
         background-color: transparent;
-        color: ${base01};
+        color: #${base04};
         border-radius: 0;
     }
 
@@ -94,15 +94,15 @@
     }
 
     #workspaces button:hover {
-        color: ${base03};
+        color: #${base03};
     }
 
     #workspaces button.focused {
-        background-color: ${base0D};
+        background-color: #${base0D};
     }
 
     #workspaces button.urgent {
-        background-color: ${base08};
+        background-color: #${base08};
     }
 
     #idle_inhibitor,
@@ -119,13 +119,13 @@
     #mpris,
     #load {
         padding: 0 10px;
-        background-color: ${base00};
-        color: ${base01};
+        background-color: #${base01};
+        color: #${base04};
     }
 
     #mode {
         background-color: @aqua;
-        color: ${base01};
+        color: #${base01};
         /* box-shadow: inset 0 -3px #ffffff; */
     }
 
@@ -145,20 +145,20 @@
 
     #battery.charging, #battery.plugged {
         background-color: @green;
-        color: ${base01};
+        color: #${base01};
     }
 
     @keyframes blink {
         to {
-            background-color: ${base00};
-            color: ${base01};
+            background-color: #${base01};
+            color: #${base04};
         }
     }
 
     /* Using steps() instead of linear as a timing function to limit cpu usage */
     #battery.critical:not(.charging) {
         background-color: @red;
-        color: ${base01};
+        color: #${base01};
         animation-name: blink;
         animation-duration: 0.5s;
         animation-timing-function: steps(12);
@@ -168,7 +168,7 @@
 
     #wireplumber.muted {
         background-color: @red;
-        color: ${base00};
+        color: #${base05};
     }
 
     #tray > .passive {
@@ -180,8 +180,8 @@
     }
 
     #mpris.playing {
-        background-color: ${base01};
-        color: ${base00};
+        background-color: #${base01};
+        color: #${base00};
     }
 
     #tray menu {
@@ -194,15 +194,15 @@
     }
 
     #cpu {
-        background-color: ${base00};
+        background-color: #${base01};
     }
 
     #memory {
-        background-color: ${base00};
+        background-color: #${base01};
     }
 
     #temperature {
-        background-color: ${base00};
+        background-color: #${base01};
     }
     '';
 }
