@@ -28,6 +28,7 @@ in {
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
     rofi-wayland # app selector
+    wayland-logout # for easy logout
     wlogout # to easily logout
     xdg-desktop-portal-hyprland # xwayland support
     xdg-utils # xwayland support
@@ -52,18 +53,20 @@ in {
   # enabling xdg
   xdg.portal = {
     enable = true;
+    xdgOpenUsePortal = true;
     config = {
       common = {
         default = [ "hyprland" ];
       };
       hyprland = {
-        default = [ "hyprland" ];
+        default = [ "gtk" "hyprland" ];
       };
       misc = {
         disable_hyprland_qtutils_check = "true";
       };
     };
     extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-hyprland
     ];
   };

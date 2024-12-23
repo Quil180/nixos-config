@@ -24,6 +24,7 @@
     packages = (with pkgs; [
       brightnessctl # brightness control
       foot # terminal emulator
+      mpv # terminal video player
       networkmanagerapplet # network manager tray
       pavucontrol # sound control GUI
       wl-clipboard # clipboard

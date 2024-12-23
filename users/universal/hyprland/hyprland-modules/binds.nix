@@ -21,7 +21,8 @@
 			"$mod, R, exec, rofi -show drun"
 			"$mod SHIFT, P, pseudo,"
 			"$mod, J, togglesplit,"
-			"$mod, L, exec, wlogout"
+			# "$mod, L, "
+			"$mod SHIFT, L, exec, wayland-logout"
 			"$mod SHIFT, F, fullscreen,0"
 
 			# binds to launch apps

@@ -3,6 +3,7 @@ let
   dotfiles = "~/.dotfiles";
 in {
   wayland.windowManager.hyprland.settings.exec-once = [
+    "swww-daemon"
     "swwww-daemon img ~/${dotfiles}/wallpapers/wallpaper.png"
     "nm-applet --indicator"
     "asusctl -c 80"
