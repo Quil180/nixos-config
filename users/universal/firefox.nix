@@ -3,6 +3,7 @@
 {
   programs.firefox = {
     enable = true;
+    package =  (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {});
 
     profiles.quil = {
       settings = {

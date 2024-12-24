@@ -26,4 +26,7 @@
     };
   };
   security.polkit.enable = true;
+  environment.sessionVariables = {
+    XDG_CURRENT_DESKTOP = "Hyprland";
+  };
 }

@@ -49,6 +49,10 @@
     nix-colors = {
       url = "github:misterio77/nix-colors";
     };
+
+    rose-pine-hyprcursor = {
+      url = "github:ndom91/rose-pine-hyprcursor";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... } @ inputs:

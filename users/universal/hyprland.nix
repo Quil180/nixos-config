@@ -22,6 +22,8 @@ in {
   
   home.packages = (with pkgs; [
     # bare essentials
+    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # hyprcursor
+    rose-pine-cursor
     grimblast # for screenshotting
     hyprland-protocols # hyprland protocols
     swww # backgrounds/wallpapers
@@ -32,6 +34,9 @@ in {
     wlogout # to easily logout
     xdg-desktop-portal-hyprland # xwayland support
     xdg-utils # xwayland support
+
+    nwg-look
+    bibata-cursors
   ]);
 
   colorScheme = nix-colors-lib.colorSchemeFromPicture {
@@ -47,7 +52,14 @@ in {
     };
     systemd.enable = false;
     systemd.variables = [ "--all" ];
-
+    settings = {
+      env = [
+	"HYPRCURSOR_THEME,rose-pine-hyprcursor"
+	"HYPRCURSOR_SIZE,24"
+	"XCURSOR_THEME,rose-pine-hyprcursor"
+	"XCURSOR_SIZE,24"
+      ];
+    };
   };
 
   # enabling xdg
@@ -59,16 +71,23 @@ in {
         default = [ "hyprland" ];
       };
       hyprland = {
-        default = [ "gtk" "hyprland" ];
+        default = [ "hyprland" ];
       };
       misc = {
         disable_hyprland_qtutils_check = "true";
       };
     };
     extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-hyprland
     ];
+  };
+  
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    name = "BreezeX-RosePine-Linux";
+    package = pkgs.rose-pine-cursor;
+    size = 24;
   };
 
   # making it so ozone apps use wayland
@@ -77,5 +96,6 @@ in {
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_DESKTOP = "Hyprland";
+    MOZ_ENABLE_WAYLAND = "1";
   };
 }
