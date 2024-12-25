@@ -15,9 +15,6 @@ in {
       "private_keys/${USER}" = {
         path = "/home/${USER}/.ssh/id_ed25519";
       };
-      "public_keys/${USER}" = {
-        path = "/home/${USER}/.ssh/id_ed22519.pub";
-      };
     };
   };
 }
