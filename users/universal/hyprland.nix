@@ -12,6 +12,7 @@ in {
     hyprland/dependent-apps/waybar.nix
     hyprland/dependent-apps/dunst.nix
     hyprland/dependent-apps/foot.nix
+    hyprland/dependent-apps/rofi.nix
 
     # Hyprland modules below
     hyprland/hyprland-modules/binds.nix
@@ -54,10 +55,10 @@ in {
     systemd.variables = [ "--all" ];
     settings = {
       env = [
-	"HYPRCURSOR_THEME,rose-pine-hyprcursor"
-	"HYPRCURSOR_SIZE,24"
-	"XCURSOR_THEME,rose-pine-hyprcursor"
-	"XCURSOR_SIZE,24"
+        "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+        "HYPRCURSOR_SIZE,24"
+        "XCURSOR_THEME,rose-pine-hyprcursor"
+        "XCURSOR_SIZE,24"
       ];
     };
   };

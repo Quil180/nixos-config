@@ -102,10 +102,10 @@
 			"$mod SHIFT, down, swapwindow, d"
 
 			# resizing windows             x    y
-			"$mod CTRL, left, resizewindowpixel, -60    0"
-			"$mod CTRL, right, resizewindowpixel,  60    0"
-			"$mod CTRL, down, resizewindowpixel,   0  -60"
-			"$mod CTRL, up, resizewindowpixel,   0   60"
+			"$mod CTRL, left, resizeactive, -60    0"
+			"$mod CTRL, right, resizeactive,  60    0"
+			"$mod CTRL, down, resizeactive,   0  -60"
+			"$mod CTRL, up, resizeactive,   0   60"
 		];
 	};
 }

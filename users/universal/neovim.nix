@@ -1,4 +1,4 @@
-{pkgs, inputs, ...}:
+{pkg, inputs, ...}:
 {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
@@ -12,11 +12,30 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-
+    globals = {
+      mapleader = " ";
+    };
+    keymaps = [
+      {
+        key = ";";
+        action = ":";
+      }
+      {
+        key = "<leader>e";
+        action = ":wqa<CR>";
+      }
+      {
+        key = "<leader>q";
+        action = ":q<CR>";
+      }
+      {
+        key = "<leader>h";
+        action = ":nohl<CR>";
+      }
+    ];
     clipboard = {
       # Use system clipboard
       register = "unnamedplus";
-
       providers.wl-copy.enable = true;
     };
 
