@@ -75,12 +75,11 @@
         "networkmanager"
         "wheel"
       ];
+      openssh.authorizedKeys.keys = [
+        (builtins.readFile ../keys/id_snowflake.pub)
+      ];
     };
   };
-
-  openssh.authorizedKeys.keys = [
-    (builtins.readFile ../keys/id_snowflake.pub)
-  ];
 
   system.stateVersion = "24.05"; # KEEP THIS THE SAME
 
