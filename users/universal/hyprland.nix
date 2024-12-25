@@ -68,16 +68,17 @@ in {
     xdgOpenUsePortal = true;
     config = {
       common = {
-        default = [ "hyprland" ];
+        default = [ "gtk" ];
       };
       hyprland = {
-        default = [ "hyprland" ];
+        default = [ "gtk" "hyprland" ];
       };
       misc = {
         disable_hyprland_qtutils_check = "true";
       };
     };
     extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-hyprland
     ];
   };
@@ -92,7 +93,6 @@ in {
 
   # making it so ozone apps use wayland
   home.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_DESKTOP = "Hyprland";

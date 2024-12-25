@@ -2,7 +2,7 @@
 {
   imports = [
     # importing sops for secrets management systemwide
-    # inputs.sops-nix.nixosModules.sops
+    inputs.sops-nix.nixosModules.sops
 
     ./hardware-configuration.nix
     ./disko.nix
@@ -16,6 +16,7 @@
     ../universal/games.nix
     # Extra options...
     ../universal/g14.nix
+    ../universal/sops.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -46,6 +47,7 @@
     git
     gh
     neovim
+    sops
     ranger
     wget
     zsh
@@ -61,12 +63,13 @@
   ];
 
   # default user settings regardless of host/user
+  sops.secrets.quil-password.neededForUsers = true;
   users = {
     defaultUserShell = pkgs.zsh;
-    mutableUsers = true; # so that sops can set passwords
+    mutableUsers = false;
     users.quil = {
       isNormalUser = true;
-      initialPassword = "1234";
+      hashedPasswordFile = config.sops.secrets.quil-password.path;
       # hashedPasswordFile = config.sops.secrets.quil-password.path;
       extraGroups = [
         "networkmanager"
@@ -74,6 +77,10 @@
       ];
     };
   };
+
+  openssh.authorizedKeys.keys = [
+    (builtins.readFile ../keys/id_snowflake.pub)
+  ];
 
   system.stateVersion = "24.05"; # KEEP THIS THE SAME
 
@@ -113,26 +120,7 @@
         mode = "u=rwx,g=rx,o=";
       }
     ];
-    # files = [
-    #   "/etc/machine-id"
-    # ];
   };
-
-  # sops for user proper
-  # sops = {
-  #   secrets.quil-password.neededForUsers = true;
-  #   defaultSopsFile = ../../secrets/secrets.yaml;
-  #   validateSopsFiles = false;
-  #   defaultSopsFormat = "yaml";
-  # 
-  #   age = {
-  #     # automatically import host SSH keys as age key.
-  #     sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-  #     keyFile = "/var/lib/sops-nix/keys.txt";
-  #     generateKey = true;
-  #   };
-  # };
-
 
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     mkdir /btrfs_tmp

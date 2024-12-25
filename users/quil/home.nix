@@ -2,13 +2,16 @@
 
 {
   imports = [
+    inputs.sops-nix.homeManagerModules.sops
+
     ../universal/bash.nix
     ../universal/firefox.nix
     ../universal/git.nix
     ../universal/hyprland.nix
-    # ../universal/neovim.nix
+    ../universal/neovim.nix
     ../universal/discord.nix
     ../universal/music.nix
+    ../universal/sops.nix
   ];
 
   nixpkgs.config = {
@@ -31,7 +34,14 @@
       zoxide # better cd
 
       obs-studio
+
+      age
     ]);
   };
+
+  sops = {
+    age.keyFile = "/home/quil/.config/sops/age/keys.txt";
+  };
+
   programs.home-manager.enable = true;
 }

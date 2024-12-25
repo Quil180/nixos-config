@@ -7,6 +7,7 @@ in {
     "swwww-daemon img ~/${dotfiles}/wallpapers/wallpaper.png"
     "nm-applet --indicator"
     "asusctl -c 80"
+    "asusctl led-mode static -c ffffff"
     "waybar"
     "wl-paste --watch cliphist store"
     "dunst"

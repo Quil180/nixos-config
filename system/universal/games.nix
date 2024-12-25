@@ -2,10 +2,12 @@
 {
   environment.systemPackages = with pkgs; [
     lutris
-    steam
   ];
 
   programs = {
-    steam.enable = true;
+    steam = {
+      enable = true;
+      gamescopeSession.enable = true;
+    };
   };
 }

@@ -11,7 +11,9 @@
 
   programs.hyprland = {
     enable = true;
-    xwayland.enable = true;
+    xwayland = {
+      enable = true;
+    };
     withUWSM = true;
   };
 
@@ -28,5 +30,6 @@
   security.polkit.enable = true;
   environment.sessionVariables = {
     XDG_CURRENT_DESKTOP = "Hyprland";
+    NIXOS_OZONE_WL = "1";
   };
 }
