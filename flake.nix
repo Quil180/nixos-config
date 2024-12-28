@@ -47,6 +47,11 @@
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... } @ inputs:
@@ -63,6 +68,7 @@
           modules = [
             inputs.disko.nixosModules.default
             inputs.impermanence.nixosModules.impermanence
+            inputs.agenix.nixosModules.default
 
             system/snowflake/disko.nix
             system/snowflake/configuration.nix

@@ -4,6 +4,7 @@
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
     ./disko.nix
+    ./secrets.nix
 
     # optional stuff
     # GUI I want (if any):
