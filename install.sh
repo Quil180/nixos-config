@@ -11,7 +11,7 @@ if [ ${phase} == 1 ]; then
 	read -p "What user is being installed? " userChoice
 
 	sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko system/${systemChoice}/disko.nix
-	sudo nixos-install --root /mnt --flake /home/nixos/nixos-config#${systemChoice}
+	sudo nixos-install --no-root-passwd --root /mnt --flake /home/nixos/nixos-config#${systemChoice}
 	cp -r ../nixos-config /mnt/home/${userChoice}/.dotfiles
 	echo "Phase 1 complete, please reboot and start Phase 2..."
 
