@@ -2,8 +2,6 @@
 {
   imports = [
     # importing sops for secrets management systemwide
-    inputs.sops-nix.nixosModules.sops
-
     ./hardware-configuration.nix
     ./disko.nix
 
@@ -16,7 +14,6 @@
     ../universal/games.nix
     # Extra options...
     ../universal/g14.nix
-    ../universal/sops.nix
     ../universal/persist.nix
   ];
 
@@ -64,14 +61,11 @@
   ];
 
   # default user settings regardless of host/user
-  sops.secrets.quil-password.neededForUsers = true;
   users = {
     defaultUserShell = pkgs.zsh;
-    mutableUsers = false;
     users.quil = {
       isNormalUser = true;
-      # initialPassword = "1234";
-      hashedPasswordFile = config.sops.secrets.quil-password.path;
+      initialPassword = "1234";
       extraGroups = [
         "networkmanager"
         "wheel"

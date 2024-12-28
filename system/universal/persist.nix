@@ -13,9 +13,6 @@
       "/var/lib/bluetooth"
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
-      "/var/lib/sops-nix"
-      "/run/secrets-for-users"
-      "/run/secrets"
       {
         directory = "/var/lib/colord";
         user = "colord";

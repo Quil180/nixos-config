@@ -39,12 +39,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # sops-nix for secretes management
-    sops-nix = {
-      url = "github:mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # nix-colors for home-manager ricing
     nix-colors = {
       url = "github:misterio77/nix-colors";

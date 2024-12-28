@@ -2,8 +2,6 @@
 
 {
   imports = [
-    inputs.sops-nix.homeManagerModules.sops
-
     ../universal/bash.nix
     ../universal/firefox.nix
     ../universal/git.nix
@@ -11,7 +9,6 @@
     ../universal/neovim.nix
     ../universal/discord.nix
     ../universal/music.nix
-    ../universal/sops.nix
   ];
 
   nixpkgs.config = {
@@ -37,10 +34,6 @@
 
       age
     ]);
-  };
-
-  sops = {
-    age.keyFile = "/home/quil/.config/sops/age/keys.txt";
   };
 
   programs.home-manager.enable = true;
