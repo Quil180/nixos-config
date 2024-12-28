@@ -2,12 +2,12 @@ keys:
   - &users:
     - &quil age1negtdklqh4uav50q2aw59tcc0kv07zuqckuvksag89tsyfuz75ms7gdqg6
   - &hosts:
-    - &snowflake age1d6grplv5g5peuxx2jhu9pwpemmc6u47nrkkq880gktwk8kkzqqdq7qagdu
+    # - &snowflake age1sr7suxt5612wswrx2f37vexg7mqzs8fv95tqsxz9w2x70q75yvds36zn4r
   - &admin age1pfjguamx2gdq9f9ksch2xr6cgjxgmcc8vw5jjyhdsrhy7787jdkqxgvqel
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
     - age:
       - *quil
-      - *snowflake
+      # - *snowflake
       - *admin

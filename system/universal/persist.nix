@@ -8,6 +8,7 @@
       "/etc/nixos"
       "/etc/NetworkManager/system-connections"
       "/etc/sudoers.d"
+      "/etc/shadow"
       "/var/log"
       "/var/lib/bluetooth"
       "/var/lib/nixos"

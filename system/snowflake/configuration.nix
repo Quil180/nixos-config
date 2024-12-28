@@ -70,7 +70,8 @@
     mutableUsers = false;
     users.quil = {
       isNormalUser = true;
-      hashedPasswordFile = config.sops.secrets.quil-password.path;
+      initialPassword = "1234";
+      # hashedPasswordFile = config.sops.secrets.quil-password.path;
       extraGroups = [
         "networkmanager"
         "wheel"
