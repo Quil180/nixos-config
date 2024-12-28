@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ lib, inputs, ... }:
 {
    # system files we want to keep
   fileSystems."/persist".neededForBoot = true;
