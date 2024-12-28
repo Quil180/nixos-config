@@ -7,7 +7,7 @@ in {
   ];
 
   sops = {
-    age.keyFile = "/home/${USER}/.config/sops/age/keys.txt";
+    # age.keyFile = "/home/${USER}/.config/sops/age/keys.txt";
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = false;
 
