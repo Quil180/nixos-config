@@ -76,6 +76,12 @@
       };
     in {
       packages.${system}.my-neovim = customNeovim.neovim;
+      
+      packages."${system}".default = (
+        nvf.lib.neovimConfiguration {
+          pkgs = nixpkgs.legacyPackages."${system}";
+          modules = [ packages/neovim/nvf-main.nix ];
+        }).neovim;
 
       nixosConfigurations = {
         snowflake = lib.nixosSystem {
