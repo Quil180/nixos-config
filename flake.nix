@@ -52,15 +52,25 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nvf = {
+      url = "github:notashelf/nvf";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... } @ inputs:
+  outputs = { self, nixpkgs, home-manager, nvf, ... } @ inputs:
     let
       lib = nixpkgs.lib;
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+      packages."${system}".default = (
+        nvf.lib.neovimConfiguration {
+          pkgs = nixpkgs.legacyPackages."${system}";
+          modules = [ packages/neovim/nvf-main.nix ];
+        }
+      ).neovim;
       nixosConfigurations = {
         snowflake = lib.nixosSystem {
           inherit system;
@@ -68,7 +78,7 @@
           modules = [
             inputs.disko.nixosModules.default
             inputs.impermanence.nixosModules.impermanence
-            inputs.agenix.nixosModules.default
+            # inputs.agenix.nixosModules.default
 
             system/snowflake/disko.nix
             system/snowflake/configuration.nix

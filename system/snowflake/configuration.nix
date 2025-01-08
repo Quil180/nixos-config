@@ -4,7 +4,7 @@
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
     ./disko.nix
-    ./secrets.nix
+    # ./secrets.nix
 
     # optional stuff
     # GUI I want (if any):
@@ -16,6 +16,7 @@
     # Extra options...
     ../universal/g14.nix
     ../universal/persist.nix
+    ../universal/virtualisation.nix
   ];
 
   # Use the systemd-boot EFI boot loader.

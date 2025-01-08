@@ -18,6 +18,8 @@ in
       upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
       updb = "source ~/.zshrc";
       upda = "updf && upds && updh && updb";
+      # clean nix store
+      clean = "nix-store --gc";
     };
     initExtra = ''
       runa() {

@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ...}:
+{ config, pkgs, inputs }:
 
 {
   imports = [
@@ -22,6 +22,8 @@
     stateVersion = "24.05";
     sessionVariables.EDITOR = "nvim";
     packages = (with pkgs; [
+      age # secrets management
+      bitwarden # password manager
       brightnessctl # brightness control
       foot # terminal emulator
       mpv # terminal video player
@@ -29,10 +31,6 @@
       pavucontrol # sound control GUI
       wl-clipboard # clipboard
       zoxide # better cd
-
-      obs-studio
-
-      age
     ]);
   };
 

@@ -19,6 +19,9 @@ fi
 if [ ${phase} == 2 ]; then
 	# phase 2
 	read -p "What user am I? " user
+	read -p "What wifi do I want to connect to? " wifiName
+	read -p "Password? " Password
+	nmcli device wifi connect ${wifiName} password ${Password}
 	sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 	sudo nix-channel --update
 	sudo nix-shell '<home-manager>' -A install
