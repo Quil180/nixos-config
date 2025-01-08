@@ -63,14 +63,20 @@
       lib = nixpkgs.lib;
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      packages."${system}".default = (
-        nvf.lib.neovimConfiguration {
-          pkgs = nixpkgs.legacyPackages."${system}";
-          modules = [ packages/neovim/nvf-main.nix ];
-        }
-      ).neovim;
+
+      neovimConfig = {
+      	imports = [
+		packages/neovim/nvf-main.nix
+	];
+      };
+
+      customNeovim = nvf.lib.neovimConfiguration {
+      	inherit pkgs;
+	modules = [ neovimConfig ];
+      };
+    in {
+      packages.${system}.my-neovim = customNeovim.neovim;
+
       nixosConfigurations = {
         snowflake = lib.nixosSystem {
           inherit system;
@@ -91,6 +97,8 @@
           extraSpecialArgs = { inherit inputs; };
           modules = [
             users/quil/home.nix
+
+	    {home.packages = [customNeovim.neovim];}
           ];
         };
       };

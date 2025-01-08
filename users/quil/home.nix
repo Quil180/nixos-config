@@ -1,4 +1,4 @@
-{ config, pkgs, inputs }:
+{ config, pkgs, inputs, nvf, ... }:
 
 {
   imports = [
@@ -6,7 +6,6 @@
     ../universal/firefox.nix
     ../universal/git.nix
     ../universal/hyprland.nix
-    ../universal/neovim.nix
     ../universal/discord.nix
     ../universal/music.nix
   ];

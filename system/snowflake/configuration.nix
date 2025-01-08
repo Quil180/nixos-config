@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, outputs, ... }:
+{ self, config, lib, pkgs, inputs, outputs, ... }:
 {
   imports = [
     # importing sops for secrets management systemwide
@@ -40,16 +40,17 @@
   time.timeZone = "America/New_York";
 
   # default packages regardless of user/host
-  environment.systemPackages = with pkgs; [
-    btop
-    fastfetch
-    git
-    gh
-    neovim
-    sops
-    ranger
-    wget
-    zsh
+  environment.systemPackages = [
+    pkgs.btop
+    pkgs.fastfetch
+    pkgs.git
+    pkgs.gh
+    pkgs.sops
+    pkgs.ranger
+    pkgs.wget
+    pkgs.zsh
+
+    self.packages."x86_64-linux".neovim
   ];
   
   fonts.packages = with pkgs; [
