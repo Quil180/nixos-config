@@ -58,55 +58,62 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nvf, ... } @ inputs:
-    let
-      lib = nixpkgs.lib;
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    nvf,
+    ...
+  } @ inputs: let
+    lib = nixpkgs.lib;
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
 
-      neovimConfig = {
-      	imports = [
-		packages/neovim/nvf-main.nix
-	];
-      };
+    neovimConfig = {
+      imports = [
+        packages/neovim/nvf-main.nix
+      ];
+    };
 
-      customNeovim = nvf.lib.neovimConfiguration {
-      	inherit pkgs;
-	modules = [ neovimConfig ];
-      };
-    in {
-      packages.${system}.my-neovim = customNeovim.neovim;
-      
-      packages."x86_64-linux".default = (
+    customNeovim = nvf.lib.neovimConfiguration {
+      inherit pkgs;
+      modules = [neovimConfig];
+    };
+  in {
+
+    packages."x86_64-linux".default =
+      (
         nvf.lib.neovimConfiguration {
-          pkgs = nixpkgs.legacyPackages."$x86_64-linux";
-          modules = [ packages/neovim/nvf-main.nix ];
-        }).neovim;
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [packages/neovim/nvf-main.nix];
+        }
+      )
+      .neovim;
 
-      nixosConfigurations = {
-        snowflake = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
-            inputs.disko.nixosModules.default
-            inputs.impermanence.nixosModules.impermanence
-            # inputs.agenix.nixosModules.default
+    nixosConfigurations = {
+      snowflake = lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules = [
+          inputs.disko.nixosModules.default
+          inputs.impermanence.nixosModules.impermanence
+          # inputs.agenix.nixosModules.default
 
-            system/snowflake/disko.nix
-            system/snowflake/configuration.nix
-          ];
-        };
-      };
-      homeConfigurations = {
-        quil = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [
-            users/quil/home.nix
-
-	    {home.packages = [customNeovim.neovim];}
-          ];
-        };
+          system/snowflake/disko.nix
+          system/snowflake/configuration.nix
+        ];
       };
     };
+    homeConfigurations = {
+      quil = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          users/quil/home.nix
+
+          {home.packages = [customNeovim.neovim];}
+        ];
+      };
+    };
+  };
 }
