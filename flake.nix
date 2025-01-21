@@ -75,11 +75,11 @@
 	modules = [ neovimConfig ];
       };
     in {
-      packages.${system}.my-neovim = customNeovim.neovim;
+      # packages.${system}.my-neovim = customNeovim.neovim;
       
       packages."x86_64-linux".default = (
         nvf.lib.neovimConfiguration {
-          pkgs = nixpkgs.legacyPackages."$x86_64-linux";
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
           modules = [ packages/neovim/nvf-main.nix ];
         }).neovim;
 
