@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # disk declaration package
+  # disk declaration package
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -69,6 +69,7 @@
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
 
+<<<<<<< HEAD
     neovimConfig = {
       imports = [
         packages/neovim/nvf-main.nix
@@ -89,6 +90,27 @@
         }
       )
       .neovim;
+=======
+      neovimConfig = {
+        imports = [
+          packages/neovim/nvf-main.nix
+        ];
+      };
+
+      customNeovim = nvf.lib.neovimConfiguration {
+        inherit pkgs;
+        modules = [ neovimConfig ];
+      };
+    in
+    {
+      # packages.${system}.my-neovim = customNeovim.neovim;
+
+      packages."x86_64-linux".default = (
+        nvf.lib.neovimConfiguration {
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [ packages/neovim/nvf-main.nix ];
+        }).neovim;
+>>>>>>> 089d74e589bca5252d46dcbffe89335c8485515b
 
     nixosConfigurations = {
       snowflake = lib.nixosSystem {
@@ -99,9 +121,27 @@
           inputs.impermanence.nixosModules.impermanence
           # inputs.agenix.nixosModules.default
 
+<<<<<<< HEAD
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
         ];
+=======
+            system/snowflake/disko.nix
+            system/snowflake/configuration.nix
+          ];
+        };
+      };
+      homeConfigurations = {
+        quil = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = { inherit inputs; };
+          modules = [
+            users/quil/home.nix
+
+            { home.packages = [ customNeovim.neovim ]; }
+          ];
+        };
+>>>>>>> 089d74e589bca5252d46dcbffe89335c8485515b
       };
     };
     homeConfigurations = {
