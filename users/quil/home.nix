@@ -8,6 +8,7 @@
     ../universal/hyprland.nix
     ../universal/discord.nix
     ../universal/music.nix
+    ../universal/revolt.nix
   ];
 
   nixpkgs.config = {
