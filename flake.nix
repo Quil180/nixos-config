@@ -65,18 +65,19 @@
       pkgs = nixpkgs.legacyPackages.${system};
 
       neovimConfig = {
-      	imports = [
-		packages/neovim/nvf-main.nix
-	];
+        imports = [
+          packages/neovim/nvf-main.nix
+        ];
       };
 
       customNeovim = nvf.lib.neovimConfiguration {
-      	inherit pkgs;
-	modules = [ neovimConfig ];
+        inherit pkgs;
+        modules = [ neovimConfig ];
       };
-    in {
+    in
+    {
       # packages.${system}.my-neovim = customNeovim.neovim;
-      
+
       packages."x86_64-linux".default = (
         nvf.lib.neovimConfiguration {
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
@@ -104,7 +105,7 @@
           modules = [
             users/quil/home.nix
 
-	    {home.packages = [customNeovim.neovim];}
+            { home.packages = [ customNeovim.neovim ]; }
           ];
         };
       };

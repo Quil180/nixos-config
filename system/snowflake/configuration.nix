@@ -52,7 +52,7 @@
 
     self.packages."x86_64-linux".neovim
   ];
-  
+
   fonts.packages = with pkgs; [
     font-awesome
     font-awesome_5
@@ -97,9 +97,11 @@
     printing.enable = true;
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowUnfreePredicate = (_: true);
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
   };
   nix = {
     gc = {
