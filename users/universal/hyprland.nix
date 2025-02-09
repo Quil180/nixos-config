@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 let
   nix-colors-lib = inputs.nix-colors.lib.contrib { inherit pkgs; };
-  wallpaper = ../../wallpapers/wallpaper.png;
+  wallpaper = ../../wallpapers/wallpaper.jpg;
 in {
 
   # importing configs for waybar, foot, and wlogout, and rofi

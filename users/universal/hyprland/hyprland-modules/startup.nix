@@ -4,11 +4,10 @@ let
 in {
   wayland.windowManager.hyprland.settings.exec-once = [
     "swww-daemon"
-    "swwww img ${dotfiles}/wallpapers/wallpaper.png"
+    "swwww img ${dotfiles}/wallpapers/wallpaper.jpg"
     "nm-applet --indicator"
     "asusctl -c 80"
     "asusctl led-mode static -c ffffff"
-    "waybar"
     "wl-paste --watch cliphist store"
     "dunst"
     "xwaylandvideobridge" # for xwayland screensharing

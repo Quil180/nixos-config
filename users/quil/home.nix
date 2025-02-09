@@ -3,10 +3,11 @@
 {
   imports = [
     ../universal/bash.nix
+    ../universal/discord.nix
     ../universal/firefox.nix
     ../universal/git.nix
     ../universal/hyprland.nix
-    ../universal/discord.nix
+    ../universal/latex.nix
     ../universal/music.nix
     ../universal/revolt.nix
   ];

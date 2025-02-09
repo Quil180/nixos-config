@@ -56,58 +56,74 @@
     nvf = {
       url = "github:notashelf/nvf";
     };
+
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nvf, ... } @ inputs:
-    let
-      lib = nixpkgs.lib;
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    nvf,
+    nixos-hardware,
+    ...
+  } @ inputs: let
+    lib = nixpkgs.lib;
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
 
-      neovimConfig = {
-        imports = [
-          packages/neovim/nvf-main.nix
-        ];
-      };
+    neovimConfig = {
+      imports = [
+        packages/neovim/nvf-main.nix
+      ];
+    };
 
-      customNeovim = nvf.lib.neovimConfiguration {
-        inherit pkgs;
-        modules = [ neovimConfig ];
-      };
-    in
-    {
-      # packages.${system}.my-neovim = customNeovim.neovim;
-
-      packages."x86_64-linux".default = (
+    customNeovim = nvf.lib.neovimConfiguration {
+      inherit pkgs;
+      modules = [neovimConfig];
+    };
+  in {
+    packages."x86_64-linux".default =
+      (
         nvf.lib.neovimConfiguration {
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
-          modules = [ packages/neovim/nvf-main.nix ];
-        }).neovim;
+          modules = [packages/neovim/nvf-main.nix];
+        }
+      )
+      .neovim;
 
-      nixosConfigurations = {
-        snowflake = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
-            inputs.disko.nixosModules.default
-            inputs.impermanence.nixosModules.impermanence
-            # inputs.agenix.nixosModules.default
-
-            system/snowflake/disko.nix
-            system/snowflake/configuration.nix
-          ];
+    nixosConfigurations = {
+      snowflake = lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
         };
-      };
-      homeConfigurations = {
-        quil = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [
-            users/quil/home.nix
+        modules = [
+          inputs.disko.nixosModules.default
+          inputs.impermanence.nixosModules.impermanence
+          # inputs.agenix.nixosModules.default
 
-            { home.packages = [ customNeovim.neovim ]; }
-          ];
-        };
+          system/snowflake/disko.nix
+          system/snowflake/configuration.nix
+
+	  nixos-hardware.nixosModules.asus-zephyrus-ga402
+
+	   # {environment.systemPackages = [customNeovim.neovim];}
+        ];
       };
     };
+    homeConfigurations = {
+      quil = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          users/quil/home.nix
+
+          # {home.packages = [customNeovim.neovim];}
+        ];
+      };
+    };
+  };
 }
