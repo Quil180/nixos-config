@@ -5,10 +5,13 @@ chmod +x install.sh
 ./install.sh
 ```
 
+After which, choose phase 1 if still on the ISO installer, and phase 2 if on the local ssd/hard drive.
+
 # Afterwards I need to setup an ssh key for github?
 ```
 cd ~/.ssh
 ssh-keygen -t rsa -b 4096 -C "email@email.com"
 cat id_rsa.pub
 ```
+
 Copy the contents pasted out, then put it into your github :)
