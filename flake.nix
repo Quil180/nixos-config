@@ -56,6 +56,10 @@
     nvf = {
       url = "github:notashelf/nvf";
     };
+
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
   };
 
   outputs = {
@@ -63,6 +67,10 @@
     nixpkgs,
     home-manager,
     nvf,
+<<<<<<< HEAD
+=======
+    nixos-hardware,
+>>>>>>> tmp
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -70,11 +78,15 @@
     pkgs = nixpkgs.legacyPackages.${system};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> tmp
     neovimConfig = {
       imports = [
         packages/neovim/nvf-main.nix
       ];
     };
+<<<<<<< HEAD
 
     customNeovim = nvf.lib.neovimConfiguration {
       inherit pkgs;
@@ -111,10 +123,27 @@
           modules = [ packages/neovim/nvf-main.nix ];
         }).neovim;
 >>>>>>> 089d74e589bca5252d46dcbffe89335c8485515b
+=======
+
+    customNeovim = nvf.lib.neovimConfiguration {
+      inherit pkgs;
+      modules = [neovimConfig];
+    };
+  in {
+    packages."x86_64-linux".default =
+      (
+        nvf.lib.neovimConfiguration {
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          modules = [packages/neovim/nvf-main.nix];
+        }
+      )
+      .neovim;
+>>>>>>> tmp
 
     nixosConfigurations = {
       snowflake = lib.nixosSystem {
         inherit system;
+<<<<<<< HEAD
         specialArgs = {inherit inputs;};
         modules = [
           inputs.disko.nixosModules.default
@@ -129,19 +158,30 @@
             system/snowflake/disko.nix
             system/snowflake/configuration.nix
           ];
+=======
+        specialArgs = {
+          inherit inputs;
+>>>>>>> tmp
         };
-      };
-      homeConfigurations = {
-        quil = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = { inherit inputs; };
-          modules = [
-            users/quil/home.nix
+        modules = [
+          inputs.disko.nixosModules.default
+          inputs.impermanence.nixosModules.impermanence
+          # inputs.agenix.nixosModules.default
 
+<<<<<<< HEAD
             { home.packages = [ customNeovim.neovim ]; }
           ];
         };
 >>>>>>> 089d74e589bca5252d46dcbffe89335c8485515b
+=======
+          system/snowflake/disko.nix
+          system/snowflake/configuration.nix
+
+	  nixos-hardware.nixosModules.asus-zephyrus-ga402
+
+	   {environment.systemPackages = [customNeovim.neovim];}
+        ];
+>>>>>>> tmp
       };
     };
     homeConfigurations = {

@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 let
   nix-colors-lib = inputs.nix-colors.lib.contrib { inherit pkgs; };
-  wallpaper = ../../wallpapers/wallpaper.png;
+  wallpaper = ../../wallpapers/wallpaper.jpg;
 in {
 
   # importing configs for waybar, foot, and wlogout, and rofi
@@ -26,7 +26,6 @@ in {
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # hyprcursor
     rose-pine-cursor
     grimblast # for screenshotting
-    hyprland-protocols # hyprland protocols
     swww # backgrounds/wallpapers
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend

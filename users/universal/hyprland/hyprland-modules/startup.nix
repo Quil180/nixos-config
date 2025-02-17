@@ -4,7 +4,7 @@ let
 in {
   wayland.windowManager.hyprland.settings.exec-once = [
     "swww-daemon"
-    "swwww img ${dotfiles}/wallpapers/wallpaper.png"
+    "swwww img ${dotfiles}/wallpapers/wallpaper.jpg"
     "nm-applet --indicator"
     "asusctl -c 80"
     "asusctl led-mode static -c ffffff"
@@ -14,5 +14,6 @@ in {
     "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "/usr/lib/polkit-kde-authentication-agent-1"
     "hyprctl setcursor rose-pine-hyprcursor 24"
+    "rog-control-center"
   ];
 }

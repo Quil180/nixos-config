@@ -1,5 +1,7 @@
-{ self, config, lib, pkgs, inputs, outputs, ... }:
 {
+  pkgs,
+  ...
+}: {
   imports = [
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
@@ -9,10 +11,13 @@
     # optional stuff
     # GUI I want (if any):
     ../universal/hyprland.nix
+
     # Sound?
     ../universal/sound.nix
+
     # Game Applications setup/installed?
     ../universal/games.nix
+
     # Extra options...
     ../universal/g14.nix
     ../universal/persist.nix
@@ -45,12 +50,12 @@
     pkgs.fastfetch
     pkgs.git
     pkgs.gh
+    pkgs.neovim
     pkgs.sops
     pkgs.ranger
     pkgs.wget
     pkgs.zsh
 
-    self.packages."x86_64-linux".neovim
   ];
 
   fonts.packages = with pkgs; [
@@ -93,15 +98,22 @@
   services = {
     # ssh support
     openssh.enable = true;
+
     # printing support via CUPS
     printing.enable = true;
   };
 
+<<<<<<< HEAD
   nixpkgs = {
     config = {
       allowUnfree = true;
       allowUnfreePredicate = (_: true);
     };
+=======
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = _: true;
+>>>>>>> tmp
   };
   nix = {
     gc = {
@@ -118,4 +130,3 @@
     };
   };
 }
-
