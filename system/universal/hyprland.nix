@@ -2,7 +2,6 @@
 {
   environment.systemPackages = with pkgs; [
     sddm
-    hyprland
   ];
 
   fonts.packages = with pkgs; [

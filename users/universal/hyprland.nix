@@ -26,7 +26,6 @@ in {
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # hyprcursor
     rose-pine-cursor
     grimblast # for screenshotting
-    hyprland-protocols # hyprland protocols
     swww # backgrounds/wallpapers
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
