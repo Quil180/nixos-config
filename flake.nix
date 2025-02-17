@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-  # disk declaration package
+    # disk declaration package
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -67,63 +67,18 @@
     nixpkgs,
     home-manager,
     nvf,
-<<<<<<< HEAD
-=======
     nixos-hardware,
->>>>>>> tmp
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> tmp
     neovimConfig = {
       imports = [
         packages/neovim/nvf-main.nix
       ];
     };
-<<<<<<< HEAD
-
-    customNeovim = nvf.lib.neovimConfiguration {
-      inherit pkgs;
-      modules = [neovimConfig];
-    };
-  in {
-
-    packages."x86_64-linux".default =
-      (
-        nvf.lib.neovimConfiguration {
-          pkgs = nixpkgs.legacyPackages."x86_64-linux";
-          modules = [packages/neovim/nvf-main.nix];
-        }
-      )
-      .neovim;
-=======
-      neovimConfig = {
-        imports = [
-          packages/neovim/nvf-main.nix
-        ];
-      };
-
-      customNeovim = nvf.lib.neovimConfiguration {
-        inherit pkgs;
-        modules = [ neovimConfig ];
-      };
-    in
-    {
-      # packages.${system}.my-neovim = customNeovim.neovim;
-
-      packages."x86_64-linux".default = (
-        nvf.lib.neovimConfiguration {
-          pkgs = nixpkgs.legacyPackages."x86_64-linux";
-          modules = [ packages/neovim/nvf-main.nix ];
-        }).neovim;
->>>>>>> 089d74e589bca5252d46dcbffe89335c8485515b
-=======
 
     customNeovim = nvf.lib.neovimConfiguration {
       inherit pkgs;
@@ -138,42 +93,18 @@
         }
       )
       .neovim;
->>>>>>> tmp
 
     nixosConfigurations = {
       snowflake = lib.nixosSystem {
         inherit system;
-<<<<<<< HEAD
-        specialArgs = {inherit inputs;};
-        modules = [
-          inputs.disko.nixosModules.default
-          inputs.impermanence.nixosModules.impermanence
-          # inputs.agenix.nixosModules.default
-
-<<<<<<< HEAD
-          system/snowflake/disko.nix
-          system/snowflake/configuration.nix
-        ];
-=======
-            system/snowflake/disko.nix
-            system/snowflake/configuration.nix
-          ];
-=======
         specialArgs = {
           inherit inputs;
->>>>>>> tmp
         };
         modules = [
           inputs.disko.nixosModules.default
           inputs.impermanence.nixosModules.impermanence
           # inputs.agenix.nixosModules.default
 
-<<<<<<< HEAD
-            { home.packages = [ customNeovim.neovim ]; }
-          ];
-        };
->>>>>>> 089d74e589bca5252d46dcbffe89335c8485515b
-=======
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
 
@@ -181,7 +112,6 @@
 
 	   {environment.systemPackages = [customNeovim.neovim];}
         ];
->>>>>>> tmp
       };
     };
     homeConfigurations = {

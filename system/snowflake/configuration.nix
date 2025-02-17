@@ -103,17 +103,9 @@
     printing.enable = true;
   };
 
-<<<<<<< HEAD
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-      allowUnfreePredicate = (_: true);
-    };
-=======
   nixpkgs.config = {
     allowUnfree = true;
     allowUnfreePredicate = _: true;
->>>>>>> tmp
   };
   nix = {
     gc = {
