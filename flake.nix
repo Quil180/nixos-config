@@ -110,7 +110,7 @@
 
 	  nixos-hardware.nixosModules.asus-zephyrus-ga402
 
-	   # {environment.systemPackages = [customNeovim.neovim];}
+	   {environment.systemPackages = [customNeovim.neovim];}
         ];
       };
     };
@@ -121,7 +121,7 @@
         modules = [
           users/quil/home.nix
 
-          # {home.packages = [customNeovim.neovim];}
+          {home.packages = [customNeovim.neovim];}
         ];
       };
     };
