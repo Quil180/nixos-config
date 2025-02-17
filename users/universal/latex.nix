@@ -4,7 +4,4 @@
     texlive.combined.scheme-full
   ]);
 
-  programs.texlive = {
-    enable = true;
-  };
 }

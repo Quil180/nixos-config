@@ -7,8 +7,9 @@
     ../universal/firefox.nix
     ../universal/git.nix
     ../universal/hyprland.nix
-    # ../universal/latex.nix
+    ../universal/latex.nix
     ../universal/music.nix
+    ../universal/office.nix
     ../universal/password-manager.nix
     ../universal/revolt.nix
   ];
