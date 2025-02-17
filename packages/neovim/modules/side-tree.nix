@@ -1,5 +1,4 @@
-{ pkgs, lib, ... }:
-{
+{...}: {
   vim.filetree = {
     neo-tree = {
       enable = true;

@@ -1,7 +1,8 @@
 {
   disko.devices = {
     disk = {
-      sdb = { # change this to the drive i want to format
+      sdb = {
+        # change this to the drive i want to format
         type = "disk";
         device = "/dev/sdb"; # change this to the drive i want to format
         content = {
@@ -35,8 +36,8 @@
                 # https://0pointer.net/blog/unlocking-luks2-volumes-with-tpm2-fido2-pkcs11-security-hardware-on-systemd-248.html
                 settings = {crypttabExtraOpts = ["fido2-device=auto" "token-timeout=10"];};
                 content = {
-		  type = "lvm_pv";
-		  vg = "root_vg";
+                  type = "lvm_pv";
+                  vg = "root_vg";
                 };
               };
             };

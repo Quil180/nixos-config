@@ -1,6 +1,4 @@
-{pkgs, ...}:
-
-{
+{...}: {
   # customizing foot with a different font
   programs.foot = {
     enable = true;

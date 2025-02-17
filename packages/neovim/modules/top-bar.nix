@@ -1,5 +1,4 @@
-{ pkgs, lib, ...}:
-{
+{...}: {
   vim.tabline = {
     nvimBufferline = {
       enable = true;

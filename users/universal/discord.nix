@@ -1,10 +1,12 @@
-{pkgs, inputs, ...}:
-
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     inputs.nixcord.homeManagerModules.nixcord
   ];
-  
+
   programs.nixcord = {
     enable = true;
     discord = {
@@ -22,10 +24,10 @@
        * @invite dHaSxn3
        * @BDEditor Clear Vision
       */
-      
+
       @import url('https://clearvision.github.io/ClearVision-v6/main.css');
       @import url('https://discordstyles.github.io/RadialStatus/dist/RadialStatus.css');
-      
+
       :root {
         --main-color: #A36240;
         --hover-color: #773D1E;
@@ -118,50 +120,50 @@
       frameless = true;
       plugins = {
         alwaysTrust.enable = true;
-	betterRoleContext.enable = true;
-	betterUploadButton.enable = true;
-	blurNSFW.enable = true;
-	clearURLs.enable = true;
-	colorSighted.enable = true;
-	consoleJanitor = {
-	  enable = true;
-	  disableLoggers = true;
-	  disableSpotifyLogger = true;
-	};
-	crashHandler.enable = true;
-	disableCallIdle.enable = true;
-	emoteCloner.enable = true;
-	fakeNitro.enable = true;
-	favoriteEmojiFirst.enable = true;
-	favoriteGifSearch.enable = true;
-	fixImagesQuality.enable = true;
-	fixSpotifyEmbeds.enable = true;
-	fixYoutubeEmbeds.enable = true;
-	forceOwnerCrown.enable = true;
-	friendsSince.enable = true;
-	gifPaste.enable = true;
-	iLoveSpam.enable = true;
-	imageZoom.enable = true;
-	implicitRelationships.enable = true;
-	invisibleChat.enable = true;
-	memberCount.enable = true;
-	mentionAvatars.enable = true;
-	messageClickActions.enable = true;
-	messageLogger.enable = true;
-	moreKaomoji.enable = true;
-	mutualGroupDMs.enable = true;
-	noF1.enable = true;
-	noOnboardingDelay.enable = true;
-	openInApp.enable = true;
-	petpet.enable = true;
-	pinDMs.enable = true;
-	reverseImageSearch.enable = true;
-	roleColorEverywhere.enable = true;
-	sendTimestamps.enable = true;
-	silentTyping.enable = true;
-	validReply.enable = true;
-	volumeBooster.enable = true;
-	youtubeAdblock.enable = true;
+        betterRoleContext.enable = true;
+        betterUploadButton.enable = true;
+        blurNSFW.enable = true;
+        clearURLs.enable = true;
+        colorSighted.enable = true;
+        consoleJanitor = {
+          enable = true;
+          disableLoggers = true;
+          disableSpotifyLogger = true;
+        };
+        crashHandler.enable = true;
+        disableCallIdle.enable = true;
+        emoteCloner.enable = true;
+        fakeNitro.enable = true;
+        favoriteEmojiFirst.enable = true;
+        favoriteGifSearch.enable = true;
+        fixImagesQuality.enable = true;
+        fixSpotifyEmbeds.enable = true;
+        fixYoutubeEmbeds.enable = true;
+        forceOwnerCrown.enable = true;
+        friendsSince.enable = true;
+        gifPaste.enable = true;
+        iLoveSpam.enable = true;
+        imageZoom.enable = true;
+        implicitRelationships.enable = true;
+        invisibleChat.enable = true;
+        memberCount.enable = true;
+        mentionAvatars.enable = true;
+        messageClickActions.enable = true;
+        messageLogger.enable = true;
+        moreKaomoji.enable = true;
+        mutualGroupDMs.enable = true;
+        noF1.enable = true;
+        noOnboardingDelay.enable = true;
+        openInApp.enable = true;
+        petpet.enable = true;
+        pinDMs.enable = true;
+        reverseImageSearch.enable = true;
+        roleColorEverywhere.enable = true;
+        sendTimestamps.enable = true;
+        silentTyping.enable = true;
+        validReply.enable = true;
+        volumeBooster.enable = true;
+        youtubeAdblock.enable = true;
       };
     };
   };

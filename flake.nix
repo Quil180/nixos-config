@@ -108,9 +108,9 @@
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
 
-	  nixos-hardware.nixosModules.asus-zephyrus-ga402
+          nixos-hardware.nixosModules.asus-zephyrus-ga402
 
-	   {environment.systemPackages = [customNeovim.neovim];}
+          {environment.systemPackages = [customNeovim.neovim];}
         ];
       };
     };

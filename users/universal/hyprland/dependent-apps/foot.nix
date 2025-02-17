@@ -1,5 +1,4 @@
-{pkgs, config, ... }:
-{
+{config, ...}: {
   programs.foot.settings.colors = with config.colorScheme.palette; {
     alpha = "1.0";
     background = "${base00}";

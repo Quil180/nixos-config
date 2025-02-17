@@ -1,5 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
-{
+{pkgs, ...}: {
   boot.kernelParams = [
     "amdgpu"
   ];
@@ -14,7 +13,7 @@
     # G14 programs below
     rog-control-center.enable = true;
   };
-  
+
   services = {
     supergfxd = {
       enable = true;
@@ -29,5 +28,5 @@
     };
     power-profiles-daemon.enable = true;
   };
-  systemd.services.supergfxd.path = [ pkgs.pciutils ];
+  systemd.services.supergfxd.path = [pkgs.pciutils];
 }

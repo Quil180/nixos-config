@@ -1,9 +1,11 @@
-{ pkgs, inputs, ... }:
-let
-  nix-colors-lib = inputs.nix-colors.lib.contrib { inherit pkgs; };
+{
+  pkgs,
+  inputs,
+  ...
+}: let
+  nix-colors-lib = inputs.nix-colors.lib.contrib {inherit pkgs;};
   wallpaper = ../../wallpapers/wallpaper.jpg;
 in {
-
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
     inputs.nix-colors.homeManagerModules.default # importing nix-colors for ricing
@@ -20,8 +22,8 @@ in {
     hyprland/hyprland-modules/monitors.nix
     hyprland/hyprland-modules/startup.nix
   ];
-  
-  home.packages = (with pkgs; [
+
+  home.packages = with pkgs; [
     # bare essentials
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # hyprcursor
     rose-pine-cursor
@@ -37,13 +39,13 @@ in {
 
     nwg-look
     bibata-cursors
-  ]);
+  ];
 
   colorScheme = nix-colors-lib.colorSchemeFromPicture {
     path = wallpaper;
     variant = "dark";
   };
-  
+
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {
     enable = true;
@@ -51,7 +53,7 @@ in {
       enable = true;
     };
     systemd.enable = false;
-    systemd.variables = [ "--all" ];
+    systemd.variables = ["--all"];
     settings = {
       env = [
         "HYPRCURSOR_THEME,rose-pine-hyprcursor"
@@ -68,10 +70,10 @@ in {
     xdgOpenUsePortal = true;
     config = {
       common = {
-        default = [ "gtk" ];
+        default = ["gtk"];
       };
       hyprland = {
-        default = [ "gtk" "hyprland" ];
+        default = ["gtk" "hyprland"];
       };
       misc = {
         disable_hyprland_qtutils_check = "true";
@@ -82,7 +84,7 @@ in {
       pkgs.xdg-desktop-portal-hyprland
     ];
   };
-  
+
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;

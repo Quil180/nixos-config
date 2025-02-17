@@ -1,9 +1,11 @@
-{pkgs, lib, inputs, ...}:
-
 {
+  pkgs,
+  lib,
+  ...
+}: {
   programs.firefox = {
     enable = true;
-    package =  (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {});
+    package = pkgs.wrapFirefox (pkgs.firefox-unwrapped.override {pipewireSupport = true;}) {};
 
     profiles.quil = {
       settings = {
@@ -90,7 +92,6 @@
 
         # autofill disabling
         "dom.forms.autocomplete.formautofill" = true;
-
       };
     };
 
@@ -104,8 +105,6 @@
       DisableTelemetry = true;
       OfferToSaveLoginsDefault = false;
       OfferToSaveLogins = false;
-
     };
   };
-
 }

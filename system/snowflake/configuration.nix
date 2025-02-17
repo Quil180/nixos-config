@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
@@ -55,7 +52,6 @@
     pkgs.ranger
     pkgs.wget
     pkgs.zsh
-
   ];
 
   fonts.packages = with pkgs; [

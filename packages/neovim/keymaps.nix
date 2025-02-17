@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{...}: {
   # to add a keymap use the following template:
   #    {
   #      key = "";

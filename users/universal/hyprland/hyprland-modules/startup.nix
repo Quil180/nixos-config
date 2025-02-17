@@ -1,5 +1,4 @@
-{pkgs, ...}:
-let
+{...}: let
   dotfiles = "~/.dotfiles";
 in {
   wayland.windowManager.hyprland.settings.exec-once = [

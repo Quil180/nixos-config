@@ -1,6 +1,4 @@
-{ config, pkgs, inputs, nvf, ... }:
-
-{
+{pkgs, ...}: {
   imports = [
     ../universal/bash.nix
     ../universal/discord.nix
@@ -16,7 +14,7 @@
 
   nixpkgs.config = {
     allowUnfree = true;
-    allowUnfreePredicate = (_: true);
+    allowUnfreePredicate = _: true;
   };
 
   home = {
@@ -24,7 +22,7 @@
     homeDirectory = "/home/quil";
     stateVersion = "24.05";
     sessionVariables.EDITOR = "nvim";
-    packages = (with pkgs; [
+    packages = with pkgs; [
       age # secrets management
       brightnessctl # brightness control
       foot # terminal emulator
@@ -33,7 +31,7 @@
       pavucontrol # sound control GUI
       wl-clipboard # clipboard
       zoxide # better cd
-    ]);
+    ];
   };
 
   programs.home-manager.enable = true;

@@ -1,9 +1,6 @@
-{config, pkgs, inputs, ...}:
-
-let
-  dotfiles="~/.dotfiles";
-in
-  {
+{config, ...}: let
+  dotfiles = "~/.dotfiles";
+in {
   # shell config
   programs.zsh = {
     enable = true;

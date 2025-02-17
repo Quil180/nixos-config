@@ -1,8 +1,7 @@
-{ lib, inputs, ... }:
-{
-   # system files we want to keep
+{lib, ...}: {
+  # system files we want to keep
   fileSystems."/persist".neededForBoot = true;
-  
+
   environment.persistence."/persist/system" = {
     hideMounts = true;
     directories = [

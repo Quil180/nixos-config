@@ -1,5 +1,8 @@
-{ config, pkgs, lib, ... }:
-let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   gpuID = [
     # "1002:73ef" # gpu
     # "1002:ab28" # audio
@@ -11,7 +14,7 @@ in {
       "iommu=pt"
       ("vfio-pci.ids=" + lib.concatStringsSep "," gpuID)
     ];
-    kernelModules = [ 
+    kernelModules = [
       "vfio_pci"
       "vfio"
       "vfio_iommu_type1"
@@ -20,9 +23,9 @@ in {
   };
 
   users.users.quil = {
-    extraGroups = [ "libvirtd" ];
+    extraGroups = ["libvirtd"];
   };
-  
+
   hardware.graphics.enable = true;
   programs.virt-manager.enable = true;
   virtualisation = {
@@ -32,10 +35,12 @@ in {
       qemu = {
         ovmf = {
           enable = true;
-          packages = [(pkgs.OVMF.override {
-            secureBoot = true;
-            tpmSupport = true;
-            }).fd
+          packages = [
+            (pkgs.OVMF.override {
+              secureBoot = true;
+              tpmSupport = true;
+            })
+            .fd
           ];
         };
         swtpm.enable = true;
@@ -46,11 +51,12 @@ in {
     };
   };
 
-  environment.sessionVariables.LIBVIRT_DEFAULT_URI = [ "qemu:///session" ];
+  environment.sessionVariables.LIBVIRT_DEFAULT_URI = ["qemu:///session"];
   environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
-    spice spice-gtk
+    spice
+    spice-gtk
     spice-protocol
     win-virtio
     win-spice

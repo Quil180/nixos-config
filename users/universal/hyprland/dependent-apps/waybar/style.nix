@@ -1,8 +1,5 @@
-{config, stylix, ...}:
-
-{
-  programs.waybar.style = with config.colorScheme.palette;
-    ''
+{config, ...}: {
+  programs.waybar.style = with config.colorScheme.palette; ''
     @define-color red       #cc241d;
     @define-color green     #98971a;
     @define-color yellow    #d79921;
@@ -204,5 +201,5 @@
     #temperature {
         background-color: #${base01};
     }
-    '';
+  '';
 }
