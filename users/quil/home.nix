@@ -7,8 +7,9 @@
     ../universal/firefox.nix
     ../universal/git.nix
     ../universal/hyprland.nix
-    ../universal/latex.nix
+    # ../universal/latex.nix
     ../universal/music.nix
+    ../universal/password-manager.nix
     ../universal/revolt.nix
   ];
 
@@ -24,7 +25,6 @@
     sessionVariables.EDITOR = "nvim";
     packages = (with pkgs; [
       age # secrets management
-      bitwarden # password manager
       brightnessctl # brightness control
       foot # terminal emulator
       mpv # terminal video player

@@ -3,10 +3,12 @@
   boot.kernelParams = [
     "amdgpu"
   ];
-  environment.systemPackages = with pkgs; [
-    asusctl
-    pciutils
-  ];
+  environment = {
+    systemPackages = with pkgs; [
+      asusctl
+      pciutils
+    ];
+  };
 
   programs = {
     # G14 programs below
