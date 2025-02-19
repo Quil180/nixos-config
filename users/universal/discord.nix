@@ -143,7 +143,7 @@
         friendsSince.enable = true;
         gifPaste.enable = true;
         iLoveSpam.enable = true;
-        imageZoom.enable = true;
+        # imageZoom.enable = true;
         implicitRelationships.enable = true;
         invisibleChat.enable = true;
         memberCount.enable = true;
