@@ -35,7 +35,7 @@
       "$mod, M, exec, foot spotify_player"
       "$mod SHIFT, R, exec, rog-control-center" # for g14 control center
       "$mod ALT, R, exec, polychromatic-controller" # for razer center
-      "$mod SHIFT, V, exec, $term -e nix run gitlab:doronbehar/nix-xilinx#vivado"
+      "$mod, V, exec, $term --hold vivado && notify-send 'Vivado was Started'"
 
       # keybinds to screenshot
       "$mod alt, P, exec, grimblast copy area && notify-send 'Zone Copied'"

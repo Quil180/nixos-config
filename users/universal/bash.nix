@@ -17,6 +17,9 @@ in {
       upda = "updf && upds && updh && updb";
       # clean nix store
       clean = "nix-store --gc";
+
+      # general useful aliases
+      vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
     };
     initExtra = ''
       runa() {

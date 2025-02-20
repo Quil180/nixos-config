@@ -66,6 +66,7 @@ in {
       ];
       windowrulev2 = [
         "opacity 0.0 override, class:^(xwaylandvideobridge)$"
+        "opacity 1.0 override 0.95 override,class:^(foot)$"
         "noanim, class:^(xwaylandvideobridge)$"
         "noinitialfocus, class:^(xwaylandvideobridge)$"
         "maxsize 1 1, class:^(xwaylandvideobridge)$"
