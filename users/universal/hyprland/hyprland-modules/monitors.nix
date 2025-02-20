@@ -2,10 +2,10 @@
   wayland.windowManager.hyprland = {
     settings = {
       monitor = [
-        "eDP-2,2560x1600@120,0x0,1.25,bitdepth,10"
-        "eDP-1,2560x1600@120,0x0,1.25,bitdepth,10"
-        "HDMI-A-1,1920x1080@120,0x-1080,1,bitdepth,10"
-        "DP-3,1920x1080@120,0x-1080,1,bitdepth,10"
+        "eDP-2,2560x1600@120,0x0,1.25,"
+        "eDP-1,2560x1600@120,0x0,1.25,"
+        "HDMI-A-1,1920x1080@120,0x-1080,1,"
+        "DP-3,1920x1080@120,0x-1080,1"
       ];
     };
 

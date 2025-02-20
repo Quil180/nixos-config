@@ -7,6 +7,7 @@
   security.rtkit.enable = true;
 
   services.pipewire = {
+    audio.enable = true;
     enable = true;
     alsa = {
       enable = true;

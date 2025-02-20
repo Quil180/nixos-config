@@ -34,8 +34,8 @@ in {
     rofi-wayland # app selector
     wayland-logout # for easy logout
     wlogout # to easily logout
-    xdg-desktop-portal-hyprland # xwayland support
     xdg-utils # xwayland support
+    xwaylandvideobridge
 
     nwg-look
     bibata-cursors
@@ -64,33 +64,20 @@ in {
         "GDK_SCALE,2"
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
       ];
+      windowrulev2 = [
+        "opacity 0.0 override, class:^(xwaylandvideobridge)$"
+        "noanim, class:^(xwaylandvideobridge)$"
+        "noinitialfocus, class:^(xwaylandvideobridge)$"
+        "maxsize 1 1, class:^(xwaylandvideobridge)$"
+        "noblur, class:^(xwaylandvideobridge)$"
+        "nofocus, class:^(xwaylandvideobridge)$"
+      ];
     };
     extraConfig = ''
       xwayland {
         force_zero_scaling = true
       }
     '';
-  };
-
-  # enabling xdg
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    config = {
-      common = {
-        default = ["gtk"];
-      };
-      hyprland = {
-        default = ["gtk" "hyprland"];
-      };
-      misc = {
-        disable_hyprland_qtutils_check = "true";
-      };
-    };
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-hyprland
-    ];
   };
 
   home.pointerCursor = {
@@ -108,4 +95,5 @@ in {
     XDG_SESSION_DESKTOP = "Hyprland";
     MOZ_ENABLE_WAYLAND = "1";
   };
+
 }

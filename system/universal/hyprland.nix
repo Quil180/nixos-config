@@ -30,4 +30,26 @@
     XDG_CURRENT_DESKTOP = "Hyprland";
     NIXOS_OZONE_WL = "1";
   };
+
+  # enabling xdg
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    config = {
+      common = {
+        default = ["*"];
+      };
+      hyprland = {
+        default = ["gtk" "hyprland"];
+      };
+      misc = {
+        disable_hyprland_qtutils_check = "true";
+      };
+    };
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+    ];
+  };
+
 }

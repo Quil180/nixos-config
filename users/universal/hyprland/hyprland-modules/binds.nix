@@ -26,7 +26,7 @@
       # binds to launch apps
       "$mod, E, exec, $term -e $file"
       "$mod, W, exec, $browser"
-      "$mod, D, exec, ELECTRON_OZONE_PLATFORM_HINT= discordcanary"
+      "$mod, D, exec, discordcanary --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
       "$mod, G, exec, steam"
       "$mod SHIFT, G, exec, lutris"
       "$mod, O, exec, obs QT_QPA_PLATFORM=wayland"
