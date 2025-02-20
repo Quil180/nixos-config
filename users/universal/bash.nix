@@ -75,10 +75,13 @@ in {
         java $temp
       }
 
-      push() {
-        git add .
-        git commit .
-        git push origin HEAD:$1
+      test() {
+        temp=""
+        for arg in "$@"
+        do
+          temp+="$arg "
+        done
+        nix-shell -p $temp
       }
     '';
     history = {

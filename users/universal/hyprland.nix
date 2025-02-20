@@ -62,6 +62,7 @@ in {
         "XCURSOR_SIZE,24"
 
         "GDK_SCALE,2"
+        "ELECTRON_OZONE_PLATFORM_HINT, wayland"
       ];
     };
     extraConfig = ''

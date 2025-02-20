@@ -26,7 +26,7 @@
       # binds to launch apps
       "$mod, E, exec, $term -e $file"
       "$mod, W, exec, $browser"
-      "$mod, D, exec, discordcanary --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
+      "$mod, D, exec, ELECTRON_OZONE_PLATFORM_HINT= discordcanary"
       "$mod, G, exec, steam"
       "$mod SHIFT, G, exec, lutris"
       "$mod, O, exec, obs QT_QPA_PLATFORM=wayland"
@@ -35,6 +35,7 @@
       "$mod, M, exec, foot spotify_player"
       "$mod SHIFT, R, exec, rog-control-center" # for g14 control center
       "$mod ALT, R, exec, polychromatic-controller" # for razer center
+      "$mod SHIFT, V, exec, $term -e nix run gitlab:doronbehar/nix-xilinx#vivado"
 
       # keybinds to screenshot
       "$mod alt, P, exec, grimblast copy area && notify-send 'Zone Copied'"

@@ -74,16 +74,17 @@
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
 
+    # neovim config package management
     neovimConfig = {
       imports = [
         packages/neovim/nvf-main.nix
       ];
     };
-
     customNeovim = nvf.lib.neovimConfiguration {
       inherit pkgs;
       modules = [neovimConfig];
     };
+
   in {
     packages."x86_64-linux".default =
       (
