@@ -3,6 +3,7 @@
     ../universal/bash.nix
     ../universal/discord.nix
     ../universal/firefox.nix
+    ../universal/games.nix
     ../universal/git.nix
     ../universal/hyprland.nix
     ../universal/latex.nix
