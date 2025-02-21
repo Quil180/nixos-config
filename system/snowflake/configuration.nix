@@ -72,6 +72,7 @@
       extraGroups = [
         "networkmanager"
         "wheel"
+        "storage"
       ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ../keys/id_snowflake.pub)
@@ -97,6 +98,11 @@
 
     # printing support via CUPS
     printing.enable = true;
+
+    # automount drives
+    devmon.enable = true;
+    gvfs.enable = true;
+    udisks2.enable = true;
   };
 
   nixpkgs.config = {
