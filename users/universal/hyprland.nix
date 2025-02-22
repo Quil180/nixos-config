@@ -49,9 +49,7 @@ in {
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {
     enable = true;
-    xwayland = {
-      enable = true;
-    };
+    xwayland.enable = true;
     systemd.enable = false;
     systemd.variables = ["--all"];
     settings = {
@@ -79,6 +77,9 @@ in {
         force_zero_scaling = true
       }
     '';
+    plugins = [
+      pkgs.hyprlandPlugins.hyprsplit
+    ];
   };
 
   home.pointerCursor = {
@@ -96,5 +97,4 @@ in {
     XDG_SESSION_DESKTOP = "Hyprland";
     MOZ_ENABLE_WAYLAND = "1";
   };
-
 }
