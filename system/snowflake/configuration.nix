@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, inputs, ...}: {
   imports = [
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
@@ -80,7 +80,21 @@
     };
   };
 
-  system.stateVersion = "24.05"; # KEEP THIS THE SAME
+  system = {
+    stateVersion = "24.05"; # KEEP THIS THE SAME
+    # auto updates
+    autoUpgrade = {
+      enable = true;
+      flake = inputs.self.outPath;
+      flags = [
+        "--update-input"
+        "nixpkgs"
+        "-L"
+      ];
+      dates = "02:00";
+      randomizedDelaySec = "45min";
+    };
+  };
 
   # enabling programs to be managed by nixos
   programs = {

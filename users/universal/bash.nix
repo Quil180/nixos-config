@@ -17,6 +17,9 @@ in {
       upda = "updf && upds && updh && updb";
       # clean nix store
       clean = "nix-store --gc";
+      # updatetime and updatelog
+      updatetime = "systemctl status nixos-upgrade.timer";
+      updatelog = "systemctl status nixos-upgrade.service";
 
       # general useful aliases
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
