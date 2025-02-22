@@ -60,6 +60,15 @@
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+    };
+
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
+    };
   };
 
   outputs = {
@@ -84,7 +93,6 @@
       inherit pkgs;
       modules = [neovimConfig];
     };
-
   in {
     packages."x86_64-linux".default =
       (
