@@ -1,11 +1,13 @@
 {pkgs, ...}: {
-  boot.kernelParams = [
-    "amdgpu"
-  ];
+  boot = {
+    kernelParams = [
+      "amdgpu"
+    ];
+    kernelPackages = pkgs.linuxPackages_latest;
+  };
   environment = {
     systemPackages = with pkgs; [
       asusctl
-      pciutils
     ];
   };
 
@@ -18,7 +20,6 @@
     supergfxd = {
       enable = true;
       settings = {
-        mode = "Integrated";
         vfio_enable = true;
       };
     };
