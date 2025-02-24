@@ -18,6 +18,7 @@ in {
       upda = "updf && upds && updh && updb";
       # clean nix store
       clean = "nix-store --gc";
+      optimize = "nix-store --optimise, nix store optimise";
       # updatetime and updatelog
       updatetime = "systemctl status nixos-upgrade.timer";
       updatelog = "systemctl status nixos-upgrade.service";
