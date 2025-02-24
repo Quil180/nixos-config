@@ -5,8 +5,8 @@ in {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+    autosuggestion.enable = true;
     shellAliases = {
       # replacing cd with zoxide
       cd = "z";
