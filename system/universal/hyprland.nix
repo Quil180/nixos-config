@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    sddm
+    kdePackages.sddm
   ];
 
   fonts.packages = with pkgs; [
