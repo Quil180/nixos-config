@@ -5,6 +5,7 @@ in {
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
       # replacing cd with zoxide
@@ -23,6 +24,7 @@ in {
 
       # general useful aliases
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
+      nf = "fastfetch";
 
       # g14 related aliases
       gpu = "supergfxctl -g";
