@@ -35,7 +35,7 @@ in {
     wayland-logout # for easy logout
     wlogout # to easily logout
     xdg-utils # xwayland support
-    xwaylandvideobridge
+    kdePackages.xwaylandvideobridge
 
     nwg-look
     bibata-cursors
