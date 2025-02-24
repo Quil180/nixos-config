@@ -28,7 +28,7 @@ in {
       hybrid = "supergfxctl -m Hybrid && wayland-logout";
       integrated = "supergfxctl -m Integrated && wayland-logout";
       vfio = "supergfxctl -m Vfio";
-      dedicated = "supergfxctl -m Dedicted && sudo reboot now";
+      dedicated = "supergfxctl -m AsusMuxDgpu && sudo reboot now";
     };
     initExtra = ''
       runa() {
