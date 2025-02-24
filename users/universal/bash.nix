@@ -25,6 +25,7 @@ in {
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
 
       # g14 related aliases
+      gpu = "supergfxctl -g";
       hybrid = "supergfxctl -m Hybrid && wayland-logout";
       integrated = "supergfxctl -m Integrated && wayland-logout";
       vfio = "supergfxctl -m Vfio";
