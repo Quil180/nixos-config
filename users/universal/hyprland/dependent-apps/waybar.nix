@@ -17,6 +17,7 @@
         spacing = 4;
         output = [
           "eDP-2"
+          "eDP-1"
         ];
 
         modules-left = [
