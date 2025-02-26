@@ -47,7 +47,7 @@
       ", xf86audiolowervolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
       ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
 
-      # brightness controll binds
+      # brightness control binds
       ", XF86MonBrightnessUp, exec, brightnessctl set +20%"
       ", XF86MonBrightnessDown, exec, brightnessctl set 20%-"
 
@@ -101,11 +101,11 @@
       "$mod SHIFT, up, swapwindow, u"
       "$mod SHIFT, down, swapwindow, d"
 
-      # resizing windows             x    y
-      "$mod CTRL, left, resizeactive, -60    0"
+      # resizing windows                 x    y
+      "$mod CTRL, left, resizeactive,  -60    0"
       "$mod CTRL, right, resizeactive,  60    0"
-      "$mod CTRL, down, resizeactive,   0  -60"
-      "$mod CTRL, up, resizeactive,   0   60"
+      "$mod CTRL, down, resizeactive,    0   60"
+      "$mod CTRL, up, resizeactive,      0  -60"
     ];
   };
 }
