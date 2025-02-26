@@ -1,4 +1,4 @@
-{config, ...}:{
+{config, ...}: {
   programs.waybar.style = with config.lib.stylix.colors.withHashtag; ''
     @define-color red       #cc241d;
     @define-color green     #98971a;
@@ -18,86 +18,70 @@
     @define-color brorange  #fe8019;
 
     * {
-        border: none;
-        font-size: 14px;
-        border-radius: 5px;
-    }
-
-    tooltip {
-        font-family: Iosevka Nerd Font Propo, monospace;
-        background-color: ${base01};
-        border-radius: 5px;
-        border: 1px solid ${base02};
-    }
-
-    tooltip label {
-        color: ${base04};
-        text-shadow: none;
+      border: none;
+      font-size: 14px;
+      border-radius: 5px;
     }
 
     window#waybar {
-        /* `otf-font-awesome` is required to be installed for icons */
-        font-family: Iosevka Nerd Font Propo, monospace;
-        background-color: transparent;
-        border-bottom: 0px;
+      background-color: transparent;
     }
 
-    window#waybar.hidden {
-        opacity: 0.2;
+    tooltip {
+      font-family: Iosevka Nerd Font Propo, monospace;
+      background-color: ${base01};
+      border-radius: 5px;
+      border: 1px solid ${base02};
     }
 
-    window#waybar.empty #window {
-        background-color: transparent;
-        padding: 0;
+    tooltip label {
+      color: ${base04};
+      text-shadow: none;
     }
 
     .modules-right {
-        margin: 10px 10px 0 0;
+      margin: 10px 10px 0 0;
     }
     .modules-center {
-        margin: 10px 0 0 0;
+      margin: 10px 0 0 0;
     }
     .modules-left {
-        margin: 10px 0 0 10px;
-    }
-
-    button {
-        border: none;
+      margin: 10px 0 0 10px;
     }
 
     #workspaces {
-        background-color: ${base01};
+      background-color: ${base01};
     }
 
     #workspaces button {
-        padding: 0 5px;
-        background-color: transparent;
-        color: ${base04};
-        border-radius: 0;
+      padding: 0 5px;
+      background-color: transparent;
+      color: ${base04};
+      border-radius: 0;
     }
 
     #workspaces button:first-child {
-        border-radius: 5px 0 0 5px;
+      border-radius: 5px 0 0 5px;
     }
 
     #workspaces button:last-child {
-        border-radius: 0 5px 5px 0;
+      border-radius: 0 5px 5px 0;
     }
 
     #workspaces button:first-child:last-child {
-        border-radius: 5px;
+      border-radius: 5px;
     }
 
     #workspaces button:hover {
-        color: ${base03};
+      color: ${base04};
     }
 
     #workspaces button.focused {
-        background-color: ${base0D};
+      background-color: ${base0D};
     }
 
     #workspaces button.urgent {
-        background-color: ${base08};
+      background-color: ${base08};
     }
 
     #idle_inhibitor,
@@ -113,91 +97,89 @@
     #tray,
     #mpris,
     #load {
-        padding: 0 10px;
-        background-color: ${base01};
-        color: ${base04};
+      padding: 0 10px;
+      background-color: ${base01};
+      color: ${base04};
     }
 
     #mode {
-        background-color: @aqua;
-        color: ${base01};
-        /* box-shadow: inset 0 -3px #ffffff; */
+      background-color: @aqua;
+      color: ${base01};
     }
 
     /* If workspaces is the leftmost module, omit left margin */
     .modules-left > widget:first-child > #workspaces {
-        margin-left: 0;
+      margin-left: 0;
     }
 
     /* If workspaces is the rightmost module, omit right margin */
     .modules-right > widget:last-child > #workspaces {
-        margin-right: 0;
+      margin-right: 0;
     }
 
     #cava {
-        padding: 0 5px;
+      padding: 0 5px;
     }
 
     #battery.charging, #battery.plugged {
-        background-color: @green;
-        color: ${base01};
+      background-color: @green;
+      color: ${base01};
     }
 
     @keyframes blink {
-        to {
-            background-color: ${base01};
-            color: ${base04};
-        }
+      to {
+        background-color: ${base01};
+        color: ${base04};
+      }
     }
 
     /* Using steps() instead of linear as a timing function to limit cpu usage */
     #battery.critical:not(.charging) {
-        background-color: @red;
-        color: ${base01};
-        animation-name: blink;
-        animation-duration: 0.5s;
-        animation-timing-function: steps(12);
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
+      background-color: @red;
+      color: ${base01};
+      animation-name: blink;
+      animation-duration: 0.5s;
+      animation-timing-function: steps(12);
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
     }
 
     #wireplumber.muted {
-        background-color: @red;
-        color: ${base05};
+      background-color: @red;
+      color: ${base05};
     }
 
     #tray > .passive {
-        -gtk-icon-effect: dim;
+      -gtk-icon-effect: dim;
     }
 
     #tray > .needs-attention {
-        -gtk-icon-effect: highlight;
+      -gtk-icon-effect: highlight;
     }
 
     #mpris.playing {
-        background-color: ${base01};
-        color: ${base00};
+      background-color: ${base01};
     }
 
     #tray menu {
-        font-family: sans-serif;
+      font-family: sans-serif;
     }
 
     #scratchpad.empty {
-        background: transparent;
-        padding: 0;
+      background: transparent;
+      padding: 0;
     }
 
     #cpu {
-        background-color: ${base01};
+      background-color: ${base01};
     }
 
     #memory {
-        background-color: ${base01};
+      background-color: ${base01};
     }
 
     #temperature {
-        background-color: ${base01};
+      background-color: ${base01};
     }
   '';
 }

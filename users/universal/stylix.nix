@@ -26,5 +26,10 @@ in {
         name = "iosevka";
       };
     };
+
+    opacity = {
+      desktop = 0.0;
+      terminal = 1.0;
+    };
   };
 }
