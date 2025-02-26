@@ -2,15 +2,12 @@
   pkgs,
   inputs,
   ...
-}: let
-  wallpaper = ../../wallpapers/wallpaper.jpg;
-in {
+}: {
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
     # app configs below
     hyprland/dependent-apps/waybar.nix
     hyprland/dependent-apps/dunst.nix
-    hyprland/dependent-apps/foot.nix
     hyprland/dependent-apps/rofi.nix
 
     # Hyprland modules below
@@ -71,14 +68,6 @@ in {
     plugins = [
       pkgs.hyprlandPlugins.hyprsplit
     ];
-  };
-
-  home.pointerCursor = {
-    gtk.enable = true;
-    x11.enable = true;
-    name = "BreezeX-RosePine-Linux";
-    package = pkgs.rose-pine-cursor;
-    size = 24;
   };
 
   # making it so ozone apps use wayland

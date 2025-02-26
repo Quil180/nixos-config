@@ -1,10 +1,30 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  wallpaper = ../../wallpapers/wallpaper.jpg;
+in {
   stylix = {
     enable = true;
+    polarity = "dark";
+
+    image = wallpaper;
+
     cursor = {
-      package = pkgs.inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default;
-      name = "rose-pine-hyprcursor";
+      package = pkgs.rose-pine-cursor;
+      name = "BreezeX-RosePine-Linux";
       size = 24;
+    };
+    fonts = {
+      monospace = {
+        package = pkgs.iosevka;
+        name = "iosevka";
+      };
+      sansSerif = {
+        package = pkgs.iosevka;
+        name = "iosevka";
+      };
+      serif = {
+        package = pkgs.iosevka;
+        name = "iosevka";
+      };
     };
   };
 }

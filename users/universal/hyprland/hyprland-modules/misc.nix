@@ -3,9 +3,6 @@
   programs.foot = {
     enable = true;
     settings = {
-      main = {
-        font = "iosevka:size=16";
-      };
       mouse = {
         hide-when-typing = "yes";
       };
