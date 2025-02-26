@@ -4,16 +4,20 @@ in {
   # shell config
   programs.zsh = {
     enable = true;
-    enableCompletion = true;
-    syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
-    historySubstringSearch.enable = true;
+    syntaxHighlighting.enable = true;
+    enableCompletion = true;
+    historySubstringSearch = {
+      enable = true;
+      searchUpKey = ["\\eOA"];
+      searchDownKey = ["\\eOB"];
+    };
     oh-my-zsh = {
       enable = true;
       theme = "risto";
       plugins = [
         "git"
-        "github"
+        "history"
       ];
     };
 
@@ -45,70 +49,70 @@ in {
       dedicated = "supergfxctl -m AsusMuxDgpu && sudo reboot now";
     };
     initExtra = ''
-      runa() {
-        temp=""
-        for arg in "$@"
-        do
-          temp+="$arg "
-        done
-        nasm -felf64 $temp -o a.o
-        ld a.o -o a
-        ./a
-        rm a.o
-        rm a
-      }
+       runa() {
+         temp=""
+         for arg in "$@"
+         do
+           temp+="$arg "
+         done
+         nasm -felf64 $temp -o a.o
+         ld a.o -o a
+         ./a
+         rm a.o
+         rm a
+       }
 
-      debugc() {
-        temp=""
-        for arg in "$@"
-        do
-          temp+="$arg "
-        done
-        gcc $temp -g -O0
-        valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./a.out
-        rm a.out
-        rm vgcore.*
-      }
+       debugc() {
+         temp=""
+         for arg in "$@"
+         do
+           temp+="$arg "
+         done
+         gcc $temp -g -O0
+         valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./a.out
+         rm a.out
+         rm vgcore.*
+       }
 
-      runc() {
-        temp=""
-        for arg in "$@"
-        do
-          temp+="$arg "
-        done
-        gcc $temp
-        ./a.out
-        rm a.out
-      }
+       runc() {
+         temp=""
+         for arg in "$@"
+         do
+           temp+="$arg "
+         done
+         gcc $temp
+         ./a.out
+         rm a.out
+       }
 
-      runcpp() {
-        temp=""
-        for arg in "$A"
-        do
-          temp+="$arg "
-        done
-        g++ $temp -o a.out -g
-        ./a.out
-        rm a.out
-      }
+       runcpp() {
+         temp=""
+         for arg in "$A"
+         do
+           temp+="$arg "
+         done
+         g++ $temp -o a.out -g
+         ./a.out
+         rm a.out
+       }
 
-      runj() {
-        temp=""
-        for arg in "$@"
-        do
-          temp+="$arg "
-        done
-        java $temp
-      }
+       runj() {
+         temp=""
+         for arg in "$@"
+         do
+           temp+="$arg "
+         done
+         java $temp
+       }
 
-      test() {
-        temp=""
-        for arg in "$@"
-        do
-          temp+="$arg "
-        done
-        nix-shell -p $temp
-      }
+       test() {
+         temp=""
+         for arg in "$@"
+         do
+           temp+="$arg "
+         done
+         nix-shell -p $temp
+       }
     '';
     history = {
       size = 10000;
