@@ -7,10 +7,13 @@ in {
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
+    historySubstringSearch.enable = true;
     oh-my-zsh = {
       enable = true;
+      theme = "risto";
       plugins = [
         "git"
+        "github"
       ];
     };
 
