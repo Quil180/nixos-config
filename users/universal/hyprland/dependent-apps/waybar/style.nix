@@ -30,6 +30,7 @@
     tooltip {
       font-family: Iosevka Nerd Font Propo, monospace;
       background-color: ${base02};
+      background: ${base01};
       border-radius: 5px;
       border: 1px solid ${base02};
     }
