@@ -29,7 +29,7 @@
 
     tooltip {
       font-family: Iosevka Nerd Font Propo, monospace;
-      background-color: ${base01};
+      background-color: ${base02};
       border-radius: 5px;
       border: 1px solid ${base02};
     }
@@ -55,7 +55,6 @@
 
     #workspaces button {
       padding: 0 5px;
-      background-color: transparent;
       color: ${base04};
       border-radius: 0;
     }
