@@ -11,6 +11,7 @@
     ../universal/office.nix
     ../universal/password-manager.nix
     ../universal/revolt.nix
+    ../universal/stylix.nix
   ];
 
   nixpkgs.config = {

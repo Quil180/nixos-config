@@ -3,13 +3,10 @@
   inputs,
   ...
 }: let
-  nix-colors-lib = inputs.nix-colors.lib.contrib {inherit pkgs;};
   wallpaper = ../../wallpapers/wallpaper.jpg;
 in {
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
-    inputs.nix-colors.homeManagerModules.default # importing nix-colors for ricing
-
     # app configs below
     hyprland/dependent-apps/waybar.nix
     hyprland/dependent-apps/dunst.nix
@@ -38,13 +35,7 @@ in {
     kdePackages.xwaylandvideobridge
 
     nwg-look
-    bibata-cursors
   ];
-
-  colorScheme = nix-colors-lib.colorSchemeFromPicture {
-    path = wallpaper;
-    variant = "dark";
-  };
 
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {

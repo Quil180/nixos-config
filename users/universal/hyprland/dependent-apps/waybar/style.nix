@@ -1,5 +1,18 @@
-{config, ...}: {
-  programs.waybar.style = with config.colorScheme.palette; ''
+{...}: let
+  base00 = "cc241d";
+  base01 = "cc241d";
+  base02 = "cc241d";
+  base03 = "cc241d";
+  base04 = "cc241d";
+  base05 = "cc241d";
+  base08 = "cc241d";
+  base09 = "cc241d";
+  base0A = "cc241d";
+  base0B = "cc241d";
+  base0C = "cc241d";
+  base0D = "cc241d";
+in {
+  programs.waybar.style = ''
     @define-color red       #cc241d;
     @define-color green     #98971a;
     @define-color yellow    #d79921;

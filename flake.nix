@@ -39,11 +39,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # nix-colors for home-manager ricing
-    nix-colors = {
-      url = "github:misterio77/nix-colors";
-    };
-
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
     };
@@ -69,6 +64,12 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+
+    # Stylix for Theming
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -77,6 +78,7 @@
     home-manager,
     nvf,
     nixos-hardware,
+    stylix,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -130,6 +132,7 @@
         modules = [
           users/quil/home.nix
 
+          stylix.homeManagerModules.stylix
           {home.packages = [customNeovim.neovim];}
         ];
       };
