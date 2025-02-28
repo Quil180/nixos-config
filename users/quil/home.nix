@@ -5,7 +5,7 @@
     ../universal/firefox.nix
     ../universal/games.nix
     ../universal/git.nix
-    ../universal/hyprland.nix
+    ../universal/hyprland/hyprland.nix
     ../universal/latex.nix
     ../universal/music.nix
     ../universal/office.nix
