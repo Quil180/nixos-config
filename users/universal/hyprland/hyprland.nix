@@ -22,6 +22,7 @@
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # hyprcursor
     rose-pine-cursor
     grimblast # for screenshotting
+    nwg-look # gtk settings editor
     swww # backgrounds/wallpapers
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
@@ -29,9 +30,8 @@
     wayland-logout # for easy logout
     wlogout # to easily logout
     xdg-utils # xwayland support
-    kdePackages.xwaylandvideobridge
+    kdePackages.xwaylandvideobridge # for xwayland screensharing
 
-    nwg-look
   ];
 
   # enabling hyprland and xwayland
