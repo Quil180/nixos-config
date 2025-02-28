@@ -6,15 +6,15 @@
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
     # app configs below
-    hyprland/dependent-apps/waybar.nix
-    hyprland/dependent-apps/dunst.nix
-    hyprland/dependent-apps/rofi.nix
+    dependent-apps/waybar.nix
+    dependent-apps/dunst.nix
+    dependent-apps/rofi.nix
 
     # Hyprland modules below
-    hyprland/hyprland-modules/binds.nix
-    hyprland/hyprland-modules/misc.nix
-    hyprland/hyprland-modules/monitors.nix
-    hyprland/hyprland-modules/startup.nix
+    hyprland-modules/binds.nix
+    hyprland-modules/misc.nix
+    hyprland-modules/monitors.nix
+    hyprland-modules/startup.nix
   ];
 
   home.packages = with pkgs; [
