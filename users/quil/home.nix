@@ -1,17 +1,29 @@
 {pkgs, ...}: {
   imports = [
-    ../universal/bash.nix
-    ../universal/discord.nix
-    ../universal/firefox.nix
-    ../universal/games.nix
-    ../universal/git.nix
-    ../universal/hyprland/hyprland.nix
-    ../universal/latex.nix
-    ../universal/music.nix
-    ../universal/office.nix
-    ../universal/password-manager.nix
-    ../universal/revolt.nix
-    ../universal/stylix.nix
+    # desktop environments below
+    ../universal/desktop-environments/hyprland/hyprland.nix
+    
+    # essential applications below
+    ../universal/applications/essentials/bash.nix
+    ../universal/applications/essentials/firefox.nix
+    ../universal/applications/essentials/music.nix
+    ../universal/applications/essentials/password-manager.nix
+    ../universal/applications/essentials/ranger.nix
+    
+    # gaming applications below
+    ../universal/applications/gaming/games.nix
+
+    # productivity applications below
+    ../universal/applications/productivity/git.nix
+    ../universal/applications/productivity/latex.nix
+    ../universal/applications/productivity/office.nix
+    
+    # ricing applications below
+    ../universal/applications/ricing/stylix.nix
+
+    # social applications below
+    ../universal/applications/social/discord.nix
+    ../universal/applications/social/revolt.nix
   ];
 
   nixpkgs.config = {
