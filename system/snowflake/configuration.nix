@@ -6,7 +6,7 @@
     # ./secrets.nix
 
     # optional stuff
-    # GUI I want (if any):
+    # System GUI I want (if any):
     ../universal/hyprland.nix
 
     # Sound?
