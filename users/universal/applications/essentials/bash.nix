@@ -106,12 +106,7 @@ in {
        }
 
        test() {
-         temp=""
-         for arg in "$@"
-         do
-           temp+="$arg "
-         done
-         nix-shell -p $temp
+         nix-shell -p $@
        }
     '';
     history = {
