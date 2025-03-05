@@ -45,6 +45,7 @@ in {
         };
         swtpm.enable = true;
         runAsRoot = true;
+        vhostUserPackages = with pkgs; [virtiofsd];
       };
       onBoot = "ignore";
       onShutdown = "shutdown";
@@ -55,10 +56,12 @@ in {
   environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
+    virtiofsd
     spice
     spice-gtk
     spice-protocol
     win-virtio
     win-spice
   ];
+  services.spice-vdagentd.enable = true;
 }
