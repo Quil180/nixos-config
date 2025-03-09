@@ -17,6 +17,7 @@
 
     # Extra options...
     ../universal/g14.nix
+    ../universal/hamachi.nix
     ../universal/persist.nix
     ../universal/virtualisation.nix
   ];

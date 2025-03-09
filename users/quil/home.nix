@@ -6,7 +6,6 @@
     # essential applications below
     ../universal/applications/essentials/bash.nix
     ../universal/applications/essentials/firefox.nix
-    ../universal/applications/essentials/hamachi.nix
     ../universal/applications/essentials/music.nix
     ../universal/applications/essentials/password-manager.nix
     ../universal/applications/essentials/ranger.nix
