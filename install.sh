@@ -7,8 +7,8 @@ read -p "1 or 2? " phase
 if [ ${phase} == 1 ]; then
 	# phase 1
 	# asking the user what system you are installing onto...
-	read -p "What system are you installing onto? " systemChoice
-	read -p "What user is being installed? " userChoice
+	read -p "What system are you installing onto (snowflake)? " systemChoice
+	read -p "What user is being installed (quil)? " userChoice
 
 	sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko system/${systemChoice}/disko.nix
 	sudo nixos-install --no-root-passwd --root /mnt --flake /home/nixos/nixos-config#${systemChoice}
@@ -18,7 +18,7 @@ if [ ${phase} == 1 ]; then
 fi
 if [ ${phase} == 2 ]; then
 	# phase 2
-	read -p "What user am I? " user
+	read -p "What user am I (quil)? " user
 	read -p "What wifi do I want to connect to? " wifiName
 	read -p "Password? " Password
 	nmcli device wifi connect ${wifiName} password ${Password}

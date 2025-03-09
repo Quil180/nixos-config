@@ -27,7 +27,7 @@
       "$mod, E, exec, $term -e $file"
       "$mod, W, exec, $browser"
       "$mod, D, exec, discordcanary --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
-      "$mod, G, exec, steam"
+      "$mod, G, exec, steam --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland"
       "$mod SHIFT, G, exec, lutris"
       "$mod, O, exec, obs QT_QPA_PLATFORM=wayland"
       "$mod, H, exec, foot -e btop"

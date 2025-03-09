@@ -4,7 +4,7 @@
       sdb = {
         # change this to the drive i want to format
         type = "disk";
-        device = "/dev/sdb"; # change this to the drive i want to format
+        device = "/dev/nvme0n1"; # change this to the drive i want to format
         content = {
           type = "gpt";
           partitions = {
