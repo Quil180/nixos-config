@@ -1,8 +1,9 @@
 {pkgs, ...}:
 {
   home.packages = with pkgs; [
-    verilator
-    gnumake
-    gcc
+    verilator # simulation
+    gnumake # for verilator
+    gcc # for verilator
+    gtkwave # waveform visualizer
   ];
 }
