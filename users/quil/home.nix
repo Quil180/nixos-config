@@ -18,6 +18,9 @@
     ../universal/applications/productivity/git.nix
     ../universal/applications/productivity/latex.nix
     ../universal/applications/productivity/office.nix
+
+    # programming languages
+    ../universal/applications/productivity/programming/verilog.nix
     
     # ricing applications below
     ../universal/applications/ricing/stylix.nix
