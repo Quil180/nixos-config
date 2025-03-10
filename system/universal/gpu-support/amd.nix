@@ -5,17 +5,15 @@
     ];
   };
 
-  hardware = {
-    graphics.enable32Bit = true;
+  hardware.graphics = {
+    enable32Bit = true;
 
-    opengl = {
-      extraPackages = with pkgs; [
-        amdvlk
-      ];
-      extraPackages32 = with pkgs; [
-        driversi686Linux.amdvlk
-      ];
-    };
+    extraPackages = with pkgs; [
+      amdvlk
+    ];
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
+    ];
   };
 
   services.xserver = {
