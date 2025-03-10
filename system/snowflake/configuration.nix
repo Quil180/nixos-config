@@ -20,6 +20,7 @@
     ../universal/hamachi.nix
     ../universal/persist.nix
     ../universal/virtualisation.nix
+    ../universal/docker.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
