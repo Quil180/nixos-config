@@ -16,7 +16,6 @@
   };
 
   services = {
-    xserver.enable = true;
 
     # setting sddm as default login screen
     displayManager.sddm = {
@@ -51,5 +50,4 @@
       xdg-desktop-portal-hyprland
     ];
   };
-
 }
