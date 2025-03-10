@@ -5,6 +5,9 @@
     ./disko.nix
     # ./secrets.nix
 
+    # gpu support
+    ../universal/gpu-support/amd.nix
+
     # optional stuff
     # System GUI I want (if any):
     ../universal/hyprland.nix
