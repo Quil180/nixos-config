@@ -21,6 +21,7 @@
 
     # programming languages
     ../universal/applications/productivity/programming/verilog.nix
+    ../universal/applications/productivity/programming/python.nix
     
     # ricing applications below
     ../universal/applications/ricing/stylix.nix
