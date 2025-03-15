@@ -19,7 +19,7 @@
     ../universal/games.nix
 
     # Extra options...
-    ../universal/g14.nix
+    ../universal/g14/g14.nix
     ../universal/hamachi.nix
     ../universal/persist.nix
     ../universal/virtualisation.nix
