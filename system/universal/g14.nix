@@ -46,14 +46,14 @@
             #   name = "0002-mt76_-mt7921_-Disable-powersave-features-by-default.patch";
             #   patch = "${patch_dir}/0002-mt76_-mt7921_-Disable-powersave-features-by-default.patch";
             # }
-            {
-              name = "0004-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
-              patch = "${patch_dir}/0004-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
-            }
-            {
-              name = "0005-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
-              patch = "${patch_dir}/0005-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
-            }
+            # {
+            #   name = "0004-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
+            #   patch = "${patch_dir}/0004-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
+            # }
+            # {
+            #   name = "0005-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
+            #   patch = "${patch_dir}/0005-ACPI-resource-Skip-IRQ-override-on-ASUS-TUF-Gaming-A.patch";
+            # }
             # {
             #   name = "0006-mediatek-pci-reset.patch";
             #   patch = "${patch_dir}/0006-mediatek-pci-reset.patch";
@@ -93,7 +93,7 @@
     # Default to using iGPU. Can use CLI to enable dGPU with a logout
     supergfxd.enable = true;
     supergfxd.settings = {
-      mode = "Integrated";
+      mode = "Hybrid";
       vfio_enable = true;
       vfio_save = false;
       always_reboot = false;
