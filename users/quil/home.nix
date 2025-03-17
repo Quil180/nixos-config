@@ -2,14 +2,14 @@
   imports = [
     # desktop environments below
     ../universal/desktop-environments/hyprland/hyprland.nix
-    
+
     # essential applications below
     ../universal/applications/essentials/bash.nix
     ../universal/applications/essentials/firefox.nix
     ../universal/applications/essentials/music.nix
     ../universal/applications/essentials/password-manager.nix
     ../universal/applications/essentials/ranger.nix
-    
+
     # gaming applications below
     ../universal/applications/gaming/games.nix
 
@@ -22,7 +22,7 @@
     # programming languages
     ../universal/applications/productivity/programming/verilog.nix
     ../universal/applications/productivity/programming/python.nix
-    
+
     # ricing applications below
     ../universal/applications/ricing/stylix.nix
 
