@@ -24,7 +24,7 @@
     ../universal/persist.nix
     ../universal/virtualisation.nix
     ../universal/docker.nix
-    ../universal/flatpak.nix
+    # ../universal/flatpak.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
