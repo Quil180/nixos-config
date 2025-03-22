@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   # git config
   programs.git = {
     enable = true;
@@ -12,4 +12,8 @@
   programs.gh = {
     enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    git-lfs
+  ];
 }
