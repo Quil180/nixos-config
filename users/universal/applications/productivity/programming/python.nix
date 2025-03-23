@@ -17,10 +17,5 @@
     };
 in {
   home.packages = with pkgs; [
-    (python.withPackages
-      (ps:
-        with ps; [
-          opencv4
-        ]))
   ];
 }
