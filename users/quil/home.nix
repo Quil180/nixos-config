@@ -9,6 +9,7 @@
     ../universal/applications/essentials/music.nix
     ../universal/applications/essentials/password-manager.nix
     ../universal/applications/essentials/ranger.nix
+    ../universal/applications/essentials/vivaldi.nix
 
     # gaming applications below
     ../universal/applications/gaming/games.nix
