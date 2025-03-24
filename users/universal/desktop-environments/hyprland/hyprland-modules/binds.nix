@@ -25,7 +25,7 @@
 
       # binds to launch apps
       "$mod, E, exec, $term -e $file"
-      "$mod, W, exec, $browser"
+      "$mod, W, exec, $browser --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland"
       "$mod, D, exec, discordcanary --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-features=WebRTCPipeWireCapturer"
       "$mod, G, exec, steam --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland"
       "$mod SHIFT, G, exec, lutris"
