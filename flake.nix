@@ -70,6 +70,11 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # flatpak declerative installation
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak/?ref=latest";
+    };
   };
 
   outputs = {
@@ -79,6 +84,7 @@
     nvf,
     nixos-hardware,
     stylix,
+    nix-flatpak,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -115,11 +121,11 @@
           inputs.disko.nixosModules.default
           inputs.impermanence.nixosModules.impermanence
           # inputs.agenix.nixosModules.default
+          nix-flatpak.nixosModules.nix-flatpak
+          nixos-hardware.nixosModules.asus-zephyrus-ga402
 
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
-
-          nixos-hardware.nixosModules.asus-zephyrus-ga402
 
           {environment.systemPackages = [customNeovim.neovim];}
         ];
