@@ -5,7 +5,7 @@ in {
     "swww-daemon"
     "swwww img ${dotfiles}/wallpapers/wallpaper.jpg"
     "nm-applet --indicator"
-    "asusctl -c 80"
+    "asusctl -c 100"
     "asusctl led-mode static -c ffffff"
     "wl-paste --watch cliphist store"
     "dunst"

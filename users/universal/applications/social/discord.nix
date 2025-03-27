@@ -10,7 +10,7 @@
   programs.nixcord = {
     enable = true;
     discord = {
-      package = pkgs.discord-canary;
+      package = pkgs.discord;
       vencord.enable = true;
     };
     quickCss = ''

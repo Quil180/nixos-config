@@ -73,7 +73,7 @@
 
     # flatpak declerative installation
     nix-flatpak = {
-      url = "github:gmodena/nix-flatpak/?ref=latest";
+      url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
     };
   };
 
