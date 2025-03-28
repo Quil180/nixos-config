@@ -25,6 +25,7 @@
     ../universal/virtualisation.nix
     ../universal/docker.nix
     ../universal/flatpak/flatpak.nix
+    ../universal/vncviewer.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
