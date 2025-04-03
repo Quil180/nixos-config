@@ -19,12 +19,12 @@
     ../universal/games.nix
 
     # Extra options...
+    # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
     ../universal/hamachi.nix
     ../universal/persist.nix
     ../universal/virtualisation.nix
     ../universal/docker.nix
-    ../universal/flatpak/flatpak.nix
     ../universal/vncviewer.nix
   ];
 
