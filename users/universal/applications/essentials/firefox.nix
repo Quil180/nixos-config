@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: {
   programs.firefox = {
@@ -107,4 +108,8 @@
       OfferToSaveLogins = false;
     };
   };
+
+  stylix.targets.firefox.profileNames = [
+    "quil"
+  ];
 }
