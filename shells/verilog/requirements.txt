@@ -1,0 +1,4 @@
+vunit-hdl
+edalize
+yowasp-yosys
+cocotb

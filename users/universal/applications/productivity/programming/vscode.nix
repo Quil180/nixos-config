@@ -1,10 +1,12 @@
 {pkgs, ...}: {
-  home.packages = with pkgs; [
-    vscode
-    vscodeExtensions.vscodevim
-    vscodeExtensions.ms-vscode.cpptools
-    vscodeExtensions.martinring.c.makefile-tools
-    vscodeExtensions.martinring.cmake-tools
-    vscodeExtensions.bbenoist.Nix-ide
-  ];
+  programs.vscode = {
+    enable = true;
+    extensions = with pkgs.vscode-extensions; [
+      dracula-theme.theme-dracula
+      vscodevim.vim
+      yzhang.markdown-all-in-one
+      ms-vscode.cpptools-extension-pack
+      teros-technology.teroshdl
+    ];
+  };
 }
