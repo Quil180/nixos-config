@@ -75,6 +75,11 @@
     nix-flatpak = {
       url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
     };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -85,6 +90,7 @@
     nixos-hardware,
     stylix,
     nix-flatpak,
+    rust-overlay,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -127,7 +133,9 @@
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
 
-          {environment.systemPackages = [customNeovim.neovim];}
+          {
+            environment.systemPackages = [customNeovim.neovim];
+          }
         ];
       };
     };
@@ -139,7 +147,10 @@
           users/quil/home.nix
 
           stylix.homeManagerModules.stylix
-          {home.packages = [customNeovim.neovim];}
+          {
+            home.packages = [customNeovim.neovim];
+            nixpkgs.overlays = [rust-overlay.overlays.default];
+          }
         ];
       };
     };
