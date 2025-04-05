@@ -25,13 +25,10 @@
     # Extra options...
     # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
-    ../universal/hamachi.nix
     ../universal/persist.nix
     ../universal/virtualisation.nix
     ../universal/docker.nix
     ../universal/vncviewer.nix
-    # ../universal/tailscale.nix
-    ../universal/zerotier.nix
   ];
 
   # Use the systemd-boot EFI boot loader.

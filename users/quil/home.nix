@@ -33,6 +33,7 @@
     ../universal/applications/social/revolt.nix
 
     # VPNs
+    ../universal/applications/vpns/hamachi.nix
     ../universal/applications/vpns/zerotier.nix
   ];
 
