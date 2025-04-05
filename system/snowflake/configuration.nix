@@ -30,7 +30,7 @@
     ../universal/virtualisation.nix
     ../universal/docker.nix
     ../universal/vncviewer.nix
-    ../universal/tailscale.nix
+    # ../universal/tailscale.nix
     ../universal/zerotier.nix
   ];
 
