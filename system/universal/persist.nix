@@ -13,6 +13,7 @@
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
       "/var/lib/libvirt"
+      "/var/lib/logmein-hamachi"
       {
         directory = "/var/lib/colord";
         user = "colord";
