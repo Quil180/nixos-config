@@ -31,6 +31,9 @@
     # social applications below
     ../universal/applications/social/discord.nix
     ../universal/applications/social/revolt.nix
+
+    # VPNs
+    ../universal/applications/vpns/zerotier.nix
   ];
 
   nixpkgs.config = {
