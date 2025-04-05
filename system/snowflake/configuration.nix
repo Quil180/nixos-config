@@ -23,8 +23,8 @@
     ../universal/games.nix
 
     # VPNs
-    ../universal/applications/vpns/hamachi.nix
-    ../universal/applications/vpns/zerotier.nix
+    ../universal/vpns/hamachi.nix
+    ../universal/vpns/zerotier.nix
 
     # Extra options...
     # ../universal/flatpak/flatpak.nix
