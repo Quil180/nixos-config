@@ -33,7 +33,10 @@
       };
       rust = {
         enable = true;
-        crates.enable = true;
+        crates = {
+          enable = true;
+          codeActions = true;
+        };
         format.enable = true;
         dap.enable = true;
         lsp.enable = true;
