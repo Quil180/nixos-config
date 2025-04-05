@@ -1,4 +1,8 @@
-{pkgs, inputs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
@@ -26,6 +30,7 @@
     ../universal/virtualisation.nix
     ../universal/docker.nix
     ../universal/vncviewer.nix
+    ../universal/tailscale.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -110,6 +115,7 @@
       enable = true;
       defaultEditor = true;
     };
+    nix-ld.enable = true;
   };
 
   # enabling the services I need system wide

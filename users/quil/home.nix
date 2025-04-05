@@ -22,6 +22,7 @@
 
     # programming languages
     ../universal/applications/productivity/programming/verilog.nix
+    ../universal/applications/productivity/programming/python.nix
     ../universal/applications/productivity/programming/vscode.nix
 
     # ricing applications below
