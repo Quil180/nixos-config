@@ -1,6 +1,6 @@
 {...}: {
-  service.zerotier = {
+  services.zerotierone = {
     enable = true;
-    joinNextwork = ["565799d8f611794d"];
+    joinNetworks = ["565799d8f611794d"];
   };
 }
