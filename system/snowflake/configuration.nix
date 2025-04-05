@@ -22,6 +22,10 @@
     # Game Applications setup/installed?
     ../universal/games.nix
 
+    # VPNs
+    ../universal/applications/vpns/hamachi.nix
+    ../universal/applications/vpns/zerotier.nix
+
     # Extra options...
     # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
