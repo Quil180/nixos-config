@@ -23,7 +23,7 @@
     ../universal/games.nix
 
     # Extra options...
-    ../universal/flatpak/flatpak.nix
+    # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
     ../universal/hamachi.nix
     ../universal/persist.nix
