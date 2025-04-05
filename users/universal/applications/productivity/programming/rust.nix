@@ -1,9 +1,13 @@
-{inputs, ...}: {
-  home.packages = with inputs.rust-overlay.packages.${inputs.rust-overlay.rustChannel}; [
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  home.packages = with pkgs; [
     rust-analyzer
     rustfmt
     cargo-audit
-    carg-generate
+    cargo-generate
     cargo-outdated
     cargo-update
     cargo-udeps
