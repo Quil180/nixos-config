@@ -10,13 +10,6 @@
         };
       };
     };
-
-    pulseaudio = {
-      enable = true;
-      extraConfig = ''
-        load-module module-switch-on-connect
-      '';
-    };
   };
 
   services.blueman = {
