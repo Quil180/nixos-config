@@ -19,6 +19,9 @@
     # Sound?
     ../universal/sound.nix
 
+    # Bluetooth?
+    ../universal/bluetooth.nix
+
     # Game Applications setup/installed?
     ../universal/games.nix
 
