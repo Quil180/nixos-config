@@ -21,7 +21,5 @@
 
   services.blueman = {
     enable = true;
-    autoEnable = true;
-    autoEnableServices = ["bluetooth"];
   };
 }
