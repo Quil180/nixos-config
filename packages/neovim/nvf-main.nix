@@ -6,7 +6,7 @@
     modules/dashboard.nix
     modules/side-tree.nix
     modules/color-indents.nix
-    modules/copilot.nix
+    # modules/copilot.nix
     modules/top-bar.nix
     modules/terminal.nix
     modules/help-keys.nix
