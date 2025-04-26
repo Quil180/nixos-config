@@ -140,6 +140,7 @@
         memberCount.enable = true;
         mentionAvatars.enable = true;
         messageClickActions.enable = true;
+        messageLinkEmbeds.enable = true;
         messageLogger.enable = true;
         moreKaomoji.enable = true;
         mutualGroupDMs.enable = true;
