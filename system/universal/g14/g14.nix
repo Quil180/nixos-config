@@ -1,34 +1,33 @@
 {pkgs, ...}: {
-  boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-  };
-  environment = {
-    systemPackages = with pkgs; [
-      asusctl
-      supergfxctl
-    ];
-  };
-
-  programs = {
-    # G14 programs below
-    rog-control-center.enable = true;
-  };
+  environment.systemPackages = with pkgs; [
+    asusctl
+    supergfxctl
+  ];
 
   services = {
-    supergfxd = {
-      enable = true;
-      settings = {
-        vfio_enable = true;
-      };
+    # supergfxd controls GPU switching
+    # Default to using iGPU. Can use CLI to enable dGPU with a logout
+    supergfxd.enable = true;
+    supergfxd.settings = {
+      mode = "Hybrid";
+      vfio_enable = true;
+      vfio_save = false;
+      always_reboot = false;
+      no_logind = false;
+      logout_timeout_s = 180;
+      hotplug_type = "None";
     };
 
+    # ASUS specific software. This also installs asusctl.
     asusd = {
       enable = true;
       enableUserService = true;
     };
 
+    # Dependency of asusd
     power-profiles-daemon.enable = true;
-  };
 
+    # fixing a bug
+  };
   systemd.services.supergfxd.path = [pkgs.pciutils];
 }

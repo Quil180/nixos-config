@@ -92,6 +92,7 @@
         "networkmanager"
         "wheel"
         "storage"
+        "docker"
       ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ../keys/id_snowflake.pub)
