@@ -7,7 +7,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    drun
+    dmenu
     st
   ];
 }
