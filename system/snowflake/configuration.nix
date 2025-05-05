@@ -14,13 +14,14 @@
 
     # optional stuff
     # System GUI I want (if any):
-    ../universal/hyprland.nix
+    ../universal/GUI/dwm/dwm.nix
+    # ../universal/GUI/hyprland/hyprland.nix
 
     # Sound?
-    ../universal/sound.nix
-
-    # Bluetooth?
-    ../universal/bluetooth.nix
+    ../universal/system/sound.nix
+    ../universal/system/bluetooth.nix
+    ../universal/system/persist.nix
+    ../universal/system/virtualisation.nix
 
     # Game Applications setup/installed?
     ../universal/games.nix
@@ -32,8 +33,6 @@
     # Extra options...
     # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
-    ../universal/persist.nix
-    ../universal/virtualisation.nix
     ../universal/docker.nix
     ../universal/vncviewer.nix
   ];
@@ -62,7 +61,7 @@
 
   # default packages regardless of user/host
   environment.systemPackages = with pkgs; [
-    btop
+    htop
     fastfetch
     git
     gh
