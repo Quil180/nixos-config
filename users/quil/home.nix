@@ -1,8 +1,7 @@
 {pkgs, ...}: {
   imports = [
     # desktop environments below
-    ../universal/desktop-environments/dwm/dwm.nix
-    # ../universal/desktop-environments/hyprland/hyprland.nix
+    ../universal/desktop-environments/hyprland/hyprland.nix
 
     # essential applications below
     ../universal/applications/essentials/bash.nix

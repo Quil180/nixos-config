@@ -29,8 +29,9 @@
     };
     useSystemClipboard = true;
 
+    lsp.enable = true;
+
     languages = {
-      enableLSP = true;
       enableTreesitter = true;
       enableFormat = true;
     };
