@@ -14,8 +14,8 @@
 
     # optional stuff
     # System GUI I want (if any):
-    ../universal/GUI/dwm/dwm.nix
-    # ../universal/GUI/hyprland/hyprland.nix
+    # ../universal/GUI/dwm/dwm.nix
+    ../universal/GUI/hyprland/hyprland.nix
 
     # Sound?
     ../universal/system/sound.nix
@@ -61,7 +61,7 @@
 
   # default packages regardless of user/host
   environment.systemPackages = with pkgs; [
-    htop
+    btop-rocm
     fastfetch
     git
     gh

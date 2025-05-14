@@ -31,7 +31,6 @@
     wlogout # to easily logout
     xdg-utils # xwayland support
     kdePackages.xwaylandvideobridge # for xwayland screensharing
-
   ];
 
   # enabling hyprland and xwayland
@@ -52,7 +51,8 @@
       ];
       windowrulev2 = [
         "opacity 0.0 override, class:^(xwaylandvideobridge)$"
-        "opacity 1.0 override 0.95 override,class:^(foot)$"
+        "opacity 0.9 override 0.85 override,class:^(foot)$"
+        "opacity 1.0 override 0.85 override,class:^(firefox)$"
         "noanim, class:^(xwaylandvideobridge)$"
         "noinitialfocus, class:^(xwaylandvideobridge)$"
         "maxsize 1 1, class:^(xwaylandvideobridge)$"

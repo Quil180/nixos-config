@@ -94,6 +94,10 @@
         # autofill disabling
         "dom.forms.autocomplete.formautofill" = true;
       };
+
+      extensions = {
+        force = true;
+      };
     };
 
     policies = {

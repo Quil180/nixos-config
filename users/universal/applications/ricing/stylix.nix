@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  wallpaper = ../../../../wallpapers/wallpaper.jpg;
+  wallpaper = ../../../../wallpapers/wallpaper.png;
 in {
   stylix = {
     enable = true;
@@ -30,6 +30,14 @@ in {
     opacity = {
       desktop = 0.0;
       terminal = 1.0;
+    };
+
+    targets = {
+      nixcord.enable = false;
+      firefox = {
+        colorTheme.enable = true;
+        enable = true;
+      };
     };
   };
 }

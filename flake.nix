@@ -80,6 +80,11 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    creamlinux = {
+      url = "github:Novattz/creamlinux-installer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
