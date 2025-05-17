@@ -27,7 +27,9 @@
         complete = "<C-y>";
       };
     };
-    useSystemClipboard = true;
+    clipboard.registers = [
+      "unnamedplus"
+    ];
 
     lsp.enable = true;
 
