@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  outputs,
   ...
 }: {
   # importing configs for waybar, foot, and wlogout, and rofi
@@ -36,6 +37,7 @@
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {
     enable = true;
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     xwayland.enable = true;
     systemd.enable = false;
     systemd.variables = ["--all"];
@@ -66,7 +68,9 @@
       }
     '';
     plugins = [
-      pkgs.hyprlandPlugins.hyprsplit
+      inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
+      # pkgs.hyprlandPlugins.hyprsplit
+      # inputs.hyprland-plugins.packages.${pkgs.system}.blahblah
     ];
   };
 

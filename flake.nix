@@ -85,6 +85,11 @@
       url = "github:Novattz/creamlinux-installer";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    split-monitor-workspaces = {
+      url = "github:Duckonaut/split-monitor-workspaces";
+      inputs.hyprland.follows = "hyprland";
+    };
   };
 
   outputs = {
@@ -96,6 +101,7 @@
     stylix,
     nix-flatpak,
     rust-overlay,
+    split-monitor-workspaces,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -151,7 +157,7 @@
         modules = [
           users/quil/home.nix
 
-          stylix.homeManagerModules.stylix
+          stylix.homeModules.stylix
           {
             home.packages = [customNeovim.neovim];
             nixpkgs.overlays = [rust-overlay.overlays.default];
