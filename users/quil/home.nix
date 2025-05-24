@@ -13,7 +13,7 @@
 
     # gaming applications below
     ../universal/applications/gaming/games.nix
-    ../universal/applications/gaming/creamlinux.nix
+    # ../universal/applications/gaming/creamlinux.nix
 
     # productivity applications below
     ../universal/applications/productivity/filezilla.nix

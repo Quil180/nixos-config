@@ -81,10 +81,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    creamlinux = {
-      url = "github:Novattz/creamlinux-installer";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # creamlinux = {
+    #   url = "github:Novattz/creamlinux-installer";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     split-monitor-workspaces = {
       url = "github:Duckonaut/split-monitor-workspaces";
