@@ -37,7 +37,7 @@
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     xwayland.enable = true;
     systemd.enable = false;
     systemd.variables = ["--all"];
@@ -54,7 +54,7 @@
       windowrulev2 = [
         "opacity 0.0 override, class:^(xwaylandvideobridge)$"
         "opacity 0.9 override 0.85 override,class:^(foot)$"
-        "opacity 1.0 override 0.85 override,class:^(firefox)$"
+        "opacity 1.0 override 0.95 override,class:^(firefox)$"
         "noanim, class:^(xwaylandvideobridge)$"
         "noinitialfocus, class:^(xwaylandvideobridge)$"
         "maxsize 1 1, class:^(xwaylandvideobridge)$"
