@@ -146,6 +146,7 @@
         mutualGroupDMs.enable = true;
         noF1.enable = true;
         noOnboardingDelay.enable = true;
+        # noReplyMention.enable = true;
         openInApp.enable = true;
         petpet.enable = true;
         pinDMs.enable = true;
