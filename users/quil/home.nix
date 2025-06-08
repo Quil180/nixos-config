@@ -9,21 +9,21 @@
     ../universal/applications/essentials/music.nix
     ../universal/applications/essentials/password-manager.nix
     ../universal/applications/essentials/ranger.nix
-    ../universal/applications/essentials/vivaldi.nix
+    # ../universal/applications/essentials/vivaldi.nix
 
     # gaming applications below
     ../universal/applications/gaming/games.nix
     # ../universal/applications/gaming/creamlinux.nix
 
     # productivity applications below
-    ../universal/applications/productivity/filezilla.nix
+    # ../universal/applications/productivity/filezilla.nix
     ../universal/applications/productivity/git.nix
     ../universal/applications/productivity/latex.nix
     ../universal/applications/productivity/office.nix
 
     # programming languages
     ../universal/applications/productivity/programming/verilog.nix
-    ../universal/applications/productivity/programming/rust.nix
+    # ../universal/applications/productivity/programming/rust.nix
     # ../universal/applications/productivity/programming/python.nix
     # ../universal/applications/productivity/programming/vscode.nix
 
