@@ -20,7 +20,6 @@
       workspace=7,monitor:eDP-2
       workspace=8,monitor:eDP-2
       workspace=9,monitor:eDP-2
-      workspace=10,monitor:eDP-2
 
       workspace=11,monitor:DP-3
       workspace=12,monitor:DP-3
