@@ -20,6 +20,7 @@
     ../universal/applications/productivity/git.nix
     ../universal/applications/productivity/latex.nix
     ../universal/applications/productivity/office.nix
+    ../universal/applications/productivity/zoom.nix
 
     # programming languages
     ../universal/applications/productivity/programming/verilog.nix
