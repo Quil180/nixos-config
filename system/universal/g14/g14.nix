@@ -1,7 +1,7 @@
 {pkgs, ...}: {
 
   imports = [
-    ./kernel.nix
+    # ./kernel.nix
   ];
   environment.systemPackages = with pkgs; [
     asusctl
