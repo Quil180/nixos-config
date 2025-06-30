@@ -38,7 +38,7 @@
           "tray"
         ];
         "hyprland/workspace" = {
-          all-outputs = true;
+          all-outputs = false;
           warp-on-scoll = false;
           enable-bar-scroll = true;
           disable-scroll-wraparound = true;

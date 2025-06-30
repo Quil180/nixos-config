@@ -12,7 +12,7 @@
     xwayland = {
       enable = true;
     };
-    withUWSM = true;
+    # withUWSM = true;
   };
 
   services = {

@@ -93,6 +93,7 @@
         "wheel"
         "storage"
         "docker"
+        "video"
       ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ../keys/id_snowflake.pub)

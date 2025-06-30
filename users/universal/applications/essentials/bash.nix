@@ -40,6 +40,7 @@ in {
       # general useful aliases
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
       nf = "fastfetch";
+      g = "git";
 
       # g14 related aliases
       gpu = "supergfxctl -g";

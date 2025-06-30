@@ -102,7 +102,7 @@
 
     policies = {
       PromptForDownloadLocation = true;
-      DefaultDownloadDirectory = "\{$home}/Downloads";
+      # DefaultDownloadDirectory = "\{$home}/Downloads";
       ExtensionReccomendations = false;
       FeatureRecomendations = false;
       SkipOnboarding = true;

@@ -102,6 +102,7 @@
     nix-flatpak,
     rust-overlay,
     split-monitor-workspaces,
+    hyprland,
     ...
   } @ inputs: let
     lib = nixpkgs.lib;
@@ -158,6 +159,7 @@
           users/quil/home.nix
 
           stylix.homeModules.stylix
+          hyprland.homeManagerModules.default
           {
             home.packages = [customNeovim.neovim];
             nixpkgs.overlays = [rust-overlay.overlays.default];

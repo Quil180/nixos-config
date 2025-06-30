@@ -3,6 +3,7 @@
     lutris
     mangohud
     goverlay
+    gamemode
   ];
 
   programs = {

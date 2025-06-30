@@ -3,5 +3,8 @@
     libreoffice-qt6
     hunspell
     hunspellDicts.en_US
+
+    corefonts
+    vistafonts
   ];
 }
