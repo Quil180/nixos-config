@@ -28,13 +28,13 @@
 
     # VPNs
     ../universal/vpns/hamachi.nix
-    ../universal/vpns/zerotier.nix
+    # ../universal/vpns/zerotier.nix
 
     # Extra options...
     # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
     ../universal/docker.nix
-    ../universal/vncviewer.nix
+   # ../universal/vncviewer.nix
   ];
 
   # Use the systemd-boot EFI boot loader.

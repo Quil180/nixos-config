@@ -20,7 +20,7 @@
     ../universal/applications/productivity/git.nix
     ../universal/applications/productivity/latex.nix
     ../universal/applications/productivity/office.nix
-    ../universal/applications/productivity/zoom.nix
+    # ../universal/applications/productivity/zoom.nix
 
     # programming languages
     ../universal/applications/productivity/programming/verilog.nix
@@ -33,7 +33,7 @@
 
     # social applications below
     ../universal/applications/social/discord.nix
-    ../universal/applications/social/revolt.nix
+    # ../universal/applications/social/revolt.nix
   ];
 
   nixpkgs.config = {
