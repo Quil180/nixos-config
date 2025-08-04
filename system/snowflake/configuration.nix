@@ -30,13 +30,15 @@
     ../universal/vpns/hamachi.nix
     # ../universal/vpns/zerotier.nix
 
+    # My Version of Neovim?
+    ../universal/neovim.nix
+
     # Extra options...
     ../universal/g14/g14.nix
     ../universal/docker.nix
     ../universal/flatpak.nix
    # ../universal/vncviewer.nix
 
-    ../universal/nvim.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -68,7 +70,7 @@
     fastfetch
     git
     gh
-    neovim
+    # neovim
     sops
     ranger
     wget

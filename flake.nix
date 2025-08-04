@@ -44,6 +44,7 @@
     };
 
     # Neovim Package (that I made) flake input
+    # Note: Get rid of this after migrating away from nvf
     nvf = {
       url = "github:notashelf/nvf";
     };
