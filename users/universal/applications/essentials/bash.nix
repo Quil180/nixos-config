@@ -36,6 +36,8 @@ in {
       # updatetime and updatelog
       updatetime = "systemctl status nixos-upgrade.timer";
       updatelog = "systemctl status nixos-upgrade.service";
+      # wifi reset full (drivers)
+      restartwifi = "sudo modprobe -r mt7921e && sudo modprobe mt7921e";
 
       # general useful aliases
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
