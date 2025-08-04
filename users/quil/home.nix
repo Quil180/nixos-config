@@ -34,6 +34,8 @@
     # social applications below
     ../universal/applications/social/discord.nix
     # ../universal/applications/social/revolt.nix
+
+    ../universal/applications/productivity/flatpak/flatpak.nix
   ];
 
   nixpkgs.config = {
