@@ -20,7 +20,7 @@
       "$mod SHIFT, P, pseudo,"
       "$mod, J, togglesplit,"
       "$mod, L, exec, wlogout"
-      "$mod SHIFT, L, exec, wayland-logout"
+      "$mod SHIFT, L, exit,"
       "$mod SHIFT, F, fullscreen,0"
 
       # binds to launch apps
