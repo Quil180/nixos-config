@@ -21,12 +21,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # neovim declaration package
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # firefox addons declaration package
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
@@ -39,6 +33,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Cursor of choice
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
     };
@@ -48,18 +43,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Neovim Package (that I made) flake input
     nvf = {
       url = "github:notashelf/nvf";
     };
 
+    # For G14 hardware configuration
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
 
+    # Latest Hyprland
     hyprland = {
       url = "github:hyprwm/Hyprland";
     };
 
+    # Hyprland Plugins
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -76,6 +75,7 @@
       url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
     };
 
+    # For rust usage
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -86,9 +86,15 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
 
+    # Used for hyprland
     split-monitor-workspaces = {
       url = "github:Duckonaut/split-monitor-workspaces";
       inputs.hyprland.follows = "hyprland";
+    };
+
+    # Latest version of neovim
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
     };
   };
 
@@ -139,14 +145,13 @@
           inputs.disko.nixosModules.default
           inputs.impermanence.nixosModules.impermanence
           # inputs.agenix.nixosModules.default
-          nix-flatpak.nixosModules.nix-flatpak
           nixos-hardware.nixosModules.asus-zephyrus-ga402
 
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
 
           {
-            environment.systemPackages = [customNeovim.neovim];
+            # environment.systemPackages = [customNeovim.neovim];
           }
         ];
       };
@@ -161,7 +166,7 @@
           stylix.homeModules.stylix
           hyprland.homeManagerModules.default
           {
-            home.packages = [customNeovim.neovim];
+            # home.packages = [customNeovim.neovim];
             nixpkgs.overlays = [rust-overlay.overlays.default];
           }
         ];
