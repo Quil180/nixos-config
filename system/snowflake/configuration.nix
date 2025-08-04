@@ -31,10 +31,12 @@
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
-    # ../universal/flatpak/flatpak.nix
     ../universal/g14/g14.nix
     ../universal/docker.nix
+    ../universal/flatpak.nix
    # ../universal/vncviewer.nix
+
+    ../universal/nvim.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
