@@ -18,18 +18,27 @@ vim.pack.add({
 	-- Color Schemes
 	{ src = "https://github.com/catppuccin/nvim" },
 	{ src = "https://github.com/Mofiqul/dracula.nvim" },
-	-- Language Server Protocols
-	{ src = "https://github.com/neovim/nvim-lspconfig" },
+
 	-- Telescoping Files
 	{ src = "https://github.com/echasnovski/mini.pick" },
 	-- LaTeX Preview/AutoCompiling (make sure you have arara installed)
 	{ src = "https://github.com/lervag/vimtex" },
 	-- Shows what keybinds exist after pressing leader
 	{ src = "https://github.com/folke/which-key.nvim" },
+	-- Simple File Explorer to get rid of Ranger Usage
+	{ src = "https://github.com/stevearc/oil.nvim" },
+	-- Lazy-lsp if I'm lazy and don't want to install onto system
+	{ src = "https://github.com/dundalek/lazy-lsp.nvim" },
 })
 
--- Enabling mini.pick
+-- Lazy-lsp Setup
+require "lazy-lsp".setup()
+
+-- mini.pick Setup
 require "mini.pick".setup()
+
+-- Oil Setup
+require "oil".setup()
 
 -- Vimtex Setup
 vim.cmd(":filetype plugin on")
@@ -61,6 +70,7 @@ map({ 'n', 'v', 'i' }, '<leader>y', '"+y', { desc = 'Copy, but different' })
 map({ 'n', 'v', 'i' }, '<leader>d', '"+d', { desc = 'Cut, but different' })
 -- Formatting
 map('n', '<leader>bf', vim.lsp.buf.format, { desc = '[B]uffer [F]ormat' })
+map('n', '<leader>ec', ':bd<CR>', { desc = '[B]uffer [D]elete' })
 -- Find a File (mini.pick)
 map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
 -- Find a keybind (mini.pick)
@@ -68,7 +78,8 @@ map('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
 -- Hovering
 map('n', 'W', vim.lsp.buf.hover, { desc = '[W]hat is this?' })
 -- Terminal!
-map('n', '<leader>tv', ':vs | term<CR>', { desc = '[T]erminal [V]ertical' })
+map('n', '<leader>tv', ':vsplit | term<CR>', { desc = '[T]erminal [V]ertical' })
+map('n', '<leader>th', ':split | term<CR>', { desc = '[T]erminal [H]orizontal' })
 map('n', '<leader>tf', ':tabnew | term<CR>', { desc = '[T]erminal [F]ullscreen' })
 map('t', '<C-o>', [[<C-\><C-n>]], { desc = '[T]erminal [E]xit' })
 -- Tabs!
@@ -77,7 +88,8 @@ map('n', '<leader>tc', ':tabclose<CR>', { desc = '[T]ab [C]lose' })
 map('n', '<leader>tn', ':tabnext<CR>', { desc = '[T]ab [N]ext' })
 map('n', '<leader>tb', ':tabprevious<CR>', { desc = '[T]ab [B]ack' })
 map('n', '<leader>tp', ':tabmove<CR>', { desc = '[T]ab [P]ush Back' })
-
+-- Oil/File Explorer
+map('n', '<leader>eo', ':split | Oil<CR>', { desc = '[E]xplorer [O]pen' })
 
 -- LSP Languages Wanted!
 vim.lsp.enable({
@@ -91,16 +103,6 @@ vim.lsp.enable({
 	"ruff",         -- Python Linter/Formatter
 	"nixd",         -- Nix
 })
--- Giving lua_ls where the neovim stuff is
-vim.lsp.config("lua_ls", {
-	settings = {
-		Lua = {
-			workspace = {
-				library = vim.api.nvim_get_runtime_file("", true),
-			}
-		}
-	}
-})
 
 -- Autocomplete with tab
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -112,4 +114,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end,
 })
 vim.cmd("set completeopt+=noselect")
-
