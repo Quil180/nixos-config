@@ -1,4 +1,4 @@
--- Setting macros for later on
+-- Setting macros for use later on
 local opt          = vim.opt
 local map          = vim.keymap.set
 
@@ -72,6 +72,7 @@ map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
 map('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
 -- Hovering
 map('n', 'W', vim.lsp.buf.hover, { desc = '[W]hat is this?' })
+map('n', 'E', vim.diagnostic.open_float, { desc = 'What\'s the [E]rror' })
 -- Terminal!
 map('n', '<leader>tv', ':vsplit | term<CR>', { desc = '[T]erminal [V]ertical' })
 map('n', '<leader>th', ':split | term<CR>', { desc = '[T]erminal [H]orizontal' })
