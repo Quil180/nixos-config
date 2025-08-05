@@ -1,12 +1,17 @@
+-- Setting macros for later on
+local opt          = vim.opt
+local map          = vim.keymap.set
+
 -- Basic Options
-vim.o.number         = true      -- Line Numbers on Left
-vim.o.relativenumber = true      -- Relative Numbers on Left
-vim.o.wrap           = false     -- Disabling Wrapping
-vim.o.tabstop        = 2         -- Tabs are 2 Spaces
-vim.o.shiftwidth     = 2         -- Tabs are 2 Spaces
-vim.o.swapfile       = false     -- Disabling swap file
-vim.o.signcolumn     = "yes"     -- Making a sign column
-vim.o.winborder      = "rounded" -- rounded borders
+opt.number         = true      -- Line Numbers on Left
+opt.relativenumber = true      -- Relative Numbers on Left
+opt.wrap           = false     -- Disabling Wrapping
+opt.tabstop        = 2         -- Tabs are 2 Spaces
+opt.shiftwidth     = 2         -- Tabs are 2 Spaces
+opt.swapfile       = false     -- Disabling swap file
+opt.signcolumn     = "yes"     -- Making a sign column
+opt.winborder      = "rounded" -- rounded borders
+opt.termguicolors  = true      -- enabling terminal gui colors
 
 -- Package Management
 vim.pack.add({
@@ -44,22 +49,34 @@ vim.g.maplocalleader = " "
 
 -- Keybinds Below
 -- Source Current File
-vim.keymap.set('n', '<leader>o', ':update<CR>:source<CR>', { desc = '[O]h I\'ve updated my config' })
+map('n', '<leader>o', ':update<CR>:source<CR>', { desc = '[O]h I\'ve updated my config' })
 -- Save Current File (assuming changes made)
-vim.keymap.set('n', '<leader>s', ':update<CR>', { desc = '[S]ave' })
+map('n', '<leader>s', ':update<CR>', { desc = '[S]ave' })
 -- Quit NeoVim
-vim.keymap.set('n', '<leader>q', ':quit<CR>', { desc = '[Q]uit' })
+map('n', '<leader>q', ':quit<CR>', { desc = '[Q]uit' })
 -- Copy/Cut
-vim.keymap.set({ 'n', 'v', 'i' }, '<C-c>', '"+y', { desc = 'Copy' })
-vim.keymap.set({ 'n', 'v', 'i' }, '<C-d>', '"+d', { desc = 'Cut' })
+map({ 'n', 'v', 'i' }, '<C-c>', '"+y', { desc = 'Copy' })
+map({ 'n', 'v', 'i' }, '<C-d>', '"+d', { desc = 'Cut' })
+map({ 'n', 'v', 'i' }, '<leader>y', '"+y', { desc = 'Copy, but different' })
+map({ 'n', 'v', 'i' }, '<leader>d', '"+d', { desc = 'Cut, but different' })
 -- Formatting
-vim.keymap.set('n', '<leader>bf', vim.lsp.buf.format, { desc = '[B]uffer [F]ormat' })
+map('n', '<leader>bf', vim.lsp.buf.format, { desc = '[B]uffer [F]ormat' })
 -- Find a File (mini.pick)
-vim.keymap.set('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
+map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
 -- Find a keybind (mini.pick)
-vim.keymap.set('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
+map('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
 -- Hovering
-vim.keymap.set('n', 'W', vim.lsp.buf.hover, { desc = '[W]hat is this?' })
+map('n', 'W', vim.lsp.buf.hover, { desc = '[W]hat is this?' })
+-- Terminal!
+map('n', '<leader>tv', ':vs | term<CR>', { desc = '[T]erminal [V]ertical' })
+map('n', '<leader>tf', ':tabnew | term<CR>', { desc = '[T]erminal [F]ullscreen' })
+map('t', '<C-o>', [[<C-\><C-n>]], { desc = '[T]erminal [E]xit' })
+-- Tabs!
+map('n', '<leader>tm', ':tabnew<CR>', { desc = '[T]ab [M]ake' })
+map('n', '<leader>tc', ':tabclose<CR>', { desc = '[T]ab [C]lose' })
+map('n', '<leader>tn', ':tabnext<CR>', { desc = '[T]ab [N]ext' })
+map('n', '<leader>tb', ':tabprevious<CR>', { desc = '[T]ab [B]ack' })
+map('n', '<leader>tp', ':tabmove<CR>', { desc = '[T]ab [P]ush Back' })
 
 
 -- LSP Languages Wanted!
@@ -74,6 +91,16 @@ vim.lsp.enable({
 	"ruff",         -- Python Linter/Formatter
 	"nixd",         -- Nix
 })
+-- Giving lua_ls where the neovim stuff is
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			workspace = {
+				library = vim.api.nvim_get_runtime_file("", true),
+			}
+		}
+	}
+})
 
 -- Autocomplete with tab
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -85,3 +112,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end,
 })
 vim.cmd("set completeopt+=noselect")
+
