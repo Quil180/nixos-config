@@ -65,7 +65,7 @@ map({ 'n', 'v', 'i' }, '<leader>y', '"+y', { desc = 'Copy, but different' })
 map({ 'n', 'v', 'i' }, '<leader>d', '"+d', { desc = 'Cut, but different' })
 -- Formatting
 map('n', '<leader>bf', vim.lsp.buf.format, { desc = '[B]uffer [F]ormat' })
-map('n', '<leader>ec', ':bd<CR>', { desc = '[B]uffer [D]elete' })
+map('n', '<leader>bd', ':bd<CR>', { desc = '[B]uffer [D]elete' })
 -- Find a File (mini.pick)
 map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
 -- Find a keybind (mini.pick)
