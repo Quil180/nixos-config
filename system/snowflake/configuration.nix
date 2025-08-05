@@ -30,9 +30,6 @@
     ../universal/vpns/hamachi.nix
     # ../universal/vpns/zerotier.nix
 
-    # My Version of Neovim?
-    ../universal/neovim.nix
-
     # Extra options...
     ../universal/g14/g14.nix
     ../universal/docker.nix
@@ -124,10 +121,16 @@
   # enabling programs to be managed by nixos
   programs = {
     zsh.enable = true;
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-    };
+	neovim = {
+		# Enabling customization of neovim and nightly version
+		enable = true;
+		package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+
+		# setting neovim to be default editor and extra aliases
+		defaultEditor = true;
+		viAlias = true;
+		vimAlias = true;
+	};
     nix-ld.enable = true;
   };
 

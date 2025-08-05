@@ -7,6 +7,7 @@
     ../universal/applications/essentials/bash.nix
     ../universal/applications/essentials/firefox.nix
     ../universal/applications/essentials/music.nix
+    ../universal/applications/essentials/neovim.nix
     ../universal/applications/essentials/password-manager.nix
     ../universal/applications/essentials/ranger.nix
     # ../universal/applications/essentials/vivaldi.nix
