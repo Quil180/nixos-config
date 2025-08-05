@@ -7,7 +7,7 @@ opt.number         = true      -- Line Numbers on Left
 opt.relativenumber = true      -- Relative Numbers on Left
 opt.wrap           = false     -- Disabling Wrapping
 opt.tabstop        = 2         -- Tabs are 2 Spaces
-opt.shiftwidth     = 2         -- Tabs are 2 Spaces
+opt.shiftwidth     = 2         -- Shifts are 2 Spaces
 opt.swapfile       = false     -- Disabling swap file
 opt.signcolumn     = "yes"     -- Making a sign column
 opt.winborder      = "rounded" -- rounded borders
@@ -27,12 +27,7 @@ vim.pack.add({
 	{ src = "https://github.com/folke/which-key.nvim" },
 	-- Simple File Explorer to get rid of Ranger Usage
 	{ src = "https://github.com/stevearc/oil.nvim" },
-	-- Lazy-lsp if I'm lazy and don't want to install onto system
-	{ src = "https://github.com/dundalek/lazy-lsp.nvim" },
 })
-
--- Lazy-lsp Setup
-require "lazy-lsp".setup()
 
 -- mini.pick Setup
 require "mini.pick".setup()
