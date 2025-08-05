@@ -11,6 +11,7 @@ This repository contains the NixOS configuration files for setting up and managi
 - [Installing Additional Software](#installing-additional-software)
   - [Vivado/Xilinx](#vivadoxilinx)
 - [Repository Structure](#repository-structure)
+- [To-Do](#To-Do)
 
 ## Installation
 
@@ -81,3 +82,6 @@ To install Vivado/Xilinx:
 - `wallpapers/`: Collection of wallpapers for the system.
 
 For more detailed information, explore the respective directories and files within this repository. 
+
+## To-Do
+- Make secrets actually work!!!!
