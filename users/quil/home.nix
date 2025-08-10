@@ -19,6 +19,7 @@
     # productivity applications below
     # ../universal/applications/productivity/filezilla.nix
     ../universal/applications/productivity/git.nix
+    ../universal/applications/productivity/kicad.nix
     ../universal/applications/productivity/latex.nix
     ../universal/applications/productivity/office.nix
     # ../universal/applications/productivity/zoom.nix
