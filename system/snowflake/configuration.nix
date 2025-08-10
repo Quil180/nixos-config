@@ -57,6 +57,7 @@
   networking = {
     hostName = "snowflake";
     networkmanager.enable = true;
+		firewall.enable = true;
   };
 
   time.timeZone = "America/New_York";
@@ -95,6 +96,9 @@
         "storage"
         "docker"
         "video"
+				# Virtual Machines
+				"libvirt"
+				"kvm"
       ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ../keys/id_snowflake.pub)

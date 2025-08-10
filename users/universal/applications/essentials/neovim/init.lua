@@ -72,7 +72,18 @@ map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
 map('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
 -- Hovering
 map('n', 'W', vim.lsp.buf.hover, { desc = '[W]hat is this?' })
-map('n', 'E', vim.diagnostic.open_float, { desc = 'What\'s the [E]rror' })
+-- map('n', 'E', vim.diagnostic.open_float, { desc = 'What\'s the [E]rror' })
+vim.keymap.set('n', 'E', function()
+	vim.diagnostic.config({ virtual_lines = { current_line = true }, virtual_text = false })
+
+	vim.api.nvim_create_autocmd('CursorMoved', {
+		group = vim.api.nvim_create_augroup('line-diagnostics', { clear = true }),
+		callback = function()
+			vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+			return true
+		end,
+	})
+end, { desc = 'What\'s the [E]rror' })
 -- Terminal!
 map('n', '<leader>tv', ':vsplit | term<CR>', { desc = '[T]erminal [V]ertical' })
 map('n', '<leader>th', ':split | term<CR>', { desc = '[T]erminal [H]orizontal' })
