@@ -34,6 +34,7 @@
     ../universal/g14/g14.nix
     ../universal/docker.nix
     ../universal/flatpak.nix
+		../universal/ollama.nix
    # ../universal/vncviewer.nix
 
   ];
