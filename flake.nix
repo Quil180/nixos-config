@@ -108,7 +108,6 @@
     stylix,
     nix-flatpak,
     rust-overlay,
-    split-monitor-workspaces,
     hyprland,
     ...
   } @ inputs: let

@@ -20,20 +20,20 @@
     # Sound?
     ../universal/system/sound.nix
     ../universal/system/bluetooth.nix
-    ../universal/system/persist.nix
+    # ../universal/system/persist.nix
     ../universal/system/virtualisation.nix
 
     # Game Applications setup/installed?
     ../universal/games.nix
 
     # VPNs
-    ../universal/vpns/hamachi.nix
+    # ../universal/vpns/hamachi.nix
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
     ../universal/g14/g14.nix
-    ../universal/docker.nix
-    ../universal/flatpak.nix
+    # ../universal/docker.nix
+    # ../universal/flatpak.nix
 		../universal/ollama.nix
    # ../universal/vncviewer.nix
 
@@ -58,7 +58,9 @@
   networking = {
     hostName = "snowflake";
     networkmanager.enable = true;
-		firewall.enable = true;
+		firewall = {
+			enable = true;
+		};
   };
 
   time.timeZone = "America/New_York";
@@ -69,7 +71,7 @@
     fastfetch
     git
     gh
-    # neovim
+    neovim
     sops
     ranger
     wget
@@ -95,10 +97,7 @@
         "networkmanager"
         "wheel"
         "storage"
-        "docker"
         "video"
-				# Virtual Machines
-				"libvirt"
 				"kvm"
       ];
       openssh.authorizedKeys.keys = [

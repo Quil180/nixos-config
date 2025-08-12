@@ -3,4 +3,7 @@
     docker
     docker-compose
   ];
+  users.users.quil = {
+    extraGroups = ["docker"];
+  };
 }

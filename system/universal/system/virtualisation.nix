@@ -1,67 +1,39 @@
+{ pkgs, ... }: 
 {
-  pkgs,
-  lib,
-  ...
-}: let
-  gpuID = [
-    # "1002:73ef" # gpu
-    # "1002:ab28" # audio
-  ];
-in {
-  boot = {
-    kernelParams = [
-      "amd_iommu=on"
-      "iommu=pt"
-      ("vfio-pci.ids=" + lib.concatStringsSep "," gpuID)
-    ];
-    kernelModules = [
-      "vfio_pci"
-      "vfio"
-      "vfio_iommu_type1"
-      "kvm-amd"
-    ];
-  };
 
-  users.users.quil = {
-    extraGroups = ["libvirtd"];
-  };
+	programs.dconf.enable = true;
+	
+  users.users.quil.extraGroups = [ "libvirtd" ];
 
-  hardware.graphics.enable = true;
-  programs.virt-manager.enable = true;
+  services.spice-vdagentd.enable = true;
+
   virtualisation = {
     spiceUSBRedirection.enable = true;
     libvirtd = {
       enable = true;
       qemu = {
+				# For Windows VMs
         ovmf = {
           enable = true;
-          packages = [
-            (pkgs.OVMF.override {
-              secureBoot = true;
-              tpmSupport = true;
-            })
-            .fd
-          ];
+          packages = [ pkgs.OVMFFull.fd ];
         };
         swtpm.enable = true;
-        runAsRoot = true;
-        vhostUserPackages = with pkgs; [virtiofsd];
       };
-      onBoot = "ignore";
-      onShutdown = "shutdown";
     };
   };
 
-  environment.sessionVariables.LIBVIRT_DEFAULT_URI = ["qemu:///session"];
   environment.systemPackages = with pkgs; [
+		# Virtual-Manager GUI
     virt-manager
     virt-viewer
-    virtiofsd
+		# SPICE client for visualizations
     spice
     spice-gtk
     spice-protocol
+		# Drivers for Windows VM
     win-virtio
     win-spice
+		# Icon pack for buttons
+		adwaita-icon-theme
   ];
-  services.spice-vdagentd.enable = true;
 }

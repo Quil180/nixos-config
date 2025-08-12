@@ -14,6 +14,9 @@
       "/var/lib/systemd/coredump"
       "/var/lib/libvirt"
       "/var/lib/logmein-hamachi"
+			"/var/lib/ollama"
+			"/var/lib/open-webui"
+			# "/var/lib/private"
       {
         directory = "/var/lib/colord";
         user = "colord";
