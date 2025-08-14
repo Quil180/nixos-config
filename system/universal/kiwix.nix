@@ -1,6 +1,7 @@
 {pkgs, ...}:
 {
-	environment.packages = with pkgs; [
+	environment.systemPackages = with pkgs; [
 		kiwix
+		kiwix-tools
 	];
 }
