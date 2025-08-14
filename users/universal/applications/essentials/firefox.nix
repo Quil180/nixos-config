@@ -30,7 +30,9 @@
 
         # Disable some telemetry
         "app.shield.optoutstudies.enabled" = false;
+				"beacon.enabled" = false;
         "browser.discovery.enabled" = false;
+				"browser.tabs.crashReporting.sendReport" = false;
         "browser.ping-centre.telemetry" = false;
         "datareporting.healthreport.service.enabled" = false;
         "datareporting.healthreport.uploadEnabled" = false;
@@ -51,6 +53,15 @@
         "toolkit.telemetry.unified" = false;
         "toolkit.telemetry.unifiedIsOptIn" = false;
         "toolkit.telemetry.updatePing.enabled" = false;
+
+				# Disabling Pre-Fetching
+				"network.dns.disablePrefetch" = true;
+				"network.dns.disablePrefetchFromHTTPS" = true;
+				"network.predictor.enabled" = false;
+				"network.predictor.enable-prefetch" = false;
+				"network.prefetch-next" = false;
+				"browser.urlbar.speculativeConnect.enabled" = false;
+
         # Disable "save password" prompt
         "signon.rememberSignons" = false;
         # Harden Security
@@ -93,6 +104,29 @@
 
         # autofill disabling
         "dom.forms.autocomplete.formautofill" = true;
+
+				# Extra Stuff
+				"pdfjs.enableScripting" = false;
+				"security.ssl3.rsa_des_ede3_sha" = false;
+				"security.ssl.require_safe_negotiation" = true;
+
+				"identity.fxaccounts.enabled" = false;
+				"geo.enabled" = false;
+				"dom.webnotifications.enabled" = false;
+				"dom.event.clipboardevents.enabled" = false;
+				"media.navigator.enabled" = false;
+				"privacy.donottrackheader.enabled" = true;
+				"browser.safebrowsing.malware.enabled" = false;
+				"browser.safebrowsing.phishing.enabled" = false;
+				"browser.safebrowsing.downloads.remote.enabled" = false;
+				"media.eme.enabled" = false;
+				"media.gmp-widevinecdm.enabled" = false;
+				"network.cookie.cookieBehavior" = 1;
+				"network.http.referer.XOriginPolicy" = 2;
+				"network.http.referer.XOriginTrimmingPolicy" = 2;
+				"browser.sessionstore.privacy_level" = 2;
+				"network.captive-portal-service.enabled" = false;
+				"network.trr.mode" = 5;
       };
 
       extensions = {
@@ -102,7 +136,6 @@
 
     policies = {
       PromptForDownloadLocation = true;
-      # DefaultDownloadDirectory = "\{$home}/Downloads";
       ExtensionReccomendations = false;
       FeatureRecomendations = false;
       SkipOnboarding = true;
