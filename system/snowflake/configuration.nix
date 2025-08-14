@@ -31,10 +31,12 @@
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
-    ../universal/g14/g14.nix
     # ../universal/docker.nix
     # ../universal/flatpak.nix
+    ../universal/g14/g14.nix
+    ../universal/kiwix.nix
 		../universal/ollama.nix
+		../universal/teamviewer.nix
    # ../universal/vncviewer.nix
 
   ];
@@ -59,8 +61,9 @@
     hostName = "snowflake";
     networkmanager.enable = true;
 		firewall = {
-			enable = true;
+			enable = false;
 		};
+		# nftables.enable = true;
   };
 
   time.timeZone = "America/New_York";

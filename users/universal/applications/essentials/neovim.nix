@@ -32,6 +32,9 @@
 			basedpyright
 			# Nix
 			nixd
+
+			# For Latex
+			zathura
 		];
 		file = {
 			".config/nvim" = {

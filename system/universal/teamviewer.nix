@@ -1,0 +1,4 @@
+{...}:
+{
+	services.teamviewer.enable = true;
+}
