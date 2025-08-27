@@ -60,8 +60,8 @@ map('n', '<leader>q', ':quit<CR>', { desc = '[Q]uit' })
 -- Copy/Cut
 map({ 'n', 'v', 'i' }, '<C-c>', '"+y', { desc = 'Copy' })
 map({ 'n', 'v', 'i' }, '<C-d>', '"+d', { desc = 'Cut' })
-map({ 'n', 'v', 'i' }, '<leader>y', '"+y', { desc = 'Copy, but different' })
-map({ 'n', 'v', 'i' }, '<leader>d', '"+d', { desc = 'Cut, but different' })
+map({ 'n' }, '<leader>y', '"+y', { desc = 'Copy, but different' })
+map({ 'n' }, '<leader>d', '"+d', { desc = 'Cut, but different' })
 -- Formatting
 map('n', '<leader>bf', vim.lsp.buf.format, { desc = '[B]uffer [F]ormat' })
 map('n', '<leader>bd', ':bd<CR>', { desc = '[B]uffer [D]elete' })
@@ -70,7 +70,7 @@ map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
 -- Find a Piece of Text
 map('n', '<leader>g', ':Pick grep_live<CR>', { desc = '[G]rep for a phrase' })
 -- Find a Buffer
-map('n', '<leader>bf', ':Pick buffers<CR>', { desc = '[B]uffer [F]inder' })
+map('n', '<leader>bg', ':Pick buffers<CR>', { desc = '[B]uffer [G]rep' })
 -- Find a keybind (mini.pick)
 map('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
 -- Hovering
@@ -124,3 +124,20 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	end,
 })
 vim.cmd("set completeopt+=noselect")
+
+-- Fixing a bug with .v and .sv fles
+-- Setting the filetype for Verilog
+vim.api.nvim_create_autocmd(
+	{ "BufNewFile", "BufRead" }, {
+		pattern = { "*.v" },
+		command = "set filetype=verilog",
+	}
+)
+
+-- Setting the filetype for SystemVerilog
+vim.api.nvim_create_autocmd(
+	{ "BufNewFile", "BufRead" }, {
+		pattern = { "*.sv" },
+		command = "set filetype=systemverilog",
+	}
+)
