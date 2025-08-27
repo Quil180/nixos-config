@@ -52,7 +52,9 @@ vim.g.maplocalleader = " "
 
 -- Keybinds Below
 -- Source Current File
-map('n', '<leader>o', ':update<CR>:source<CR>', { desc = '[O]h I\'ve updated my config' })
+map('n', '<leader>ou', ':update<CR>:source<CR>', { desc = '[O]h I\'ve[U]pdated my config' })
+map('n', '<leader>oe', ':update<CR>:edit ~/.dotfiles/users/universal/applications/essentials/neovim/init.lua<CR>',
+	{ desc = '[O]h [E]dit my config' })
 -- Save Current File (assuming changes made)
 map('n', '<leader>s', ':update<CR>', { desc = '[S]ave' })
 -- Quit NeoVim
@@ -100,6 +102,10 @@ map('n', '<leader>tb', ':tabprevious<CR>', { desc = '[T]ab [B]ack' })
 map('n', '<leader>tp', ':tabmove<CR>', { desc = '[T]ab [P]ush Back' })
 -- Oil/File Explorer
 map('n', '<leader>eo', ':split | Oil<CR>', { desc = '[E]xplorer [O]pen' })
+-- opening a new horizontal window
+map('n', '<leader>wv', ':vsplit<CR>', { desc = '[W]indow [V]ertical' })
+map('n', '<leader>wh', ':split<CR>', { desc = '[W]indow [H]orizontal' })
+map('n', '<leader>wc', ':close<CR>', { desc = '[W]indow [C]lose' })
 
 -- LSP Languages Wanted!
 vim.lsp.enable({

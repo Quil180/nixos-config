@@ -6,9 +6,13 @@
       profiles.default.extensions = with pkgs.vscode-extensions; [
         dracula-theme.theme-dracula
         vscodevim.vim
-        yzhang.markdown-all-in-one
-        ms-vscode.cpptools-extension-pack
         github.copilot
+
+				# Languages
+        ms-vscode.cpptools-extension-pack
+        yzhang.markdown-all-in-one
+				ms-vscode.makefile-tools
+				ms-python.python
       ];
     };
   };
