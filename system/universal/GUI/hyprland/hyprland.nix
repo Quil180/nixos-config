@@ -28,6 +28,7 @@
   security.polkit.enable = true;
   environment.sessionVariables = {
     XDG_CURRENT_DESKTOP = "Hyprland";
+		ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     NIXOS_OZONE_WL = "1";
   };
 
