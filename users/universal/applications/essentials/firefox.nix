@@ -119,14 +119,14 @@
 				"browser.safebrowsing.malware.enabled" = false;
 				"browser.safebrowsing.phishing.enabled" = false;
 				"browser.safebrowsing.downloads.remote.enabled" = false;
-				"media.eme.enabled" = false;
-				"media.gmp-widevinecdm.enabled" = false;
-				"network.cookie.cookieBehavior" = 1;
-				"network.http.referer.XOriginPolicy" = 2;
-				"network.http.referer.XOriginTrimmingPolicy" = 2;
-				"browser.sessionstore.privacy_level" = 2;
-				"network.captive-portal-service.enabled" = false;
-				"network.trr.mode" = 5;
+				# "media.eme.enabled" = false;
+				# "media.gmp-widevinecdm.enabled" = false;
+				# "network.cookie.cookieBehavior" = 1;
+				# "network.http.referer.XOriginPolicy" = 2;
+				# "network.http.referer.XOriginTrimmingPolicy" = 2;
+				# "browser.sessionstore.privacy_level" = 2;
+				# "network.captive-portal-service.enabled" = false;
+				# "network.trr.mode" = 5;
       };
 
       extensions = {
