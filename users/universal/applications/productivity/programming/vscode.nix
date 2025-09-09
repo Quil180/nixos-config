@@ -10,6 +10,7 @@
 					vscodevim.vim
 					github.copilot
 					eamodio.gitlens
+					saoudrizwan.claude-dev
 
 					# Languages
 					ms-vscode.cpptools-extension-pack
@@ -38,6 +39,7 @@
 					"chat.tools.autoApprove" = true;
 					"chat.agent.maxRequests" = 250;
 					"git.autofetch" = true;
+					"chat.mcp.autostart" = "newAndOutdated";
 				};
 			};
     };
