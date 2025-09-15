@@ -35,7 +35,7 @@
     # ../universal/flatpak.nix
     ../universal/g14/g14.nix
     ../universal/kiwix.nix
-		../universal/ollama.nix
+		# ../universal/ollama.nix
 		../universal/teamviewer.nix
    # ../universal/vncviewer.nix
 
