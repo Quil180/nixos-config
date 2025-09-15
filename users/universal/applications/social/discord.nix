@@ -123,7 +123,7 @@
         };
         crashHandler.enable = true;
         disableCallIdle.enable = true;
-        emoteCloner.enable = true;
+        # emoteCloner.enable = true;
         fakeNitro.enable = true;
         favoriteEmojiFirst.enable = true;
         favoriteGifSearch.enable = true;
