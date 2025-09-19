@@ -27,7 +27,7 @@
     swww # backgrounds/wallpapers
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
-    rofi-wayland # app selector
+    # rofi # app selector
     wayland-logout # for easy logout
     wlogout # to easily logout
     wlr-randr # to change display primacy
