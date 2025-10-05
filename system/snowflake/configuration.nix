@@ -31,7 +31,7 @@
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
-    # ../universal/docker.nix
+    ../universal/docker.nix
     # ../universal/flatpak.nix
     ../universal/g14/g14.nix
     ../universal/kiwix.nix
@@ -50,21 +50,33 @@
       };
       grub = {
         enable = true;
+				configurationLimit = 5;
         device = "nodev";
         efiSupport = true;
       };
     };
+		kernelModules = [
+			"ip_tables"
+			"iptable_nat"
+		];
     kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [
+      "pcie_aspm.policy=powersave"
+    ];
   };
 
   networking = {
     hostName = "snowflake";
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      wifi.powersave = false;
+    };
 		firewall = {
 			enable = false;
 		};
-		# nftables.enable = true;
   };
+  # To ensure all firmware is loaded
+  hardware.enableRedistributableFirmware = true;
 
   time.timeZone = "America/New_York";
 
@@ -127,18 +139,22 @@
 
   # enabling programs to be managed by nixos
   programs = {
-    zsh.enable = true;
-	neovim = {
-		# Enabling customization of neovim and nightly version
-		enable = true;
-		package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+		gnupg.agent = {
+			enable = true;
+			enableSSHSupport = true;
+		};
+		neovim = {
+			# Enabling customization of neovim and nightly version
+			enable = true;
+			package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
 
-		# setting neovim to be default editor and extra aliases
-		defaultEditor = true;
-		viAlias = true;
-		vimAlias = true;
-	};
+			# setting neovim to be default editor and extra aliases
+			defaultEditor = true;
+			viAlias = true;
+			vimAlias = true;
+		};
     nix-ld.enable = true;
+    zsh.enable = true;
   };
 
   # enabling the services I need system wide
@@ -153,6 +169,9 @@
     devmon.enable = true;
     gvfs.enable = true;
     udisks2.enable = true;
+		
+		# For gpg
+		pcscd.enable = true;
   };
 
   nixpkgs.config = {

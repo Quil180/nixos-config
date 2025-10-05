@@ -8,6 +8,7 @@ opt.relativenumber = true      -- Relative Numbers on Left
 opt.wrap           = false     -- Disabling Wrapping
 opt.tabstop        = 2         -- Tabs are 2 Spaces
 opt.shiftwidth     = 2         -- Shifts are 2 Spaces
+opt.expandtab      = true      -- Tabs are always spaces
 opt.swapfile       = false     -- Disabling swap file
 opt.signcolumn     = "yes"     -- Making a sign column
 opt.winborder      = "rounded" -- rounded borders
@@ -17,7 +18,6 @@ opt.termguicolors  = true      -- enabling terminal gui colors
 vim.pack.add({
 	-- Color Schemes
 	{ src = "https://github.com/Mofiqul/dracula.nvim" },
-
 	-- Telescoping Files
 	{ src = "https://github.com/echasnovski/mini.pick" },
 	-- LaTeX Preview/AutoCompiling (make sure you have arara installed)

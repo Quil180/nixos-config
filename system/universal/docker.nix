@@ -6,4 +6,5 @@
   users.users.quil = {
     extraGroups = ["docker"];
   };
+	virtualisation.docker.enable = true;
 }

@@ -29,7 +29,7 @@
     ../universal/applications/productivity/programming/verilog.nix
     # ../universal/applications/productivity/programming/rust.nix
     # ../universal/applications/productivity/programming/python.nix
-    # ../universal/applications/productivity/programming/vscode.nix
+    ../universal/applications/productivity/programming/vscode.nix
 
     # ricing applications below
     ../universal/applications/ricing/stylix.nix
