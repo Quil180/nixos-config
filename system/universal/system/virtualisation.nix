@@ -137,7 +137,7 @@ VM_OFF_GOVERNOR=schedutil
 # Set the powerprofiles ctl profile to performance when 
 # the VM is on, and power-saver when the VM is shut down
 VM_ON_PWRPROFILE=performance
-VM_OFF_PWRPROFILE=power-saver
+VM_OFF_PWRPROFILE=performance
 
 # Set which CPU's to isolate, and your system's total
 # CPU's. For example, an 8-core, 16-thread processor has 

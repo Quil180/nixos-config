@@ -30,8 +30,12 @@
 
     # Dependency of asusd
     power-profiles-daemon.enable = true;
-
-    # fixing a bug
   };
-  systemd.services.supergfxd.path = [pkgs.pciutils];
+  systemd.services.supergfxd = {
+    serviceConfig = {
+      KillSignal = "SIGINT";
+      TimeoutStopSec = 10;
+    };
+    path = [pkgs.pciutils];
+  };
 }

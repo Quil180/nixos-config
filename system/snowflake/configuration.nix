@@ -60,9 +60,6 @@
 			"iptable_nat"
 		];
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "pcie_aspm.policy=powersave"
-    ];
   };
 
   networking = {
