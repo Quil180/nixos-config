@@ -82,11 +82,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # creamlinux = {
-    #   url = "github:Novattz/creamlinux-installer";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     # Used for hyprland
     split-monitor-workspaces = {
       url = "github:Duckonaut/split-monitor-workspaces";
@@ -97,10 +92,14 @@
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
     };
+
+    winboat = {
+      url = "github:TibixDev/winboat";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
-    self,
     nixpkgs,
     home-manager,
     nvf,
@@ -111,8 +110,9 @@
     hyprland,
     ...
   } @ inputs: let
-    lib = nixpkgs.lib;
+    username = "quil";
     system = "x86_64-linux";
+    lib = nixpkgs.lib;
     pkgs = nixpkgs.legacyPackages.${system};
 
     # neovim config package management
@@ -139,7 +139,7 @@
       snowflake = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs;
+          inherit inputs system username;
         };
         modules = [
           inputs.disko.nixosModules.default
@@ -155,9 +155,9 @@
     homeConfigurations = {
       quil = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = {inherit inputs;};
+        extraSpecialArgs = {inherit inputs system username;};
         modules = [
-          users/quil/home.nix
+          users/${username}/home.nix
 
           stylix.homeModules.stylix
           hyprland.homeManagerModules.default

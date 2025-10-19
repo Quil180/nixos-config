@@ -1,13 +1,14 @@
 {
   pkgs,
   lib,
+  username,
   ...
 }: {
   programs.firefox = {
     enable = true;
     package = pkgs.wrapFirefox (pkgs.firefox-unwrapped.override {pipewireSupport = true;}) {};
 
-    profiles.quil = {
+    profiles.${username} = {
       settings = {
         "browser.startup.homepage" = "https://mynixos.com";
         "browser.search.region" = "US";
@@ -138,6 +139,6 @@
   };
 
   stylix.targets.firefox.profileNames = [
-    "quil"
+    "${username}"
   ];
 }

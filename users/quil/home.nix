@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, username, ...}: {
   imports = [
     # desktop environments below
     ../universal/desktop-environments/hyprland/hyprland.nix
@@ -47,8 +47,8 @@
   };
 
   home = {
-    username = "quil";
-    homeDirectory = "/home/quil";
+    username = "${username}";
+    homeDirectory = "/home/${username}";
     stateVersion = "24.05";
     sessionVariables.EDITOR = "nvim";
     packages = with pkgs; [

@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  username,
   ...
 }: {
   imports = [
@@ -34,10 +35,11 @@
     ../universal/docker.nix
     # ../universal/flatpak.nix
     ../universal/g14/g14.nix
-    ../universal/kiwix.nix
+    # ../universal/kiwix.nix
 		# ../universal/ollama.nix
 		../universal/teamviewer.nix
    # ../universal/vncviewer.nix
+   ../universal/winboat.nix
 
   ];
 
@@ -59,7 +61,7 @@
 			"ip_tables"
 			"iptable_nat"
 		];
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
   };
 
   networking = {
@@ -79,6 +81,7 @@
 
   # default packages regardless of user/host
   environment.systemPackages = with pkgs; [
+    appimage-run
     btop-rocm
     fastfetch
     git
@@ -102,7 +105,7 @@
   # default user settings regardless of host/user
   users = {
     defaultUserShell = pkgs.zsh;
-    users.quil = {
+    users.${username} = {
       isNormalUser = true;
       initialPassword = "1234";
       extraGroups = [
@@ -111,6 +114,7 @@
         "storage"
         "video"
 				"kvm"
+        "docker"
       ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ../keys/id_snowflake.pub)
@@ -136,6 +140,10 @@
 
   # enabling programs to be managed by nixos
   programs = {
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
 		gnupg.agent = {
 			enable = true;
 			enableSSHSupport = true;

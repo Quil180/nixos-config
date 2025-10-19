@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{...}: {
   # git config
   programs.git = {
     enable = true;

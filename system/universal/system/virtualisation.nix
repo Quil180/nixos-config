@@ -1,14 +1,9 @@
-{ pkgs, ... }: 
-let
-	secureOVMFFull = pkgs.OVMFFull.override {
-    secureBoot = true;
-    tpmSupport = true;
-  };
-in {
+{ pkgs, username, ... }: 
+{
 
 	programs.dconf.enable = true;
 	
-  users.users.quil.extraGroups = [
+  users.users.${username}.extraGroups = [
 		"libvirt"
 		"libvirtd" 
 		"kvm"
@@ -24,11 +19,6 @@ in {
 			onShutdown = "shutdown";
       qemu = {
 				runAsRoot = false;
-				# For Windows VMs
-        ovmf = {
-          enable = true;
-          packages = [ secureOVMFFull ];
-        };
         swtpm.enable = true;
       };
     };
@@ -123,7 +113,7 @@ fi
 # need to specify the username and ID. As well, when the 
 # VM is turned off, we need to restore the amount of idle 
 # time until the screen is turned off (in seconds)
-LOGGED_IN_USERNAME=quil
+LOGGED_IN_USERNAME=${username}
 LOGGED_IN_USERID=1000
 
 # How much memory we've assigned to the VM, in kibibytes 

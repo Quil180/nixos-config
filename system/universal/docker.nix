@@ -1,10 +1,10 @@
-{pkgs, ...}: {
+{pkgs, username, ...}: {
   environment.systemPackages = with pkgs; [
     docker
     docker-compose
   ];
-  users.users.quil = {
-    extraGroups = ["docker"];
+  users.users.${username} = {
+    extraGroups = [ "docker" ];
   };
 	virtualisation.docker.enable = true;
 }
