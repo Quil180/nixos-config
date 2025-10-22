@@ -1,7 +1,9 @@
-{inputs, pkgs, system, ...}:
+{inputs, username, ...}:
 {
-  environment.systemPackages = [
-    inputs.winboat.packages.${system}.winboat
-    pkgs.freerdp
+  imports = [
+    inputs.winboat.nixosModules.default
   ];
+
+  users.users.${username}.extraGroups = [ "docker" ];
+  services.winboat.enable = true;
 }
