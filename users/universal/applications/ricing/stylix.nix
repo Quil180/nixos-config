@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  wallpaper = ../../../../wallpapers/wallpaper.png;
+  wallpaper = ../../../../wallpaper.png;
 in {
   stylix = {
     enable = true;
