@@ -32,7 +32,6 @@
     wlogout # to easily logout
     wlr-randr # to change display primacy
     xdg-utils # xwayland support
-    kdePackages.xwaylandvideobridge # for xwayland screensharing
   ];
 
   # enabling hyprland and xwayland
