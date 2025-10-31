@@ -26,6 +26,7 @@
     # ../universal/applications/productivity/zoom.nix
 
     # programming languages
+    ../universal/applications/productivity/programming/cpp.nix
     ../universal/applications/productivity/programming/verilog.nix
     # ../universal/applications/productivity/programming/rust.nix
     # ../universal/applications/productivity/programming/python.nix
