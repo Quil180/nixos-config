@@ -5,6 +5,6 @@
     hunspellDicts.en_US
 
     corefonts
-    vistafonts
+    vista-fonts
   ];
 }
