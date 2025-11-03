@@ -53,7 +53,7 @@
         );
       linux_g14 = pkgs.callPackage linux_g14_pkg { };
     in
-    pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux_g14);
+    lib.recurseIntoAttrs (pkgs.linuxPackagesFor linux_g14);
 
   services = {
     # supergfxd controls GPU switching

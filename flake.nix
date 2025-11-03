@@ -155,7 +155,9 @@
     homeConfigurations = {
       quil = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = {inherit inputs system username;};
+        extraSpecialArgs = {
+          inherit inputs system username;
+        };
         modules = [
           users/${username}/home.nix
 

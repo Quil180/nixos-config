@@ -35,7 +35,7 @@
     pkgs.spice-gtk
     pkgs.spice-protocol
 		# Drivers for Windows VM
-    pkgs.win-virtio
+    pkgs.virtio-win
     pkgs.win-spice
 		# Icon pack for buttons
 		pkgs.adwaita-icon-theme
