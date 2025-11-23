@@ -28,14 +28,30 @@
       enableUserService = true;
     };
 
-    # Dependency of asusd
-    power-profiles-daemon.enable = true;
+    # Power Management Services
+    auto-cpufreq.enable = true;
+    power-profiles-daemon.enable = false;
+    upower.enable = true;
   };
   systemd.services.supergfxd = {
     serviceConfig = {
       KillSignal = "SIGINT";
       TimeoutStopSec = 10;
     };
-    path = [pkgs.pciutils];
+    path = [ pkgs.pciutils ];
+  };
+
+  # Power saving stuff
+  boot = {
+    kernelModules = ["amd-pstate"];
+    kernelParams = [
+      "initcall_blacklist=acpi_cpufreq_init"
+      "amd_pstates=passive"
+    ];
+  };
+
+  powerManagement = {
+    enable = true;
+    powertop.enable = true;
   };
 }
