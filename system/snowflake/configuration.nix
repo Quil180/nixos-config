@@ -151,7 +151,7 @@
 		neovim = {
 			# Enabling customization of neovim and nightly version
 			enable = true;
-			package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+			package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
 			# setting neovim to be default editor and extra aliases
 			defaultEditor = true;

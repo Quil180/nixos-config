@@ -20,7 +20,7 @@
   home.packages = with pkgs; [
     # bare essentials
     adwaita-icon-theme
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default # hyprcursor
+    inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default # hyprcursor
     rose-pine-cursor
     grimblast # for screenshotting
     nwg-look # gtk settings editor
@@ -37,7 +37,7 @@
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
     systemd.enable = false;
@@ -69,9 +69,9 @@
       }
     '';
     plugins = [
-      inputs.split-monitor-workspaces.packages.${pkgs.system}.split-monitor-workspaces
+      inputs.split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
       # to add more plugins just use the following
-      # inputs.hyprland-plugins.packages.${pkgs.system}.blahblah
+      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.blahblah
     ];
   };
 

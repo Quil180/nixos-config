@@ -113,8 +113,8 @@
         alwaysTrust.enable = true;
         betterRoleContext.enable = true;
         betterUploadButton.enable = true;
-        blurNSFW.enable = true;
-        clearURLs.enable = true;
+        blurNsfw.enable = true;
+        clearUrLs.enable = true;
         colorSighted.enable = true;
         consoleJanitor = {
           enable = true;
@@ -142,7 +142,7 @@
         messageClickActions.enable = true;
         messageLinkEmbeds.enable = true;
         messageLogger.enable = true;
-        moreKaomoji.enable = true;
+        # moreKaomoji.enable = true;
         mutualGroupDMs.enable = true;
         noF1.enable = true;
         noOnboardingDelay.enable = true;

@@ -5,6 +5,6 @@
   ...
 }: {
   home.packages = [
-    inputs.creamlinux.packages.${pkgs.system}.default
+    inputs.creamlinux.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
