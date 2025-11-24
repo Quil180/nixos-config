@@ -78,6 +78,24 @@
     ];
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      pkgs.xdg-desktop-portal-gtk
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+    ];
+    config = {
+      common = {
+        default = [ "gtk" ];
+        "org.freedesktop.portal.OpenURI" = [ "gtk" ];
+      };
+      hyprland = {
+        default = [ "gtk" "hyprland" ];
+        "org.freedesktop.portal.OpenURI" = [ "gtk" ];
+      };
+    };
+  };
+
   # making it so ozone apps use wayland
   home.sessionVariables = {
     XDG_SESSION_TYPE = "wayland";
