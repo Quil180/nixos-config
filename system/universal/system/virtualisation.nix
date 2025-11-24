@@ -60,6 +60,7 @@
 		};
 		kernelParams = [ "pcie_aspm=off" ];
 		kernelModules = [ "kvm-amd" "vendor-reset" ];
+    extraModprobeConfig = "options kvm_amd ignore_msrs=1";
 	};
 
 	environment.etc = {

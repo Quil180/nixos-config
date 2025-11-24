@@ -30,6 +30,9 @@
     ../universal/applications/productivity/programming/verilog.nix
     # ../universal/applications/productivity/programming/rust.nix
     # ../universal/applications/productivity/programming/python.nix
+
+    # IDEs
+    ../universal/applications/productivity/programming/antigravity.nix
     ../universal/applications/productivity/programming/vscode.nix
 
     # ricing applications below

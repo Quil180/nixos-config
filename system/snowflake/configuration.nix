@@ -177,6 +177,9 @@
 		
 		# For gpg
 		pcscd.enable = true;
+
+    # For authentication
+    gnome.gnome-keyring.enable = true;
   };
 
   nixpkgs.config = {

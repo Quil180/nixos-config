@@ -52,15 +52,18 @@
         "GDK_SCALE,2"
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
       ];
-      windowrulev2 = [
-        "opacity 0.0 override, class:^(xwaylandvideobridge)$"
-        "opacity 0.9 override 0.85 override,class:^(foot)$"
-        "opacity 1.0 override 0.95 override,class:^(firefox)$"
-        "noanim, class:^(xwaylandvideobridge)$"
-        "noinitialfocus, class:^(xwaylandvideobridge)$"
-        "maxsize 1 1, class:^(xwaylandvideobridge)$"
-        "noblur, class:^(xwaylandvideobridge)$"
-        "nofocus, class:^(xwaylandvideobridge)$"
+      windowrule = [
+        # XWayland Video Bridge
+        "opacity 0.0 override, match:class xwaylandvideobridge"
+        "no_anim on, match:class xwaylandvideobridge"
+        "no_initial_focus on, match:class xwaylandvideobridge"
+        "max_size 1 1, match:class xwaylandvideobridge"
+        "no_blur on, match:class xwaylandvideobridge"
+        "no_focus on, match:class xwaylandvideobridge"
+
+        # Terminal & Browser Opacity
+        "opacity 0.9 override 0.85 override, match:class foot"
+        "opacity 1.0 override 0.95 override, match:class firefox"
       ];
     };
     extraConfig = ''
