@@ -39,9 +39,11 @@
     config = {
       common = {
         default = ["gtk"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
       };
       hyprland = {
         default = ["gtk" "hyprland"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
       };
       misc = {
         disable_hyprland_qtutils_check = "true";

@@ -54,7 +54,10 @@
     username = "${username}";
     homeDirectory = "/home/${username}";
     stateVersion = "24.05";
-    sessionVariables.EDITOR = "nvim";
+    sessionVariables = {
+      EDITOR = "nvim";
+      BROWSER = "firefox";
+    };
     packages = with pkgs; [
       age # secrets management
       brightnessctl # brightness control
