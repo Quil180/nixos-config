@@ -71,7 +71,10 @@
       wifi.powersave = false;
     };
 		firewall = {
-			enable = false;
+			enable = true;
+      allowedTCPPorts = [
+        # Place ports here
+      ];
 		};
   };
   # To ensure all firmware is loaded

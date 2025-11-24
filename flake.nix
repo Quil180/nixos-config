@@ -43,12 +43,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Neovim Package (that I made) flake input
-    # Note: Get rid of this after migrating away from nvf
-    nvf = {
-      url = "github:notashelf/nvf";
-    };
-
     # For G14 hardware configuration
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
@@ -114,27 +108,7 @@
     system = "x86_64-linux";
     lib = nixpkgs.lib;
     pkgs = nixpkgs.legacyPackages.${system};
-
-    # neovim config package management
-    neovimConfig = {
-      imports = [
-        packages/neovim/nvf-main.nix
-      ];
-    };
-    customNeovim = nvf.lib.neovimConfiguration {
-      inherit pkgs;
-      modules = [neovimConfig];
-    };
   in {
-    packages."x86_64-linux".default =
-      (
-        nvf.lib.neovimConfiguration {
-          pkgs = nixpkgs.legacyPackages."x86_64-linux";
-          modules = [packages/neovim/nvf-main.nix];
-        }
-      )
-      .neovim;
-
     nixosConfigurations = {
       snowflake = lib.nixosSystem {
         inherit system;
