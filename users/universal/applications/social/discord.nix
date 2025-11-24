@@ -147,7 +147,7 @@
         noF1.enable = true;
         noOnboardingDelay.enable = true;
         # noReplyMention.enable = true;
-        openInApp.enable = true;
+        openInApp.enable = false;
         petpet.enable = true;
         pinDMs.enable = true;
         reverseImageSearch.enable = true;

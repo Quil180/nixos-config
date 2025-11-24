@@ -113,7 +113,7 @@
 				"identity.fxaccounts.enabled" = false;
 				"geo.enabled" = false;
 				"dom.webnotifications.enabled" = false;
-				"dom.event.clipboardevents.enabled" = false;
+				"dom.event.clipboardevents.enabled" = true;
 				"media.navigator.enabled" = false;
 				"privacy.donottrackheader.enabled" = true;
 				"browser.safebrowsing.malware.enabled" = false;
@@ -135,6 +135,17 @@
       DisableTelemetry = true;
       OfferToSaveLoginsDefault = false;
       OfferToSaveLogins = false;
+    };
+  };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
     };
   };
 
