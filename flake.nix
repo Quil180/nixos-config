@@ -96,10 +96,9 @@
   outputs = {
     nixpkgs,
     home-manager,
-    nvf,
     nixos-hardware,
     stylix,
-    nix-flatpak,
+    # nix-flatpak,
     rust-overlay,
     hyprland,
     ...
