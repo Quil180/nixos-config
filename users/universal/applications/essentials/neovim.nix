@@ -43,6 +43,7 @@
 	xdg.configFile = {
 		"nvim/lsp".source = ./neovim/lsp;
 		"nvim/init.lua".text = builtins.replaceStrings 
+			["~/.dotfiles"] 
 			["${dotfilesDir}"] 
 			(builtins.readFile ./neovim/init.lua);
 	};

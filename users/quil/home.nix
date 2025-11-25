@@ -72,9 +72,10 @@
 
   programs.ssh = {
     enable = true;
-    extraConfig = ''
-      IdentityFile /home/${username}/.ssh/id_snowflake
-    '';
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      identityFile = "/home/${username}/.ssh/id_snowflake";
+    };
   };
 
   programs.home-manager.enable = true;
