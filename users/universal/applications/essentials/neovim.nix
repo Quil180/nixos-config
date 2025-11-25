@@ -36,11 +36,13 @@
 			# For Latex
 			zathura
 		];
-		file = {
-			".config/nvim" = {
-				source = ./neovim;
-				recursive = true;
-			};
-		};
+	};
+
+	xdg.configFile = {
+		"nvim/lsp".source = ./neovim/lsp;
+		"nvim/init.lua".text = builtins.replaceStrings 
+			["~/.dotfiles"] 
+			["/home/${username}/Documents/GitRepos/dotfiles"] 
+			(builtins.readFile ./neovim/init.lua);
 	};
 }
