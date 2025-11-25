@@ -104,6 +104,7 @@
     ...
   } @ inputs: let
     username = "quil";
+    dotfilesDir = "/home/${username}/.dotfiles";
     system = "x86_64-linux";
     lib = nixpkgs.lib;
     pkgs = nixpkgs.legacyPackages.${system};
@@ -112,7 +113,7 @@
       snowflake = lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit inputs system username;
+          inherit inputs system username dotfilesDir;
         };
         modules = [
           inputs.disko.nixosModules.default
@@ -129,7 +130,7 @@
       quil = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
-          inherit inputs system username;
+          inherit inputs system username dotfilesDir;
         };
         modules = [
           users/${username}/home.nix

@@ -1,6 +1,8 @@
 {
 	pkgs,
 	inputs,
+	username,
+	dotfilesDir,
 	...
 }: {
 	programs.neovim = {
@@ -41,8 +43,7 @@
 	xdg.configFile = {
 		"nvim/lsp".source = ./neovim/lsp;
 		"nvim/init.lua".text = builtins.replaceStrings 
-			["~/.dotfiles"] 
-			["/home/${username}/Documents/GitRepos/dotfiles"] 
+			["${dotfilesDir}"] 
 			(builtins.readFile ./neovim/init.lua);
 	};
 }
