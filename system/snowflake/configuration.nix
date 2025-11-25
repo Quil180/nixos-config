@@ -2,6 +2,8 @@
   pkgs,
   inputs,
   username,
+  system,
+  config,
   ...
 }: {
   imports = [
@@ -94,6 +96,7 @@
     ranger
     wget
     zsh
+    inputs.agenix.packages.${system}.default
   ];
 
   fonts.packages = with pkgs; [
@@ -105,12 +108,29 @@
     nerd-fonts.symbols-only
   ];
 
+  age.secrets.snowflake = {
+    file = ../../secrets/snowflake.age;
+    path = "/home/${username}/.ssh/id_snowflake";
+    owner = username;
+    mode = "600";
+  };
+  age.secrets.luks.file = ../../secrets/luks.age;
+  age.secrets.quil_password.file = ../../secrets/quil_password.age;
+  age.secrets.github_token = {
+    file = ../../secrets/github_token.age;
+    owner = username;
+  };
+  age.secrets.git_identity = {
+    file = ../../secrets/git_identity.age;
+    owner = username;
+  };
+
   # default user settings regardless of host/user
   users = {
     defaultUserShell = pkgs.zsh;
     users.${username} = {
       isNormalUser = true;
-      initialPassword = "1234";
+      hashedPasswordFile = config.age.secrets.quil_password.path;
       extraGroups = [
         "networkmanager"
         "wheel"

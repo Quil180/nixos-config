@@ -4,11 +4,10 @@
     enable = true;
     settings = {
       init.defaultBranch = "main";
-      user = {
-        name = "Quil";
-        email = "quil180gaming@gmail.com";
-      };
     };
+    includes = [
+      { path = "/run/agenix/git_identity"; }
+    ];
     lfs.enable = true;
   };
 

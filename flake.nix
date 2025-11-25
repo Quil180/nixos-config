@@ -117,7 +117,7 @@
         modules = [
           inputs.disko.nixosModules.default
           inputs.impermanence.nixosModules.impermanence
-          # inputs.agenix.nixosModules.default
+          inputs.agenix.nixosModules.default
           nixos-hardware.nixosModules.asus-zephyrus-ga402
 
           system/snowflake/disko.nix
