@@ -1,5 +1,5 @@
 {config, ...}: let
-  dotfiles = "${config.home.homeDirectory}/Documents/GitRepos/dotfiles";
+  dotfiles = "${config.home.homeDirectory}/.dotfiles";
 in {
   # shell config
   programs.zsh = {
