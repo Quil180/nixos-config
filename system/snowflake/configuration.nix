@@ -22,7 +22,7 @@
     # ../universal/GUI/sddm.nix
 
     # System GUI I want (if any):
-    # ../universal/GUI/dwm/dwm.nix
+    ../universal/GUI/dwm/dwm.nix
     ../universal/GUI/hyprland/hyprland.nix
 
     # Sound?
@@ -45,8 +45,8 @@
     # ../universal/applications/kiwix.nix
 		# ../universal/services/ollama.nix
 		../universal/applications/teamviewer.nix
-   # ../universal/applications/vncviewer.nix
-   ../universal/applications/winboat.nix
+    #../universal/applications/vncviewer.nix
+    ../universal/applications/winboat.nix
 
   ];
 
