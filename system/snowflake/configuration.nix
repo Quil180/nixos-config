@@ -63,7 +63,7 @@
 			"ip_tables"
 			"iptable_nat"
 		];
-    # kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   networking = {
