@@ -35,7 +35,7 @@
 
     # Extra options...
     ../universal/docker.nix
-    # ../universal/flatpak.nix
+    ../universal/flatpak.nix
     ../universal/g14/g14.nix
     # ../universal/kiwix.nix
 		# ../universal/ollama.nix

@@ -11,11 +11,17 @@
   xdg.enable = true;
 
   services.flatpak = {
+    update = {
+      onActivation = true;
+      auto = {
+        enable = true;
+        onCalendar = "daily";
+      };
+    };
     packages = [
       "org.freedesktop.portal.Settings"
       "io.github.flattool.Warehouse"
       "org.vinegarhq.Sober"
-      "net.waterfox.waterfox"
     ];
   };
 
