@@ -16,6 +16,11 @@
     ../universal/gpu-support/amd.nix
 
     # optional stuff
+
+    # Display Manager
+    ../universal/GUI/ly.nix
+    # ../universal/GUI/sddm.nix
+
     # System GUI I want (if any):
     # ../universal/GUI/dwm/dwm.nix
     ../universal/GUI/hyprland/hyprland.nix
@@ -27,21 +32,21 @@
     ../universal/system/virtualisation.nix
 
     # Game Applications setup/installed?
-    ../universal/games.nix
+    ../universal/applications/games.nix
 
     # VPNs
     # ../universal/vpns/hamachi.nix
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
-    ../universal/docker.nix
-    ../universal/flatpak.nix
+    ../universal/virtualisation/docker.nix
+    ../universal/system/flatpak.nix
     ../universal/g14/g14.nix
-    # ../universal/kiwix.nix
-		# ../universal/ollama.nix
-		../universal/teamviewer.nix
-   # ../universal/vncviewer.nix
-   ../universal/winboat.nix
+    # ../universal/applications/kiwix.nix
+		# ../universal/services/ollama.nix
+		../universal/applications/teamviewer.nix
+   # ../universal/applications/vncviewer.nix
+   ../universal/applications/winboat.nix
 
   ];
 

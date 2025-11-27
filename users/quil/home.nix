@@ -42,7 +42,7 @@
     ../universal/applications/social/discord.nix
     # ../universal/applications/social/revolt.nix
 
-    ../universal/applications/productivity/flatpak/flatpak.nix
+    ../universal/system/flatpak/flatpak.nix
   ];
 
   nixpkgs.config = {
