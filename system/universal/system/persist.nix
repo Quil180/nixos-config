@@ -16,6 +16,7 @@
       "/var/lib/logmein-hamachi"
 			"/var/lib/ollama"
 			"/var/lib/open-webui"
+			"/var/lib/llama-cpp"
 			# "/var/lib/private"
       {
         directory = "/var/lib/colord";
