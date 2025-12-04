@@ -91,6 +91,10 @@
       url = "github:Rexcrazy804/winboat?ref=fix-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    determinate = {
+      url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    };
   };
 
   outputs = {
@@ -101,6 +105,7 @@
     # nix-flatpak,
     rust-overlay,
     hyprland,
+    determinate,
     ...
   } @ inputs: let
     username = "quil";
@@ -120,6 +125,7 @@
           inputs.impermanence.nixosModules.impermanence
           inputs.agenix.nixosModules.default
           nixos-hardware.nixosModules.asus-zephyrus-ga402
+          determinate.nixosModules.default
 
           system/snowflake/disko.nix
           system/snowflake/configuration.nix
