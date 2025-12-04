@@ -10,6 +10,7 @@
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
     ./disko.nix
+    ../universal/system/determinate.nix
     # ./secrets.nix
 
     # gpu support

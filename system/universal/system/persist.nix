@@ -6,6 +6,7 @@
     hideMounts = true;
     directories = [
       "/etc/nixos"
+      "/etc/determinate"
       "/etc/NetworkManager/system-connections"
       "/etc/sudoers.d"
       "/var/log"

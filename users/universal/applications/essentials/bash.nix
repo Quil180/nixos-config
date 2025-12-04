@@ -111,6 +111,9 @@ in {
       test() {
         nix-shell -p $@
       }
+
+      # Determinate nix autocomplete
+      eval "$(determinate-nixd completion zsh)"
     '';
     history = {
       size = 10000;
