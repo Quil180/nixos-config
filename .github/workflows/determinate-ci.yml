@@ -19,4 +19,4 @@ jobs:
       id-token: write
       contents: read
     with:
-      visibility: public
+      visibility: "private"
