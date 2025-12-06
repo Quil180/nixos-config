@@ -25,8 +25,8 @@ in {
       # replacing cd with zoxide
       cd = "z";
       # update aliases
-      updh = "home-manager switch --flake ${dotfiles}";
-      updf = "cd ${dotfiles} && nix flake update";
+      updh = "home-manager switch --impure --flake ${dotfiles}";
+      updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
       upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
       updb = "source ~/.zshrc";
       upda = "updf && upds && updh && updb";
@@ -38,6 +38,9 @@ in {
       updatelog = "systemctl status nixos-upgrade.service";
       # wifi reset full (drivers)
       restartwifi = "sudo modprobe -r mt7921e && sudo modprobe mt7921e";
+
+      # NixOS configuration manager
+      polaris = "${dotfiles}/install.sh";
 
       # general useful aliases
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
