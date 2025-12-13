@@ -23,14 +23,14 @@
     # ../universal/GUI/sddm.nix
 
     # System GUI I want (if any):
-    ../universal/GUI/dwm/dwm.nix
+    # ../universal/GUI/dwm/dwm.nix
     ../universal/GUI/hyprland/hyprland.nix
 
     # Sound?
     ../universal/system/sound.nix
     ../universal/system/bluetooth.nix
     # ../universal/system/persist.nix
-    ../universal/system/virtualisation.nix
+    # ../universal/system/virtualisation.nix
 
     # Game Applications setup/installed?
     ../universal/applications/games.nix
@@ -40,7 +40,7 @@
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
-    ../universal/virtualisation/docker.nix
+    # ../universal/virtualisation/docker.nix
     ../universal/system/flatpak.nix
     ../universal/g14/g14.nix
     # ../universal/applications/kiwix.nix
@@ -48,8 +48,7 @@
     # ../universal/services/llamacpp.nix
 		../universal/applications/teamviewer.nix
     #../universal/applications/vncviewer.nix
-    ../universal/applications/winboat.nix
-
+    # ../universal/applications/winboat.nix
   ];
 
   # Use the systemd-boot EFI boot loader.

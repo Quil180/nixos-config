@@ -43,8 +43,8 @@
 	# Note: neovim config is in a git submodule, so we use absolute paths
 	# to avoid Nix flake visibility issues with submodules
 	xdg.configFile = {
-		"nvim/lsp".source = /home/${username}/.dotfiles/users/universal/applications/essentials/neovim/lsp;
-		"nvim/init.lua".source = /home/${username}/.dotfiles/users/universal/applications/essentials/neovim/init.lua;
+		"nvim/lsp".source = neovim/lsp;
+		"nvim/init.lua".source = neovim/init.lua;
 	};
 
 	# Create a wrapper script to patch the dotfiles path in init.lua at activation

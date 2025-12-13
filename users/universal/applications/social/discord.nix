@@ -136,7 +136,6 @@
         iLoveSpam.enable = true;
         # imageZoom.enable = true;
         implicitRelationships.enable = true;
-        invisibleChat.enable = true;
         memberCount.enable = true;
         mentionAvatars.enable = true;
         messageClickActions.enable = true;

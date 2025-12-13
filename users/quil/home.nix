@@ -33,7 +33,7 @@
 
     # IDEs
     ../universal/applications/productivity/programming/antigravity.nix
-    ../universal/applications/productivity/programming/vscode.nix
+    # ../universal/applications/productivity/programming/vscode.nix
 
     # ricing applications below
     ../universal/applications/ricing/stylix.nix
