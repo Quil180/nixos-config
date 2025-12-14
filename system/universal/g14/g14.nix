@@ -1,8 +1,4 @@
 {pkgs, ...}: {
-
-  imports = [
-    # ./kernel.nix
-  ];
   environment.systemPackages = with pkgs; [
     asusctl
     supergfxctl
