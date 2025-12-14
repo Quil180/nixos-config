@@ -1,4 +1,8 @@
 {pkgs, ...}: {
+  imports = [
+    # Uncomment the following line to compile the custom linux-g14 kernel
+    ./kernel-custom.nix
+  ];
   environment.systemPackages = with pkgs; [
     asusctl
     supergfxctl

@@ -69,6 +69,9 @@
 			"ip_tables"
 			"iptable_nat"
 		];
+    # Using the latest kernel is recommended for Asus Rog Zephyrus G14 (GA402) support
+    # This provides the necessary drivers and patches for this hardware.
+    # To compile the specific linux-g14 kernel instead, check system/universal/g14/g14.nix
     kernelPackages = pkgs.linuxPackages_latest;
   };
 
