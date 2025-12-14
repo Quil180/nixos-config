@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, ... }:
 
 let
   # Fetch the linux-g14 repo
@@ -13,7 +13,15 @@ let
   findPatches = dir: 
     let
       files = builtins.readDir dir;
-      patchFiles = lib.filterAttrs (name: type: type == "regular" && lib.hasSuffix ".patch" name && name != "0001-platform-x86-asus-armoury-Fix-error-code-in-mini_led.patch" && name != "0001-platform-x86-asus-armoury-fix-only-DC-tunables-being.patch" && name != "0002-platform-x86-asus-armoury-fix-mini-led-mode-show.patch" && name != "0003-platform-x86-asus-armoury-add-support-for-FA507UV.patch" && name != "PATCH-v10-00-11-HID-asus-Fix-ASUS-ROG-Laptop-s-Keyboard-backlight-handling-id1-id2-pr_err.patch" && name != "sys-kernel_arch-sources-g14_files-0004-more-uarches-for-kernel-6.15.patch") files;
+      patchFiles = lib.filterAttrs (name: type: type == "regular" && 
+                                                lib.hasSuffix ".patch" name && 
+                                                name != "0001-platform-x86-asus-armoury-Fix-error-code-in-mini_led.patch" && 
+                                                name != "0001-platform-x86-asus-armoury-fix-only-DC-tunables-being.patch" && 
+                                                name != "0002-platform-x86-asus-armoury-fix-mini-led-mode-show.patch" && 
+                                                name != "0003-platform-x86-asus-armoury-add-support-for-FA507UV.patch" && 
+                                                name != "PATCH-v10-00-11-HID-asus-Fix-ASUS-ROG-Laptop-s-Keyboard-backlight-handling-id1-id2-pr_err.patch" && 
+                                                name != "sys-kernel_arch-sources-g14_files-0004-more-uarches-for-kernel-6.15.patch"
+                                   ) files;
     in
       lib.mapAttrsToList (name: _: {
         name = name;

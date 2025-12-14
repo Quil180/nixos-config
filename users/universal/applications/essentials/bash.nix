@@ -25,7 +25,7 @@ in {
       # replacing cd with zoxide
       cd = "z";
       # update aliases
-      updh = "home-manager switch --impure --flake ${dotfiles}";
+      updh = "home-manager switch --flake ${dotfiles}";
       updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
       upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
       updb = "source ~/.zshrc";
