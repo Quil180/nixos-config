@@ -3,7 +3,7 @@
     lutris
     mangohud
     goverlay
-    gamemode
+    steamtinkerlaunch # for modifying steam games
   ];
 
   programs = {
