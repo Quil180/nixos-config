@@ -11,15 +11,17 @@
   services = {
     # supergfxd controls GPU switching
     # Default to using iGPU. Can use CLI to enable dGPU with a logout
-    supergfxd.enable = true;
-    supergfxd.settings = {
-      mode = "Hybrid";
-      vfio_enable = true;
-      vfio_save = false;
-      always_reboot = false;
-      no_logind = false;
-      logout_timeout_s = 180;
-      hotplug_type = "None";
+    supergfxd = {
+      enable = true;
+      settings = {
+        mode = "Hybrid";
+        vfio_enable = true;
+        vfio_save = false;
+        always_reboot = false;
+        no_logind = false;
+        logout_timeout_s = 180;
+        hotplug_type = "None";
+      };
     };
 
     # ASUS specific software. This also installs asusctl.
@@ -28,10 +30,20 @@
       enableUserService = true;
     };
 
-    # Power Management Services
-    auto-cpufreq.enable = true;
-    power-profiles-daemon.enable = false;
-    upower.enable = true;
+    tlp.enable = false; # ensuring that tlp is off.
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "never";
+        };
+      };
+    };
   };
   systemd.services.supergfxd = {
     serviceConfig = {
@@ -50,8 +62,8 @@
     ];
   };
 
+  # Ensuring that Hibernate and Suspend
   powerManagement = {
     enable = true;
-    powertop.enable = true;
   };
 }
