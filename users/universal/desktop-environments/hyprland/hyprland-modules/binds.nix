@@ -21,7 +21,7 @@
       "$mod, J, togglesplit,"
       "$mod, L, exec, wlogout"
       "$mod SHIFT, L, exit,"
-      "$mod SHIFT, F, fullscreen,0"
+      "$mod SHIFT, F, fullscreen"
 
       # binds to launch apps
       "$mod, E, exec, $term -e $file"

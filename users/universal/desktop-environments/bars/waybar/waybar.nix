@@ -4,7 +4,7 @@
   ];
 
   imports = [
-    waybar/style.nix
+    ./style.nix
   ];
 
   programs.waybar = {
