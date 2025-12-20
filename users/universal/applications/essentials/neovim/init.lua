@@ -66,7 +66,7 @@ require("gp").setup({
       provider = "ollama",
       chat = true,
       command = true,
-      model = { model = "llama3.2" }, -- Change to your preferred model
+      model = { model = "granite-4.0-micro-GGUF:F16" }, -- Change to your preferred model
       system_prompt = "You are a helpful coding assistant.",
     },
   },
