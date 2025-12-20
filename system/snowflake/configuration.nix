@@ -44,7 +44,7 @@
     ../universal/system/flatpak.nix
     ../universal/g14/g14.nix
     # ../universal/applications/kiwix.nix
-    # ../universal/services/ollama.nix
+    ../universal/services/ollama.nix
     # ../universal/services/llamacpp.nix
 		../universal/applications/teamviewer.nix
     #../universal/applications/vncviewer.nix
