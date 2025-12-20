@@ -32,6 +32,9 @@ vim.pack.add({
   { src = "https://github.com/stevearc/oil.nvim" },
   -- Shows hex colors if specified in code
   { src = "https://github.com/brenoprata10/nvim-highlight-colors" },
+  -- AI Chat/Completion with local LLMs (Ollama/llama.cpp)
+  { src = "https://github.com/nvim-lua/plenary.nvim" },
+  { src = "https://github.com/Robitx/gp.nvim" },
 })
 
 -- mini.pick Setup
@@ -49,6 +52,29 @@ vim.g.vimtex_view_method = 'zathura'
 -- Highlight Colors
 vim.opt.termguicolors = true
 require "nvim-highlight-colors".setup()
+
+-- GP.nvim Setup (Local AI with Ollama)
+require("gp").setup({
+  providers = {
+    ollama = {
+      endpoint = "http://localhost:11434/v1/chat/completions",
+    },
+  },
+  agents = {
+    {
+      name = "Ollama",
+      provider = "ollama",
+      chat = true,
+      command = true,
+      model = { model = "llama3.2" }, -- Change to your preferred model
+      system_prompt = "You are a helpful coding assistant.",
+    },
+  },
+  -- Default agent for chat
+  default_chat_agent = "Ollama",
+  -- Default agent for commands
+  default_command_agent = "Ollama",
+})
 
 -- Color Scheme (Uncomment the one I want)
 -- vim.cmd("colorscheme catppuccin")
@@ -116,6 +142,41 @@ map('n', '<leader>eo', ':split | Oil<CR>', { desc = '[E]xplorer [O]pen' })
 map('n', '<leader>wv', ':vsplit<CR>', { desc = '[W]indow [V]ertical' })
 map('n', '<leader>wh', ':split<CR>', { desc = '[W]indow [H]orizontal' })
 map('n', '<leader>wc', ':close<CR>', { desc = '[W]indow [C]lose' })
+-- AI (gp.nvim) keybindings
+map('n', '<leader>ac', ':GpChatNew<CR>', { desc = '[A]I [C]hat new' })
+map('n', '<leader>at', ':GpChatToggle<CR>', { desc = '[A]I Chat [T]oggle' })
+map('n', '<leader>af', ':GpChatFinder<CR>', { desc = '[A]I Chat [F]inder' })
+map('v', '<leader>ar', ':GpRewrite<CR>', { desc = '[A]I [R]ewrite selection' })
+map('v', '<leader>aa', ':GpAppend<CR>', { desc = '[A]I [A]ppend after selection' })
+map('n', '<leader>ap', ':GpPopup<CR>', { desc = '[A]I [P]opup prompt' })
+map('v', '<leader>ap', ':GpPopup<CR>', { desc = '[A]I [P]opup with selection' })
+
+-- Lazygit floating terminal
+local function open_lazygit()
+  local buf = vim.api.nvim_create_buf(false, true)
+  local width = math.floor(vim.o.columns * 0.9)
+  local height = math.floor(vim.o.lines * 0.9)
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    col = math.floor((vim.o.columns - width) / 2),
+    row = math.floor((vim.o.lines - height) / 2),
+    style = 'minimal',
+    border = 'rounded',
+    title = ' Lazygit ',
+    title_pos = 'center',
+  })
+  vim.fn.termopen('lazygit', {
+    on_exit = function()
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+    end,
+  })
+  vim.cmd('startinsert')
+end
+map('n', '<leader>lg', open_lazygit, { desc = '[L]azy[G]it' })
 
 -- LSP Languages Wanted!
 vim.lsp.enable({
