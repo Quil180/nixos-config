@@ -34,9 +34,14 @@
 			basedpyright
 			# Nix
 			nixd
-
+			# QML
+			kdePackages.qtdeclarative # provides qmlls
 			# For Latex
+			texlab
 			zathura
+
+			# Git TUI
+			lazygit
 		];
 	};
 
