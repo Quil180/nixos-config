@@ -182,7 +182,7 @@ map('n', '<leader>lg', open_lazygit, { desc = '[L]azy[G]it' })
 vim.lsp.enable({
   "lua_ls",        -- lua
   "texlab",        -- latex
-  "rust-analyzer", -- rust
+  "rust_analyzer", -- rust
   "clangd",        -- C/C++
   "verible",       -- SystemVerilog
   "vhdl_ls",       -- VHDL
@@ -192,16 +192,42 @@ vim.lsp.enable({
   "qmlls",         -- QML
 })
 
--- Autocomplete with tab
+-- Autocomplete setup
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
+    if client then
+      -- Enable completion for this buffer
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+      -- Set omnifunc as fallback for <C-x><C-o>
+      vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
     end
   end,
 })
-vim.cmd("set completeopt+=noselect")
+
+-- Trigger completion on any text change (workaround for servers without trigger characters)
+vim.api.nvim_create_autocmd('TextChangedI', {
+  callback = function()
+    -- Only trigger if popup menu is not visible and we have LSP clients
+    if vim.fn.pumvisible() == 0 and #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+      -- Get the character before cursor
+      local col = vim.fn.col('.') - 1
+      if col > 0 then
+        local line = vim.fn.getline('.')
+        local char = line:sub(col, col)
+        -- Trigger on alphanumeric, underscore, or common trigger chars
+        if char:match('[%w_%.%:]') then
+          -- Use feedkeys to trigger omni-completion
+          local keys = vim.api.nvim_replace_termcodes('<C-x><C-o>', true, false, true)
+          vim.api.nvim_feedkeys(keys, 'n', false)
+        end
+      end
+    end
+  end,
+})
+
+-- Completion menu options (noselect = don't auto-select first item)
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
 -- Fixing a bug with .v and .sv fles
 -- Setting the filetype for Verilog
