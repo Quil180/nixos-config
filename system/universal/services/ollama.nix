@@ -1,5 +1,8 @@
-{...}:
+{pkgs, lib, ...}:
 {
+	imports = [
+		./openwebui.nix
+	];
 	# nixpkgs.overlays = [
 	# 	(final: prev: {
 	# 		# This is the corrected overlay.
@@ -14,20 +17,20 @@
 	services = {
 		ollama = {
 			enable = true;
-			acceleration = "rocm";
+			package = pkgs.ollama-rocm;
 			environmentVariables = {
 				# This forces Ollama to use your Radeon RX 6800S
 				HSA_OVERRIDE_GFX_VERSION = "10.3.0";
 				OLLAMA_MODELS = "/home/quil/Documents/llamacpp/models";
 			};
-			user = "quil";
-			group = "users";
 		};
 		
 		# Open WebUI is configured in llamacpp.nix
 	};
 	
 	systemd.services.ollama.serviceConfig = {
+		User = "quil";
+		Group = "users";
 		DynamicUser = lib.mkForce false;
 		ProtectHome = lib.mkForce false;
 	};

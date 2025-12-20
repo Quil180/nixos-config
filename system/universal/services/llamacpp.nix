@@ -1,6 +1,10 @@
 { pkgs, config, lib, ... }:
 
 {
+  imports = [
+    ./openwebui.nix
+  ];
+
   services.llama-cpp = {
     enable = true;
     package = pkgs.llama-cpp.override { rocmSupport = true; };
@@ -24,17 +28,5 @@
     Group = "users";
     DynamicUser = lib.mkForce false;
     ProtectHome = lib.mkForce false;
-  };
-
-  # Open WebUI configuration
-  services.open-webui = {
-    enable = true;
-    environment = {
-      # Point Open WebUI to llama.cpp
-      # llama.cpp server is OpenAI compatible
-      OPENAI_API_BASE_URL = "http://localhost:8081/v1";
-      # Disable Ollama
-      OLLAMA_BASE_URL = "http://localhost:11434";
-    };
   };
 }
