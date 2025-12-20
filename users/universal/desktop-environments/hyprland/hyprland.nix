@@ -6,7 +6,7 @@
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
     # app configs below
-    ../bars/waybar/waybar.nix
+    # ../bars/waybar/waybar.nix
     ../bars/quickshell/quickshell.nix
     dependent-apps/dunst.nix
     dependent-apps/rofi.nix
