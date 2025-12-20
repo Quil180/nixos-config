@@ -44,6 +44,15 @@
     systemd.enable = false;
     systemd.variables = ["--all"];
     settings = {
+      # Remove gaps when there's only one tiled window on a workspace
+      workspace = [
+        "w[t1], gapsin:0, gapsout:0, border:0"
+      ];
+      # Gap settings
+      general = {
+        gaps_in = 5;   # gaps between windows
+        gaps_out = 5;  # gaps from windows to screen edge
+      };
       env = [
         "HYPRCURSOR_THEME,rose-pine-hyprcursor"
         "HYPRCURSOR_SIZE,24"
