@@ -102,57 +102,70 @@
     };
   };
 
-  outputs = {
-    nixpkgs,
-    home-manager,
-    nixos-hardware,
-    stylix,
-    # nix-flatpak,
-    rust-overlay,
-    hyprland,
-    determinate,
-    ...
-  } @ inputs: let
-    username = "quil";
-    dotfilesDir = "/home/${username}/.dotfiles";
-    system = "x86_64-linux";
-    lib = nixpkgs.lib;
-    pkgs = nixpkgs.legacyPackages.${system};
-  in {
-    nixosConfigurations = {
-      snowflake = lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs system username dotfilesDir;
-        };
-        modules = [
-          inputs.disko.nixosModules.default
-          inputs.impermanence.nixosModules.impermanence
-          inputs.agenix.nixosModules.default
-          nixos-hardware.nixosModules.asus-zephyrus-ga402
-          determinate.nixosModules.default
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      nixos-hardware,
+      stylix,
+      # nix-flatpak,
+      rust-overlay,
+      hyprland,
+      determinate,
+      ...
+    }@inputs:
+    let
+      username = "quil";
+      dotfilesDir = "/home/${username}/.dotfiles";
+      system = "x86_64-linux";
+      lib = nixpkgs.lib;
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      nixosConfigurations = {
+        snowflake = lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit
+              inputs
+              system
+              username
+              dotfilesDir
+              ;
+          };
+          modules = [
+            inputs.disko.nixosModules.default
+            inputs.impermanence.nixosModules.impermanence
+            inputs.agenix.nixosModules.default
+            nixos-hardware.nixosModules.asus-zephyrus-ga402
+            determinate.nixosModules.default
 
-          system/snowflake/disko.nix
-          system/snowflake/configuration.nix
-        ];
+            system/snowflake/disko.nix
+            system/snowflake/configuration.nix
+          ];
+        };
+      };
+      homeConfigurations = {
+        quil = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {
+            inherit
+              inputs
+              system
+              username
+              dotfilesDir
+              ;
+          };
+          modules = [
+            users/${username}/home.nix
+
+            stylix.homeModules.stylix
+            hyprland.homeManagerModules.default
+            {
+              nixpkgs.overlays = [ rust-overlay.overlays.default ];
+            }
+          ];
+        };
       };
     };
-    homeConfigurations = {
-      quil = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = {
-          inherit inputs system username dotfilesDir;
-        };
-        modules = [
-          users/${username}/home.nix
-
-          stylix.homeModules.stylix
-          hyprland.homeManagerModules.default
-          {
-            nixpkgs.overlays = [rust-overlay.overlays.default];
-          }
-        ];
-      };
-    };
-  };
 }

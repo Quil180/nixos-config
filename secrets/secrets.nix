@@ -4,13 +4,14 @@ let
 
   # User keys: Used by you to encrypt/edit secrets.
   user_quil = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINIHmKLah2TNwOeg1CiM2uXd0c0ICrpymUa1Q0A7zSdg quil@snowflake";
-  
+
   # Grouping keys
   systems = [ snowflake ];
   users = [ user_quil ];
   allKeys = systems ++ users;
 
-in {
+in
+{
   "snowflake.age".publicKeys = allKeys;
   "luks.age".publicKeys = allKeys;
   "quil_password.age".publicKeys = allKeys;
