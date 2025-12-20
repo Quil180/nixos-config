@@ -14,6 +14,6 @@ in {
     "bash -c 'sleep 1 && /usr/lib/polkit-kde-authentication-agent-1'"
     "bash -c 'sleep 1 && hyprctl setcursor rose-pine-hyprcursor 24'"
     "bash -c 'sleep 1 && rog-control-center'"
-    "bash -c 'sleep 1 && waybar'"
+    "bash -c 'sleep 1 && qs -p ~/.dotfiles/users/universal/desktop-environments/bars/quickshell/bar.qml'"
   ];
 }
