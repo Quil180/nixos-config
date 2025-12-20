@@ -14,6 +14,10 @@ opt.signcolumn     = "yes"     -- Making a sign column
 opt.winborder      = "rounded" -- rounded borders
 opt.termguicolors  = true      -- enabling terminal gui colors
 
+-- Indent guides
+opt.list           = true
+opt.listchars      = { leadmultispace = "│ ", trail = "·", tab = "→ " }
+
 -- Package Management
 vim.pack.add({
   -- Color Schemes
