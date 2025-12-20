@@ -16,16 +16,18 @@ opt.termguicolors  = true      -- enabling terminal gui colors
 
 -- Package Management
 vim.pack.add({
-	-- Color Schemes
-	{ src = "https://github.com/Mofiqul/dracula.nvim" },
-	-- Telescoping Files
-	{ src = "https://github.com/echasnovski/mini.pick" },
-	-- LaTeX Preview/AutoCompiling (make sure you have arara installed)
-	{ src = "https://github.com/lervag/vimtex" },
-	-- Shows what keybinds exist after pressing leader
-	{ src = "https://github.com/folke/which-key.nvim" },
-	-- Simple File Explorer to get rid of Ranger Usage
-	{ src = "https://github.com/stevearc/oil.nvim" },
+  -- Color Schemes
+  { src = "https://github.com/Mofiqul/dracula.nvim" },
+  -- Telescoping Files
+  { src = "https://github.com/echasnovski/mini.pick" },
+  -- LaTeX Preview/AutoCompiling (make sure you have arara installed)
+  { src = "https://github.com/lervag/vimtex" },
+  -- Shows what keybinds exist after pressing leader
+  { src = "https://github.com/folke/which-key.nvim" },
+  -- Simple File Explorer to get rid of Ranger Usage
+  { src = "https://github.com/stevearc/oil.nvim" },
+  -- Shows hex colors if specified in code
+  { src = "https://github.com/brenoprata10/nvim-highlight-colors" },
 })
 
 -- mini.pick Setup
@@ -39,6 +41,10 @@ vim.cmd(":filetype plugin on")
 vim.cmd(":filetype indent on")
 vim.cmd("syntax enable")
 vim.g.vimtex_view_method = 'zathura'
+
+-- Highlight Colors
+vim.opt.termguicolors = true
+require "nvim-highlight-colors".setup()
 
 -- Color Scheme (Uncomment the one I want)
 -- vim.cmd("colorscheme catppuccin")
@@ -54,7 +60,7 @@ vim.g.maplocalleader = " "
 -- Source Current File
 map('n', '<leader>ou', ':update<CR>:source<CR>', { desc = '[O]h I\'ve[U]pdated my config' })
 map('n', '<leader>oe', ':update<CR>:edit ~/.dotfiles/users/universal/applications/essentials/neovim/init.lua<CR>',
-	{ desc = '[O]h [E]dit my config' })
+  { desc = '[O]h [E]dit my config' })
 -- Save Current File (assuming changes made)
 map('n', '<leader>s', ':update<CR>', { desc = '[S]ave' })
 -- Quit NeoVim
@@ -79,15 +85,15 @@ map('n', '<leader>h', ':Pick help<CR>', { desc = '[H]elp me find a command' })
 map('n', 'W', vim.lsp.buf.hover, { desc = '[W]hat is this?' })
 -- map('n', 'E', vim.diagnostic.open_float, { desc = 'What\'s the [E]rror' })
 vim.keymap.set('n', 'E', function()
-	vim.diagnostic.config({ virtual_lines = { current_line = true }, virtual_text = false })
+  vim.diagnostic.config({ virtual_lines = { current_line = true }, virtual_text = false })
 
-	vim.api.nvim_create_autocmd('CursorMoved', {
-		group = vim.api.nvim_create_augroup('line-diagnostics', { clear = true }),
-		callback = function()
-			vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
-			return true
-		end,
-	})
+  vim.api.nvim_create_autocmd('CursorMoved', {
+    group = vim.api.nvim_create_augroup('line-diagnostics', { clear = true }),
+    callback = function()
+      vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+      return true
+    end,
+  })
 end, { desc = 'What\'s the [E]rror' })
 -- Terminal!
 map('n', '<leader>tv', ':vsplit | term<CR>', { desc = '[T]erminal [V]ertical' })
@@ -109,42 +115,42 @@ map('n', '<leader>wc', ':close<CR>', { desc = '[W]indow [C]lose' })
 
 -- LSP Languages Wanted!
 vim.lsp.enable({
-	"lua_ls",       -- lua
-	"texlab",       -- latex
-	"rust-analyzer", -- rust
-	"clangd",       -- C/C++
-	"verible",      -- SystemVerilog
-	"vhdl_ls",      -- VHDL
-	"basedpyright", -- Python Server
-	"ruff",         -- Python Linter/Formatter
-	"nixd",         -- Nix
-  "qmlls",        -- QML
+  "lua_ls",        -- lua
+  "texlab",        -- latex
+  "rust-analyzer", -- rust
+  "clangd",        -- C/C++
+  "verible",       -- SystemVerilog
+  "vhdl_ls",       -- VHDL
+  "basedpyright",  -- Python Server
+  "ruff",          -- Python Linter/Formatter
+  "nixd",          -- Nix
+  "qmlls",         -- QML
 })
 
 -- Autocomplete with tab
 vim.api.nvim_create_autocmd('LspAttach', {
-	callback = function(ev)
-		local client = vim.lsp.get_client_by_id(ev.data.client_id)
-		if client:supports_method('textDocument/completion') then
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-		end
-	end,
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+  end,
 })
 vim.cmd("set completeopt+=noselect")
 
 -- Fixing a bug with .v and .sv fles
 -- Setting the filetype for Verilog
 vim.api.nvim_create_autocmd(
-	{ "BufNewFile", "BufRead" }, {
-		pattern = { "*.v" },
-		command = "set filetype=verilog",
-	}
+  { "BufNewFile", "BufRead" }, {
+    pattern = { "*.v" },
+    command = "set filetype=verilog",
+  }
 )
 
 -- Setting the filetype for SystemVerilog
 vim.api.nvim_create_autocmd(
-	{ "BufNewFile", "BufRead" }, {
-		pattern = { "*.sv" },
-		command = "set filetype=systemverilog",
-	}
+  { "BufNewFile", "BufRead" }, {
+    pattern = { "*.sv" },
+    command = "set filetype=systemverilog",
+  }
 )
