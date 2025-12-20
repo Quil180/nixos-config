@@ -7,6 +7,7 @@
   imports = [
     # app configs below
     ../bars/waybar/waybar.nix
+    ../bars/quickshell/quickshell.nix
     dependent-apps/dunst.nix
     dependent-apps/rofi.nix
 
