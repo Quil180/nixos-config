@@ -40,7 +40,7 @@
         };
         charger = {
           governor = "performance";
-          turbo = "never";
+          turbo = "always"; # Max clock speeds when plugged in
         };
       };
     };
@@ -53,12 +53,12 @@
     path = [ pkgs.pciutils ];
   };
 
-  # Power saving stuff
+  # Performance-optimized power settings for 6900HS/6800S
   boot = {
     kernelModules = ["amd-pstate"];
     kernelParams = [
       "initcall_blacklist=acpi_cpufreq_init"
-      "amd_pstates=passive"
+      "amd_pstate=active" # Active mode for best performance scaling
     ];
   };
 
