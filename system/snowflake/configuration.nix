@@ -5,7 +5,8 @@
   system,
   config,
   ...
-}: {
+}:
+{
   imports = [
     # importing sops for secrets management systemwide
     ./hardware-configuration.nix
@@ -46,7 +47,7 @@
     # ../universal/applications/kiwix.nix
     ../universal/services/ollama.nix
     # ../universal/services/llamacpp.nix
-		../universal/applications/teamviewer.nix
+    ../universal/applications/teamviewer.nix
     #../universal/applications/vncviewer.nix
     # ../universal/applications/winboat.nix
   ];
@@ -60,15 +61,15 @@
       };
       grub = {
         enable = true;
-				configurationLimit = 5;
+        configurationLimit = 5;
         device = "nodev";
         efiSupport = true;
       };
     };
-		kernelModules = [
-			"ip_tables"
-			"iptable_nat"
-		];
+    kernelModules = [
+      "ip_tables"
+      "iptable_nat"
+    ];
     # Using the latest kernel is recommended for Asus Rog Zephyrus G14 (GA402) support
     # This provides the necessary drivers and patches for this hardware.
     # To compile the specific linux-g14 kernel instead, check system/universal/g14/g14.nix
@@ -81,12 +82,12 @@
       enable = true;
       wifi.powersave = false;
     };
-		firewall = {
-			enable = true;
+    firewall = {
+      enable = true;
       allowedTCPPorts = [
         # Place ports here
       ];
-		};
+    };
   };
   # To ensure all firmware is loaded
   hardware.enableRedistributableFirmware = true;
@@ -145,7 +146,7 @@
         "wheel"
         "storage"
         "video"
-				"kvm"
+        "kvm"
         "docker"
       ];
       openssh.authorizedKeys.keys = [
@@ -176,20 +177,20 @@
       enable = true;
       binfmt = true;
     };
-		gnupg.agent = {
-			enable = true;
-			enableSSHSupport = true;
-		};
-		neovim = {
-			# Enabling customization of neovim and nightly version
-			enable = true;
-			package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    neovim = {
+      # Enabling customization of neovim and nightly version
+      enable = true;
+      package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
-			# setting neovim to be default editor and extra aliases
-			defaultEditor = true;
-			viAlias = true;
-			vimAlias = true;
-		};
+      # setting neovim to be default editor and extra aliases
+      defaultEditor = true;
+      viAlias = true;
+      vimAlias = true;
+    };
     nix-ld.enable = true;
     zsh.enable = true;
   };
@@ -206,9 +207,9 @@
     devmon.enable = true;
     gvfs.enable = true;
     udisks2.enable = true;
-		
-		# For gpg
-		pcscd.enable = true;
+
+    # For gpg
+    pcscd.enable = true;
 
     # For authentication
     gnome.gnome-keyring.enable = true;

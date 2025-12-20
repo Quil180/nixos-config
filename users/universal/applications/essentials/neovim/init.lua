@@ -32,9 +32,12 @@ vim.pack.add({
   { src = "https://github.com/stevearc/oil.nvim" },
   -- Shows hex colors if specified in code
   { src = "https://github.com/brenoprata10/nvim-highlight-colors" },
-  -- AI Chat/Completion with local LLMs (Ollama/llama.cpp)
+  -- AI Chat/Completion (Avante - like Cursor AI)
   { src = "https://github.com/nvim-lua/plenary.nvim" },
-  { src = "https://github.com/Robitx/gp.nvim" },
+  { src = "https://github.com/MunifTanjim/nui.nvim" },
+  { src = "https://github.com/stevearc/dressing.nvim" },
+  { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+  { src = "https://github.com/yetone/avante.nvim", build = "make" },
 })
 
 -- mini.pick Setup
@@ -53,27 +56,33 @@ vim.g.vimtex_view_method = 'zathura'
 vim.opt.termguicolors = true
 require "nvim-highlight-colors".setup()
 
--- GP.nvim Setup (Local AI with Ollama)
-require("gp").setup({
+-- Avante Setup (AI like Cursor, using Ollama)
+require("avante").setup({
+  provider = "ollama",
   providers = {
     ollama = {
-      endpoint = "http://localhost:11434/v1/chat/completions",
+      endpoint = "http://localhost:11434",
+      model = "hf.co/ibm-granite/granite-4.0-micro-GGUF:Q4_K_M",
+      is_env_set = function()
+        -- Check if Ollama is running
+        local handle = io.popen("curl -s http://localhost:11434/api/tags 2>/dev/null")
+        if handle then
+          local result = handle:read("*a")
+          handle:close()
+          return result and result ~= ""
+        end
+        return false
+      end,
     },
   },
-  agents = {
-    {
-      name = "Ollama",
-      provider = "ollama",
-      chat = true,
-      command = true,
-      model = { model = "granite-4.0-micro-GGUF:F16" }, -- Change to your preferred model
-      system_prompt = "You are a helpful coding assistant.",
-    },
+  behaviour = {
+    auto_suggestions = false, -- Disable auto suggestions (can be resource heavy)
+    auto_set_keymaps = true,
   },
-  -- Default agent for chat
-  default_chat_agent = "Ollama",
-  -- Default agent for commands
-  default_command_agent = "Ollama",
+  windows = {
+    position = "right",
+    width = 40,
+  },
 })
 
 -- Color Scheme (Uncomment the one I want)
@@ -100,8 +109,57 @@ map({ 'n', 'v', 'i' }, '<C-c>', '"+y', { desc = 'Copy' })
 map({ 'n', 'v', 'i' }, '<C-d>', '"+d', { desc = 'Cut' })
 map({ 'n' }, '<leader>y', '"+y', { desc = 'Copy, but different' })
 map({ 'n' }, '<leader>d', '"+d', { desc = 'Cut, but different' })
--- Formatting
-map('n', '<leader>bf', vim.lsp.buf.format, { desc = '[B]uffer [F]ormat' })
+-- Formatting (smart: tries LSP first, then external formatters)
+local function smart_format()
+  -- Map of filetypes to external formatters
+  local formatters = {
+    nix = { cmd = "nixfmt", args = {} },
+    lua = { cmd = "stylua", args = { "-" } },
+    python = { cmd = "ruff", args = { "format", "-" } },
+    rust = { cmd = "rustfmt", args = {} },
+  }
+
+  local ft = vim.bo.filetype
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+
+  -- Check if any LSP client supports formatting
+  local has_lsp_format = false
+  for _, client in ipairs(clients) do
+    if client.supports_method("textDocument/formatting") then
+      has_lsp_format = true
+      break
+    end
+  end
+
+  if has_lsp_format then
+    vim.lsp.buf.format()
+  elseif formatters[ft] then
+    -- Use external formatter
+    local formatter = formatters[ft]
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local input = table.concat(lines, "\n")
+
+    local result = vim.system({ formatter.cmd, unpack(formatter.args) }, {
+      stdin = input,
+      text = true,
+    }):wait()
+
+    if result.code == 0 and result.stdout and result.stdout ~= "" then
+      local new_lines = vim.split(result.stdout, "\n", { trimempty = false })
+      -- Remove trailing empty line if present
+      if new_lines[#new_lines] == "" then
+        table.remove(new_lines)
+      end
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, new_lines)
+      vim.notify("Formatted with " .. formatter.cmd, vim.log.levels.INFO)
+    elseif result.stderr and result.stderr ~= "" then
+      vim.notify("Format error: " .. result.stderr, vim.log.levels.ERROR)
+    end
+  else
+    vim.notify("No formatter available for " .. ft, vim.log.levels.WARN)
+  end
+end
+map('n', '<leader>bf', smart_format, { desc = '[B]uffer [F]ormat' })
 map('n', '<leader>bd', ':bd<CR>', { desc = '[B]uffer [D]elete' })
 -- Find a File (mini.pick)
 map('n', '<leader>f', ':Pick files<CR>', { desc = '[F]ind a file' })
@@ -142,14 +200,15 @@ map('n', '<leader>eo', ':split | Oil<CR>', { desc = '[E]xplorer [O]pen' })
 map('n', '<leader>wv', ':vsplit<CR>', { desc = '[W]indow [V]ertical' })
 map('n', '<leader>wh', ':split<CR>', { desc = '[W]indow [H]orizontal' })
 map('n', '<leader>wc', ':close<CR>', { desc = '[W]indow [C]lose' })
--- AI (gp.nvim) keybindings
-map('n', '<leader>ac', ':GpChatNew<CR>', { desc = '[A]I [C]hat new' })
-map('n', '<leader>at', ':GpChatToggle<CR>', { desc = '[A]I Chat [T]oggle' })
-map('n', '<leader>af', ':GpChatFinder<CR>', { desc = '[A]I Chat [F]inder' })
-map('v', '<leader>ar', ':GpRewrite<CR>', { desc = '[A]I [R]ewrite selection' })
-map('v', '<leader>aa', ':GpAppend<CR>', { desc = '[A]I [A]ppend after selection' })
-map('n', '<leader>ap', ':GpPopup<CR>', { desc = '[A]I [P]opup prompt' })
-map('v', '<leader>ap', ':GpPopup<CR>', { desc = '[A]I [P]opup with selection' })
+-- AI (Avante) keybindings
+map('n', '<leader>aa', ':AvanteAsk<CR>', { desc = '[A]I [A]sk' })
+map('v', '<leader>aa', ':AvanteAsk<CR>', { desc = '[A]I [A]sk with selection' })
+map('n', '<leader>at', ':AvanteToggle<CR>', { desc = '[A]I [T]oggle sidebar' })
+map('n', '<leader>ar', ':AvanteRefresh<CR>', { desc = '[A]I [R]efresh' })
+map('n', '<leader>ae', ':AvanteEdit<CR>', { desc = '[A]I [E]dit' })
+map('v', '<leader>ae', ':AvanteEdit<CR>', { desc = '[A]I [E]dit selection' })
+map('n', '<leader>af', ':AvanteFocus<CR>', { desc = '[A]I [F]ocus' })
+map('n', '<leader>ac', ':AvanteChat<CR>', { desc = '[A]I new [C]hat' })
 
 -- Lazygit floating terminal
 local function open_lazygit()

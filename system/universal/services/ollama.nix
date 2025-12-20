@@ -22,6 +22,8 @@
 				# This forces Ollama to use your Radeon RX 6800S
 				HSA_OVERRIDE_GFX_VERSION = "10.3.0";
 				OLLAMA_MODELS = "/home/quil/Documents/llamacpp/models";
+				# Only use the dedicated GPU (6800S), not the integrated 680M
+				ROCR_VISIBLE_DEVICES = "0";
 			};
 		};
 		
