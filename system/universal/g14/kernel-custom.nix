@@ -33,7 +33,7 @@ in {
     argsOverride = {
       # Append the G14 patches to the standard latest kernel patches
       kernelPatches = pkgs.linuxPackages_latest.kernel.kernelPatches ++ (findPatches linux-g14-repo);
-      extraMeta.branch = "6.18.1"; # Update this to match approximate version if needed
+      extraMeta.branch = "6.18.2"; # Update this to match approximate version if needed
     };
   }));
 }

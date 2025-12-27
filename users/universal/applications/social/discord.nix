@@ -113,8 +113,6 @@
         alwaysTrust.enable = true;
         betterRoleContext.enable = true;
         betterUploadButton.enable = true;
-        blurNsfw.enable = true;
-        clearUrLs.enable = true;
         colorSighted.enable = true;
         consoleJanitor = {
           enable = true;
@@ -142,13 +140,11 @@
         messageLinkEmbeds.enable = true;
         messageLogger.enable = true;
         # moreKaomoji.enable = true;
-        mutualGroupDMs.enable = true;
         noF1.enable = true;
         noOnboardingDelay.enable = true;
         # noReplyMention.enable = true;
         openInApp.enable = false;
         petpet.enable = true;
-        pinDMs.enable = true;
         reverseImageSearch.enable = true;
         roleColorEverywhere.enable = true;
         sendTimestamps.enable = true;

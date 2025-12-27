@@ -2,7 +2,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   # importing configs for waybar, foot, and wlogout, and rofi
   imports = [
     # app configs below
@@ -39,10 +40,13 @@
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    portalPackage =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
-    systemd.enable = false;
-    systemd.variables = ["--all"];
+    systemd = {
+      enable = false;
+      variables = [ "--all" ];
+    };
     settings = {
       # Remove gaps when there's only one tiled window on a workspace
       workspace = [
@@ -50,8 +54,8 @@
       ];
       # Gap settings
       general = {
-        gaps_in = 5;   # gaps between windows
-        gaps_out = 5;  # gaps from windows to screen edge
+        gaps_in = 5; # gaps between windows
+        gaps_out = 5; # gaps from windows to screen edge
       };
       env = [
         "HYPRCURSOR_THEME,rose-pine-hyprcursor"
@@ -61,6 +65,8 @@
 
         "GDK_SCALE,2"
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
+
+        "AQ_DRM_DEVICES,/dev/dri/card2:/dev/dri/card1"
       ];
       windowrule = [
         # XWayland Video Bridge
@@ -80,6 +86,12 @@
       xwayland {
         force_zero_scaling = true
       }
+
+      device {
+        touchpad {
+          natural_scroll = true
+        }
+      }
     '';
     plugins = [
       inputs.split-monitor-workspaces.packages.${pkgs.stdenv.hostPlatform.system}.split-monitor-workspaces
@@ -90,7 +102,7 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs; [
+    extraPortals = [
       pkgs.xdg-desktop-portal-gtk
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
     ];
@@ -100,7 +112,10 @@
         "org.freedesktop.portal.OpenURI" = [ "gtk" ];
       };
       hyprland = {
-        default = [ "gtk" "hyprland" ];
+        default = [
+          "gtk"
+          "hyprland"
+        ];
         "org.freedesktop.portal.OpenURI" = [ "gtk" ];
       };
     };
@@ -111,7 +126,7 @@
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_DESKTOP = "Hyprland";
-		ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     MOZ_ENABLE_WAYLAND = "1";
   };
 }
