@@ -69,63 +69,7 @@ PanelWindow {
     // Track network icon position for popup
     property real networkIconX: 0
     
-    // App Launcher state
-    property bool launcherVisible: false
-    
-    // Function to toggle launcher
-    function toggleLauncher() {
-        console.log("Toggle Launcher called. Current state: " + launcherVisible);
-        launcherVisible = !launcherVisible;
-        launcherWindow.visible = launcherVisible;
-        console.log("New state: " + launcherVisible + ", Window visible: " + launcherWindow.visible);
-        if (launcherVisible) {
-            appLauncher.focusSearch();
-        }
-    }
-    
-    // Global shortcut to toggle launcher (Super+R)
-    GlobalShortcut {
-        name: "launcherToggle"
-        description: "Toggle App Launcher"
-        
-        onPressed: {
-            console.log("GlobalShortcut pressed!");
-            toggleLauncher();
-        }
-    }
-    
-    // Launcher popup window (centered on screen)
-    PopupWindow {
-        id: launcherWindow
-        visible: false
-        implicitWidth: appLauncher.implicitWidth
-        implicitHeight: appLauncher.implicitHeight
-        color: "transparent"
-        
-        // Center on screen
-        anchor {
-            item: barLayout
-            edges: Edges.Top
-            gravity: Edges.Top
-        }
-        
-        Modules.AppLauncher {
-            id: appLauncher
-            focus: true
-            
-            opacity: launcherWindow.visible ? 1 : 0
-            scale: launcherWindow.visible ? 1 : 0.9
-            
-            onClosed: {
-                launcherWindow.visible = false;
-                launcherVisible = false;
-            }
-            
-            onAppLaunched: name => {
-                console.log("Launched: " + name);
-            }
-        }
-    }
+
 
     // Timer for hiding network popup
     Timer {

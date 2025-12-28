@@ -16,7 +16,7 @@
       "$mod, RETURN, exec, foot"
       "$mod, Q, killactive,"
       "$mod, F, togglefloating,"
-      "$mod, R, global, quickshell:launcherToggle"
+      "$mod, R, exec, rofi -show drun"
       "$mod SHIFT, P, pseudo,"
       "$mod, J, togglesplit,"
       "$mod, L, exec, wlogout"
