@@ -8,7 +8,7 @@ in {
     "bash -c 'sleep 1 && asusctl -c 80'"
     "bash -c 'sleep 1 && asusctl led-mode static -c ffffff'"
     "bash -c 'sleep 1 && wl-paste --watch cliphist store'"
-    "bash -c 'sleep 1 && dunst'"
+    # dunst removed - Quickshell handles notifications now
     "bash -c 'sleep 1 && xwaylandvideobridge'" # for xwayland screensharing
     "bash -c 'sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP --all'"
     "bash -c 'sleep 1 && /usr/lib/polkit-kde-authentication-agent-1'"

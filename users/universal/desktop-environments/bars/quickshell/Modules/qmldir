@@ -15,3 +15,17 @@ NetworkPopup 1.0 NetworkPopup.qml
 NetworkSelector 1.0 NetworkSelector.qml
 MusicWidget 1.0 MusicWidget.qml
 MusicPopup 1.0 MusicPopup.qml
+BatteryWidget 1.0 BatteryWidget.qml
+BatteryPopup 1.0 BatteryPopup.qml
+BluetoothWidget 1.0 BluetoothWidget.qml
+BluetoothPopup 1.0 BluetoothPopup.qml
+PowerMenu 1.0 PowerMenu.qml
+KeyboardWidget 1.0 KeyboardWidget.qml
+CalendarPopup 1.0 CalendarPopup.qml
+WeatherWidget 1.0 WeatherWidget.qml
+WeatherPopup 1.0 WeatherPopup.qml
+NotificationPopup 1.0 NotificationPopup.qml
+NotificationToast 1.0 NotificationToast.qml
+BarIcon 1.0 BarIcon.qml
+MiniProgress 1.0 MiniProgress.qml
+AppLauncher 1.0 AppLauncher.qml

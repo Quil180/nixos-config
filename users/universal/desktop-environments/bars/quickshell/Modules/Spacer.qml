@@ -1,7 +1,10 @@
 import QtQuick
 
-Rectangle {
-    width: 2
-    height: 16
-    color: Theme.base08
+Text {
+    text: "|"
+    color: Theme.base02
+    font {
+        family: Theme.fontFamily
+        pixelSize: Theme.fontSize
+    }
 }
