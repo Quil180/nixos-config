@@ -1,0 +1,15 @@
+module Modules
+
+singleton Theme 1.0 Theme.qml
+CpuWidget 1.0 CpuWidget.qml
+MemoryWidget 1.0 MemoryWidget.qml
+TemperatureWidget 1.0 TemperatureWidget.qml
+BrightnessWidget 1.0 BrightnessWidget.qml
+WindowWidget 1.0 WindowWidget.qml
+Workspaces 1.0 Workspaces.qml
+Clock 1.0 Clock.qml
+Spacer 1.0 Spacer.qml
+VolumeWidget 1.0 VolumeWidget.qml
+NetworkWidget 1.0 NetworkWidget.qml
+NetworkPopup 1.0 NetworkPopup.qml
+NetworkSelector 1.0 NetworkSelector.qml
