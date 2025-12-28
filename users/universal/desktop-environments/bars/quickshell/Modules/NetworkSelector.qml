@@ -11,15 +11,38 @@ Rectangle {
     property bool scanning: false
     
     signal networkSelected(string ssid)
+    signal mouseEntered()
+    signal mouseExited()
+    
+    // Computed hover state - checks main area and all network item mouse areas
+    readonly property bool isHovered: mainHover.containsMouse
+    
+    onIsHoveredChanged: {
+        if (isHovered) {
+            popup.mouseEntered();
+        } else {
+            popup.mouseExited();
+        }
+    }
 
-
-    width: 250
-    height: Math.min(networksColumn.height + 24, 300)
+    implicitWidth: 250
+    implicitHeight: Math.max(networksColumn.height + 24, 80)
     color: Theme.base00
     radius: 8
     border.color: Theme.base01
     border.width: 1
     clip: true
+    
+    MouseArea {
+        id: mainHover
+        anchors.fill: parent
+        hoverEnabled: true
+        propagateComposedEvents: true
+        onClicked: mouse => mouse.accepted = false
+        onPressed: mouse => mouse.accepted = false
+        onReleased: mouse => mouse.accepted = false
+    }
+
 
 
     ColumnLayout {
@@ -171,6 +194,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
+                    onEntered: popup.mouseEntered()
                     onClicked: {
                         if (!modelData.isConnected) {
                             popup.networkSelected(modelData.ssid);

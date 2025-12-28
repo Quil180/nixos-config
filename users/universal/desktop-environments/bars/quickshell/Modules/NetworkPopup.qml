@@ -13,39 +13,30 @@ Rectangle {
     property bool connected: false
     
     signal mouseExited()
+    signal mouseEntered()
     
-    // Track if mouse is over popup
-    property bool mouseOver: false
+    // Computed hover state
+    readonly property bool isHovered: mainHover.containsMouse
+    
+    onIsHoveredChanged: {
+        if (isHovered) {
+            popup.mouseEntered();
+        } else {
+            popup.mouseExited();
+        }
+    }
 
-    width: 220
-    height: 150
+    implicitWidth: 220
+    implicitHeight: 150
     color: Theme.base00
     radius: 8
     border.color: Theme.base01
     border.width: 1
     
-    // Delay before hiding to allow moving from bar to popup
-    Timer {
-        id: hideTimer
-        interval: 150
-        onTriggered: {
-            if (!popup.mouseOver) {
-                popup.mouseExited();
-            }
-        }
-    }
-    
     MouseArea {
+        id: mainHover
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: {
-            popup.mouseOver = true;
-            hideTimer.stop();
-        }
-        onExited: {
-            popup.mouseOver = false;
-            hideTimer.restart();
-        }
     }
 
     ColumnLayout {

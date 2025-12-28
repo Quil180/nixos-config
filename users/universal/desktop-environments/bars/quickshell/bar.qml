@@ -26,18 +26,26 @@ PanelWindow {
     Modules.TemperatureWidget { id: tempWidget }
     Modules.BrightnessWidget { id: brightnessWidget }
     Modules.VolumeWidget { id: volumeWidget }
+    Modules.MusicWidget { id: musicWidget }
     Modules.NetworkWidget { id: networkWidget }
     Modules.WindowWidget { id: windowWidget }
 
     // Track network icon position for popup
     property real networkIconX: 0
 
+    // Timer for hiding network popup
+    Timer {
+        id: networkHideTimer
+        interval: 500
+        onTriggered: networkPopupWindow.visible = false
+    }
+
     // Network popup window
     PopupWindow {
         id: networkPopupWindow
         visible: false
-        width: networkPopup.width
-        height: networkPopup.height
+        implicitWidth: networkPopup.implicitWidth
+        implicitHeight: networkPopup.implicitHeight
         anchor {
             item: networkIcon
             edges: Edges.Bottom
@@ -75,16 +83,24 @@ PanelWindow {
                 }
             }
             
-            onMouseExited: networkPopupWindow.visible = false
+            onMouseEntered: networkHideTimer.stop()
+            onMouseExited: networkHideTimer.restart()
         }
+    }
+
+    // Timer for hiding network selector popup
+    Timer {
+        id: networkSelectorHideTimer
+        interval: 500
+        onTriggered: networkSelectorWindow.visible = false
     }
 
     // Network selector popup window (right-click)
     PopupWindow {
         id: networkSelectorWindow
         visible: false
-        width: networkSelector.width
-        height: networkSelector.height
+        implicitWidth: networkSelector.implicitWidth
+        implicitHeight: networkSelector.implicitHeight
         anchor {
             item: networkIcon
             edges: Edges.Bottom
@@ -124,9 +140,70 @@ PanelWindow {
                 networkWidget.connectToNetwork(ssid);
                 networkSelectorWindow.visible = false;
             }
+            
+            onMouseEntered: networkSelectorHideTimer.stop()
+            onMouseExited: networkSelectorHideTimer.restart()
         }
     }
 
+    // Timer for hiding music popup
+    Timer {
+        id: musicHideTimer
+        interval: 500
+        onTriggered: {
+            // Only hide if we're really not hovering anything in the popup
+            musicPopupWindow.visible = false
+        }
+    }
+
+    // Music popup window (hover over volume)
+    PopupWindow {
+        id: musicPopupWindow
+        visible: false
+        implicitWidth: musicPopup.implicitWidth
+        implicitHeight: musicPopup.implicitHeight
+        anchor {
+            item: volume
+            edges: Edges.Bottom
+            gravity: Edges.Bottom
+        }
+        
+        color: "transparent"
+        
+        Modules.MusicPopup {
+            id: musicPopup
+            title: musicWidget.title
+            artist: musicWidget.artist
+            album: musicWidget.album
+            status: musicWidget.status
+            hasPlayer: musicWidget.hasPlayer
+            
+            transformOrigin: Item.Top
+            opacity: musicPopupWindow.visible ? 1 : 0
+            scale: musicPopupWindow.visible ? 1 : 0.8
+            
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutBack
+                }
+            }
+            
+            Behavior on scale {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutBack
+                    easing.overshoot: 1.5
+                }
+            }
+            
+            onPlayPause: musicWidget.playPause()
+            onNext: musicWidget.next()
+            onPrevious: musicWidget.previous()
+            onMouseEntered: musicHideTimer.stop()
+            onMouseExited: musicHideTimer.restart()
+        }
+    }
     RowLayout {
         anchors {
             fill: parent
@@ -240,7 +317,13 @@ PanelWindow {
 
             MouseArea {
                 anchors.fill: parent
+                hoverEnabled: true
                 onClicked: volumeWidget.toggleMute()
+                onEntered: {
+                    musicHideTimer.stop();
+                    musicPopupWindow.visible = true;
+                }
+                onExited: musicHideTimer.restart()
             }
         }
 
@@ -259,7 +342,16 @@ PanelWindow {
 
             MouseArea {
                 anchors.fill: parent
+                hoverEnabled: true
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onEntered: {
+                    networkHideTimer.stop();
+                }
+                onExited: {
+                    if (networkPopupWindow.visible) {
+                        networkHideTimer.restart();
+                    }
+                }
                 onClicked: mouse => {
                     if (mouse.button === Qt.RightButton) {
                         // Right-click: show network selector and scan
@@ -269,6 +361,7 @@ PanelWindow {
                     } else {
                         // Left-click: show connection info
                         networkSelectorWindow.visible = false;
+                        networkHideTimer.stop();
                         networkPopupWindow.visible = !networkPopupWindow.visible;
                     }
                 }

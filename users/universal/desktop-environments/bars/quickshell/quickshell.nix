@@ -9,6 +9,7 @@
   home.packages = [
     inputs.quickshell.packages.${system}.default
     pkgs.jq # json parsing
+    pkgs.playerctl
   ];
 
   xdg = {

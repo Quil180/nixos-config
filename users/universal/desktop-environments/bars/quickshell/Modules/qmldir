@@ -13,3 +13,5 @@ VolumeWidget 1.0 VolumeWidget.qml
 NetworkWidget 1.0 NetworkWidget.qml
 NetworkPopup 1.0 NetworkPopup.qml
 NetworkSelector 1.0 NetworkSelector.qml
+MusicWidget 1.0 MusicWidget.qml
+MusicPopup 1.0 MusicPopup.qml
