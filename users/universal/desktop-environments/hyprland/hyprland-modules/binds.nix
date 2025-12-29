@@ -19,7 +19,6 @@
       "$mod, R, exec, rofi -show drun"
       "$mod SHIFT, P, pseudo,"
       "$mod, J, togglesplit,"
-      "$mod, L, exec, wlogout"
       "$mod SHIFT, L, exit,"
       "$mod SHIFT, F, fullscreen"
 

@@ -826,7 +826,7 @@ PanelWindow {
             
             Text {
                 id: clockText
-                text: Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm AP")
+                text: Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm:ss AP")
                 color: Modules.Theme.base04
                 font {
                     family: Modules.Theme.fontFamily
@@ -839,7 +839,7 @@ PanelWindow {
                 interval: 1000
                 running: true
                 repeat: true
-                onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm AP")
+                onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm:ss AP")
             }
             
             MouseArea {
