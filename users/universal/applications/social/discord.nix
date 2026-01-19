@@ -112,6 +112,7 @@
       plugins = {
         alwaysTrust.enable = true;
         betterRoleContext.enable = true;
+        betterSettings.enable = true;
         betterUploadButton.enable = true;
         colorSighted.enable = true;
         consoleJanitor = {
@@ -122,6 +123,7 @@
         crashHandler.enable = true;
         disableCallIdle.enable = true;
         # emoteCloner.enable = true;
+        experiments.enable = true;
         fakeNitro.enable = true;
         favoriteEmojiFirst.enable = true;
         favoriteGifSearch.enable = true;

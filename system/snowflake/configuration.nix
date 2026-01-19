@@ -49,7 +49,7 @@
     # ../universal/services/llamacpp.nix
     ../universal/applications/teamviewer.nix
     #../universal/applications/vncviewer.nix
-    # ../universal/applications/winboat.nix
+    ../universal/applications/winboat.nix
   ];
 
   # Use the systemd-boot EFI boot loader.

@@ -37,7 +37,6 @@ vim.pack.add({
   { src = "https://github.com/MunifTanjim/nui.nvim" },
   { src = "https://github.com/stevearc/dressing.nvim" },
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
-  { src = "https://github.com/yetone/avante.nvim", build = "make" },
 })
 
 -- mini.pick Setup
@@ -55,35 +54,6 @@ vim.g.vimtex_view_method = 'zathura'
 -- Highlight Colors
 vim.opt.termguicolors = true
 require "nvim-highlight-colors".setup()
-
--- Avante Setup (AI like Cursor, using Ollama)
-require("avante").setup({
-  provider = "ollama",
-  providers = {
-    ollama = {
-      endpoint = "http://localhost:11434",
-      model = "hf.co/ibm-granite/granite-4.0-micro-GGUF:Q4_K_M",
-      is_env_set = function()
-        -- Check if Ollama is running
-        local handle = io.popen("curl -s http://localhost:11434/api/tags 2>/dev/null")
-        if handle then
-          local result = handle:read("*a")
-          handle:close()
-          return result and result ~= ""
-        end
-        return false
-      end,
-    },
-  },
-  behaviour = {
-    auto_suggestions = false, -- Disable auto suggestions (can be resource heavy)
-    auto_set_keymaps = true,
-  },
-  windows = {
-    position = "right",
-    width = 40,
-  },
-})
 
 -- Color Scheme (Uncomment the one I want)
 -- vim.cmd("colorscheme catppuccin")
@@ -200,15 +170,6 @@ map('n', '<leader>eo', ':split | Oil<CR>', { desc = '[E]xplorer [O]pen' })
 map('n', '<leader>wv', ':vsplit<CR>', { desc = '[W]indow [V]ertical' })
 map('n', '<leader>wh', ':split<CR>', { desc = '[W]indow [H]orizontal' })
 map('n', '<leader>wc', ':close<CR>', { desc = '[W]indow [C]lose' })
--- AI (Avante) keybindings
-map('n', '<leader>aa', ':AvanteAsk<CR>', { desc = '[A]I [A]sk' })
-map('v', '<leader>aa', ':AvanteAsk<CR>', { desc = '[A]I [A]sk with selection' })
-map('n', '<leader>at', ':AvanteToggle<CR>', { desc = '[A]I [T]oggle sidebar' })
-map('n', '<leader>ar', ':AvanteRefresh<CR>', { desc = '[A]I [R]efresh' })
-map('n', '<leader>ae', ':AvanteEdit<CR>', { desc = '[A]I [E]dit' })
-map('v', '<leader>ae', ':AvanteEdit<CR>', { desc = '[A]I [E]dit selection' })
-map('n', '<leader>af', ':AvanteFocus<CR>', { desc = '[A]I [F]ocus' })
-map('n', '<leader>ac', ':AvanteChat<CR>', { desc = '[A]I new [C]hat' })
 
 -- Lazygit floating terminal
 local function open_lazygit()
