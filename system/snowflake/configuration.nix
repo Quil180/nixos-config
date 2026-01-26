@@ -222,8 +222,12 @@
   nix = {
     gc = {
       automatic = true;
-      dates = "weekly";
+      dates = "daily";
       options = "--delete-older-than 1w";
+    };
+    optimise = {
+      automatic = true;
+      dates = "daily";
     };
     settings = {
       auto-optimise-store = true;
