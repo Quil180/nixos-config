@@ -25,7 +25,7 @@
       # binds to launch apps
       "$mod, E, exec, $term -e $file"
       "$mod, W, exec, $browser --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland"
-      "$mod, D, exec, env -u NIXOS_OZONE_WL ELECTRON_OZONE_PLATFORM_HINT=x11 discord"
+      "$mod, D, exec,  discord"
       "$mod, G, exec, steam --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland"
       "$mod SHIFT, G, exec, lutris"
       "$mod, O, exec, obs QT_QPA_PLATFORM=wayland"
