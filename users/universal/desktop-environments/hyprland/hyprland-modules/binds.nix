@@ -104,11 +104,6 @@
       "$mod CTRL, right, resizeactive,  60    0"
       "$mod CTRL, down, resizeactive,    0   60"
       "$mod CTRL, up, resizeactive,      0  -60"
-
-      # Passing keybinds maybe to discord
-      ", mouse:276, pass, class:^(discord)$"
-      ", mouse:275, pass, class:^(discord)$"
-      ", Alt_R, pass, class:^(discord)$"
     ];
   };
 }

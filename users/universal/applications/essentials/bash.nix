@@ -1,16 +1,19 @@
-{config, ...}: let
+{ config, ... }:
+let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
-in {
+in
+{
   # shell config
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     enableCompletion = true;
+    dotDir = "${config.home.homeDirectory}/.config/zsh";
     historySubstringSearch = {
       enable = true;
-      searchUpKey = ["\\eOA"];
-      searchDownKey = ["\\eOB"];
+      searchUpKey = [ "\\eOA" ];
+      searchDownKey = [ "\\eOB" ];
     };
     oh-my-zsh = {
       enable = true;
@@ -25,7 +28,7 @@ in {
       # replacing cd with zoxide
       cd = "z";
       # update aliases
-      updh = "home-manager switch --flake ${dotfiles}";
+      updh = "home-manager switch --flake ${dotfiles} -b backup";
       updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
       upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
       updb = "source ~/.zshrc";
@@ -46,6 +49,7 @@ in {
       vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
       nf = "fastfetch";
       g = "git";
+      vlsi = "export TERM=ansi; ssh -Y yo485591@vlsi.eecs.ucf.edu";
 
       # g14 related aliases
       gpu = "supergfxctl -g";

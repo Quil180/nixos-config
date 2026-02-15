@@ -44,7 +44,7 @@
       lazygit
 
       # Formatters (LSPs often don't include formatters)
-      nixfmt-rfc-style # Nix formatter
+      nixfmt # Nix formatter
       stylua # Lua formatter
     ];
   };
