@@ -26,6 +26,7 @@
     # System GUI I want (if any):
     # ../universal/GUI/dwm/dwm.nix
     ../universal/GUI/hyprland/hyprland.nix
+    ../universal/GUI/cinnamon/cinnamon.nix
 
     # Sound?
     ../universal/system/sound.nix
