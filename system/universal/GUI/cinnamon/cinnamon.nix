@@ -9,6 +9,9 @@
   # Cinnamon default apps and utilities
   services.cinnamon.apps.enable = true;
 
+  # Disable power-profiles-daemon since it conflicts with auto-cpufreq
+  services.power-profiles-daemon.enable = false;
+
   # Polkit for privilege escalation prompts
   security.polkit.enable = true;
 
