@@ -20,8 +20,8 @@
     # optional stuff
 
     # Display Manager
-    ../universal/GUI/ly.nix
-    # ../universal/GUI/sddm.nix
+    # ../universal/GUI/ly.nix
+    ../universal/GUI/sddm.nix
 
     # System GUI I want (if any):
     # ../universal/GUI/dwm/dwm.nix
