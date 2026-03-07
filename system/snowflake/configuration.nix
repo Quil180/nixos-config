@@ -20,13 +20,13 @@
     # optional stuff
 
     # Display Manager
-    # ../universal/GUI/ly.nix
-    ../universal/GUI/sddm.nix
+    ../universal/GUI/ly.nix
+    # ../universal/GUI/sddm.nix
 
     # System GUI I want (if any):
     # ../universal/GUI/dwm/dwm.nix
     ../universal/GUI/hyprland/hyprland.nix
-    ../universal/GUI/cinnamon/cinnamon.nix
+    # ../universal/GUI/cinnamon/cinnamon.nix
 
     # Sound?
     ../universal/system/sound.nix
@@ -46,7 +46,7 @@
     ../universal/system/flatpak.nix
     ../universal/g14/g14.nix
     # ../universal/applications/kiwix.nix
-    ../universal/services/ollama.nix
+    # ../universal/services/ollama.nix
     # ../universal/services/llamacpp.nix
     ../universal/applications/teamviewer.nix
     #../universal/applications/vncviewer.nix
@@ -160,7 +160,7 @@
     stateVersion = "26.05"; # KEEP THIS THE SAME
     # auto updates
     autoUpgrade = {
-      enable = true;
+      enable = false;
       flake = inputs.self.outPath;
       flags = [
         "--update-input"
