@@ -92,10 +92,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    determinate = {
-      url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    };
-
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -111,7 +107,6 @@
       # nix-flatpak,
       rust-overlay,
       hyprland,
-      determinate,
       ...
     }@inputs:
     let
@@ -138,7 +133,6 @@
             inputs.impermanence.nixosModules.impermanence
             inputs.agenix.nixosModules.default
             nixos-hardware.nixosModules.asus-zephyrus-ga402
-            determinate.nixosModules.default
 
             system/snowflake/disko.nix
             system/snowflake/configuration.nix
