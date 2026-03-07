@@ -67,6 +67,8 @@
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
 
         "AQ_DRM_DEVICES,/dev/dri/card2:/dev/dri/card1"
+
+        "MOZ_ENABLE_WAYLAND,1"
       ];
       windowrule = [
         # XWayland Video Bridge
@@ -112,14 +114,5 @@
         "org.freedesktop.portal.OpenURI" = [ "gtk" ];
       };
     };
-  };
-
-  # making it so ozone apps use wayland
-  home.sessionVariables = {
-    XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "Hyprland";
-    XDG_SESSION_DESKTOP = "Hyprland";
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-    MOZ_ENABLE_WAYLAND = "1";
   };
 }
