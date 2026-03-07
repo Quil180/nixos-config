@@ -1,31 +1,23 @@
-{ pkgs, ... }: {
-  boot.initrd.kernelModules = [ "amdgpu" ];
-
-  services.xserver = {
-    enable = true;
+{ pkgs, ... }:
+{
+  services = {
+    xserver.enable = true;
+    lact.enable = true;
   };
 
   hardware = {
     graphics = {
       enable = true;
       enable32Bit = true;
-
-      # OpenCL support
-      extraPackages = with pkgs; [
-        rocmPackages.clr.icd 
-      ];
     };
+    firmware = [
+      pkgs.linux-firmware
+    ];
+    amdgpu.overdrive.enable = true;
   };
 
   # System packages for monitoring
   environment.systemPackages = with pkgs; [
-    clinfo # Verify OpenCL
-    lact   # AMD Control Center (GUI)
+    clinfo
   ];
-
-  # Enable the LACT daemon
-  systemd = {
-    packages = with pkgs; [ lact ];
-    services.lactd.wantedBy = ["multi-user.target"];
-  };
 }
