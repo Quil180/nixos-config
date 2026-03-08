@@ -18,7 +18,7 @@
       "$mod, F, togglefloating,"
       "$mod, R, exec, rofi -show drun"
       "$mod SHIFT, P, pseudo,"
-      "$mod, J, togglesplit,"
+      "$mod, J, layoutmsg, togglesplit,"
       "$mod SHIFT, L, exit,"
       "$mod SHIFT, F, fullscreen"
 

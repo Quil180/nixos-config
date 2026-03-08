@@ -16,10 +16,12 @@
 
   security.polkit.enable = true;
   environment.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "hyprland";
+    XDG_CURRENT_DESKTOP = "Hyprland";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     NIXOS_OZONE_WL = "1";
-    AQ_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    AQ_NO_HARDWARE_CURSORS = "1";
+    AQ_DRM_DEVICES = "/dev/dri/card2:/dev/dri/card2";
   };
 
   # enabling xdg

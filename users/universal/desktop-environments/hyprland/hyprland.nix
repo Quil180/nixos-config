@@ -43,7 +43,7 @@
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
     systemd = {
-      enable = false;
+      enable = true;
       variables = [ "--all" ];
     };
     settings = {
@@ -56,16 +56,22 @@
         gaps_in = 5; # gaps between windows
         gaps_out = 5; # gaps from windows to screen edge
       };
+      cursor = {
+        no_hardware_cursors = true;
+      };
       env = [
         "HYPRCURSOR_THEME,rose-pine-hyprcursor"
         "HYPRCURSOR_SIZE,24"
         "XCURSOR_THEME,rose-pine-hyprcursor"
         "XCURSOR_SIZE,24"
 
+        "WLR_NO_HARDWARE_CURSORS,1"
+        "AQ_NO_HARDWARE_CURSORS,1"
+
         "GDK_SCALE,2"
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
 
-        "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
+        "AQ_DRM_DEVICES,/dev/dri/card2:/dev/dri/card1"
 
         "MOZ_ENABLE_WAYLAND,1"
       ];
@@ -86,6 +92,9 @@
     extraConfig = ''
       xwayland {
         force_zero_scaling = true
+      }
+      cursor {
+        no_hardware_cursors = true
       }
     '';
     plugins = [
