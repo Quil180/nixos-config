@@ -29,7 +29,6 @@
     swww # backgrounds/wallpapers
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
-    # rofi # app selector
     wayland-logout # for easy logout
     wlogout # to easily logout
     wlr-randr # to change display primacy
@@ -66,7 +65,7 @@
         "GDK_SCALE,2"
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
 
-        "AQ_DRM_DEVICES,/dev/dri/card2:/dev/dri/card1"
+        "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
 
         "MOZ_ENABLE_WAYLAND,1"
       ];
