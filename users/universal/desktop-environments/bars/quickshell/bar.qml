@@ -94,6 +94,9 @@ Scope {
             // Screen binding
             screen: modelData
 
+            // Identify secondary screens (optional but used in visibility logic)
+            property bool isSecondary: root.screen !== Quickshell.screens[0]
+
             WlrLayershell.namespace: "quickshell-bar"
             WlrLayershell.layer: WlrLayer.Top
 
@@ -592,6 +595,7 @@ Scope {
                 Modules.Workspaces {
                     id: workspaces
                     visible: !isSecondary
+                    monitorName: root.screen.name
                 }
 
                 // Spacer

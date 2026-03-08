@@ -6,12 +6,14 @@ Repeater {
     id: root
 
     property int workspaceCount: 9
+    property string monitorName: ""
 
     model: workspaceCount
 
     Rectangle {
+        property var monitor: Hyprland.monitors.values.find(m => m.name === root.monitorName)
         property var workspaceData: Hyprland.workspaces.values.find(workspace => workspace.id === index + 1 && workspace.toplevels.values.length > 0) ?? null
-        property bool isFocused: Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id === (index + 1)
+        property bool isFocused: monitor ? (monitor.activeWorkspace && monitor.activeWorkspace.id === (index + 1)) : (Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id === (index + 1))
 
         Layout.preferredWidth: 20
         Layout.preferredHeight: parent.height
