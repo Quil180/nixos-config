@@ -55,6 +55,7 @@
 
   # Use the systemd-boot EFI boot loader.
   boot = {
+    resumeDevice = "/dev/mapper/root_vg-root";
     loader = {
       systemd-boot.enable = false;
       efi = {

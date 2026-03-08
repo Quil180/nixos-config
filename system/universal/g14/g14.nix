@@ -16,6 +16,8 @@
       enable = true;
     };
 
+    upower.enable = true;
+
     tlp.enable = false;
     # ensuring that tlp is off.
     auto-cpufreq = {
@@ -55,6 +57,8 @@
 
   systemd.services = {
     systemd-suspend.serviceConfig.Environment = "SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0";
+    systemd-hibernate.serviceConfig.Environment = "SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0";
+    systemd-hybrid-sleep.serviceConfig.Environment = "SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0";
   };
 
   # Performance-optimized power settings for 6900HS/6800S
@@ -63,6 +67,9 @@
     kernelParams = [
       "initcall_blacklist=acpi_cpufreq_init"
       "amd_pstate=active" # Active mode for best performance scaling
+      "amdgpu.sg_display=0" # Fix for display issues on resume
+      "resume_offset=533760"
+      "mem_sleep_default=s2idle"
     ];
   };
 
