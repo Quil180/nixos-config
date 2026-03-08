@@ -57,14 +57,16 @@
       force = true;
     };
     "nvim/init.lua" = {
-      source = neovim/init.lua;
+      text = builtins.replaceStrings [ "~/.dotfiles" ] [ dotfilesDir ] (builtins.readFile ./neovim/init.lua);
       force = true;
     };
   };
 
-  # Patch dotfiles path and build avante.nvim if present
-  home.activation.patchNeovimConfig = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    		$DRY_RUN_CMD sed -i 's|~/.dotfiles|${dotfilesDir}|g' $HOME/.config/nvim/init.lua || true
+  # Setup Avante.nvim and clean up any leftover backup files
+  home.activation.setupNeovim = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    		# Remove any backup files that cause interactive prompts during home-manager switch
+    		$DRY_RUN_CMD rm -f $HOME/.config/nvim/init.lua.backup || true
+
     		# Build avante.nvim if it exists (requires make, cargo, and openssl)
     		if [ -d "$HOME/.local/share/nvim/site/pack/core/opt/avante.nvim" ]; then
     			cd "$HOME/.local/share/nvim/site/pack/core/opt/avante.nvim"
