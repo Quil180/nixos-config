@@ -9,6 +9,16 @@ import QtQuick.Layouts
 import "Modules" as Modules
 
 Scope {
+    Component.onCompleted: {
+        console.log("Scope loaded!");
+        console.log("Quickshell.screens length: " + Quickshell.screens.length);
+        console.log("WlrLayer exists: " + (typeof WlrLayer !== 'undefined'));
+        if (typeof WlrLayer !== 'undefined') {
+            console.log("WlrLayer.Overlay: " + WlrLayer.Overlay);
+        }
+        console.log("WlrLayershell exists: " + (typeof WlrLayershell !== 'undefined'));
+    }
+
     // Widget data sources (Shared across screens)
     Modules.CpuWidget {
         id: cpuWidget
@@ -75,7 +85,7 @@ Scope {
         }
     }
 
-    Repeater {
+    Instantiator {
         model: Quickshell.screens
         delegate: PanelWindow {
             id: root
@@ -84,15 +94,15 @@ Scope {
             // Screen binding
             screen: modelData
 
-            // Secondary screen detection
-            property bool isSecondary: index !== 0
+            WlrLayershell.namespace: "quickshell-bar"
+            WlrLayershell.layer: WlrLayer.Top
 
-            // Ensuring the bar is on the top and all the way to the left and right
             anchors {
                 top: true
                 left: true
                 right: true
             }
+
             // Setting the maximum height to be 30
             height: 30
             // Glassmorphism background - semi-transparent with subtle gradient
