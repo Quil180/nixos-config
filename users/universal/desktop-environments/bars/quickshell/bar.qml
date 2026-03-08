@@ -41,9 +41,6 @@ Scope {
     Modules.NetworkWidget {
         id: networkWidget
     }
-    Modules.WindowWidget {
-        id: windowWidget
-    }
     Modules.BatteryWidget {
         id: batteryWidget
     }
@@ -107,7 +104,7 @@ Scope {
             }
 
             // Setting the maximum height to be 30
-            height: 30
+            implicitHeight: 30
             // Glassmorphism background - semi-transparent with subtle gradient
             color: Qt.rgba(parseInt(Modules.Theme.base00.toString().slice(1, 3), 16) / 255, parseInt(Modules.Theme.base00.toString().slice(3, 5), 16) / 255, parseInt(Modules.Theme.base00.toString().slice(5, 7), 16) / 255)
 
@@ -594,18 +591,19 @@ Scope {
                 // Hidden on secondary screens
                 Modules.Workspaces {
                     id: workspaces
-                    visible: !isSecondary
                     monitorName: root.screen.name
                 }
 
                 // Spacer
                 Modules.Spacer {
-                    visible: !isSecondary
                 }
 
                 // Active Window Title
                 Text {
-                    text: windowWidget.activeWindow
+                    property var monitor: Hyprland.monitors.values.find(m => m.name === root.screen.name)
+                    text: monitor && monitor.activeWorkspace && monitor.activeWorkspace.toplevels.values.length > 0 
+                        ? (monitor.activeWorkspace.toplevels.values.find(t => t.focused) || monitor.activeWorkspace.toplevels.values[0]).title 
+                        : ""
                     color: Modules.Theme.base04
                     font {
                         family: Modules.Theme.fontFamily
@@ -616,7 +614,6 @@ Scope {
                     Layout.leftMargin: 8
                     elide: Text.ElideRight
                     maximumLineCount: 1
-                    visible: !isSecondary
                 }
 
                 // Spacer to push rest to the very right
@@ -626,6 +623,7 @@ Scope {
 
                 // System Stats Group (no separators between them)
                 RowLayout {
+                    visible: !root.isSecondary
                     spacing: 12
 
                     // CPU Usage with mini progress
@@ -710,10 +708,13 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {}
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
 
                 // Audio/Display Group
                 RowLayout {
+                    visible: !root.isSecondary
                     spacing: 12
 
                     // Brightness
@@ -771,11 +772,14 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {}
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
 
                 // Network Icon
                 Text {
                     id: networkIcon
+                    visible: !root.isSecondary
                     text: networkWidget.connected ? "\uf1eb" : "\uf467"
                     color: networkWidget.connected ? Modules.Theme.base03 : Modules.Theme.alertColor
                     font {
@@ -812,11 +816,14 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {}
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
 
                 // Weather Icon
                 Text {
                     id: weatherIcon
+                    visible: !root.isSecondary
                     text: "\uf0c2"
                     color: weatherMouse.containsMouse ? Modules.Theme.base04 : Modules.Theme.base03
                     font {
@@ -850,11 +857,14 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {}
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
 
                 // Battery Icon
                 Text {
                     id: batteryIcon
+                    visible: !root.isSecondary
                     text: batteryWidget.charging ? "\uf0e7" : (batteryWidget.percentage > 75 ? "\uf240" : (batteryWidget.percentage > 50 ? "\uf241" : (batteryWidget.percentage > 25 ? "\uf242" : (batteryWidget.percentage > 10 ? "\uf243" : "\uf244"))))
                     color: batteryMouse.containsMouse ? Modules.Theme.base04 : (batteryWidget.percentage <= 20 && !batteryWidget.charging ? Modules.Theme.alertColor : Modules.Theme.base03)
                     font {
@@ -888,11 +898,14 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {}
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
 
                 // Bluetooth Icon
                 Text {
                     id: bluetoothIcon
+                    visible: !root.isSecondary
                     text: "\uf293"
                     color: bluetoothMouse.containsMouse ? Modules.Theme.base04 : (bluetoothWidget.connected ? Modules.Theme.base0D : (bluetoothWidget.powered ? Modules.Theme.base03 : Modules.Theme.base02))
                     font {
@@ -926,13 +939,15 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {}
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
 
                 // Notification/DND Icon (merged: hover=notifications, click=toggle DND)
                 // Hidden on secondary screens
                 Text {
                     id: notificationIcon
-                    visible: !isSecondary
+                    visible: !root.isSecondary
                     text: notificationServer.dndEnabled ? "\uf1f6" : "\uf0f3"
                     color: notificationMouse.containsMouse ? Modules.Theme.base04 : (notificationServer.dndEnabled ? Modules.Theme.alertColor : (notificationServer.notificationHistory.length > 0 ? Modules.Theme.base0A : Modules.Theme.base03))
                     font {
@@ -970,6 +985,7 @@ Scope {
                 // Power Icon
                 Text {
                     id: powerIcon
+                    visible: !root.isSecondary
                     text: "\uf011"
                     color: powerMouse.containsMouse ? Modules.Theme.alertColor : Modules.Theme.base03
                     font {
@@ -1004,14 +1020,13 @@ Scope {
                 }
 
                 Modules.Spacer {
-                    visible: !isSecondary
+                    visible: !root.isSecondary
                 }
 
                 // Clock with calendar popup
                 // Hidden on secondary screens
                 Item {
                     id: clockItem
-                    visible: !isSecondary
                     implicitWidth: clockText.implicitWidth
                     implicitHeight: clockText.implicitHeight
 

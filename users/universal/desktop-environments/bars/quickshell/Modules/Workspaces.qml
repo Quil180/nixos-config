@@ -12,8 +12,9 @@ Repeater {
 
     Rectangle {
         property var monitor: Hyprland.monitors.values.find(m => m.name === root.monitorName)
-        property var workspaceData: Hyprland.workspaces.values.find(workspace => workspace.id === index + 1 && workspace.toplevels.values.length > 0) ?? null
-        property bool isFocused: monitor ? (monitor.activeWorkspace && monitor.activeWorkspace.id === (index + 1)) : (Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id === (index + 1))
+        property int offset: monitor && monitor.activeWorkspace ? Math.floor((monitor.activeWorkspace.id - 1) / 10) * 10 : 0
+        property var workspaceData: Hyprland.workspaces.values.find(workspace => workspace.id === (index + 1 + offset) && workspace.toplevels.values.length > 0) ?? null
+        property bool isFocused: monitor && monitor.activeWorkspace ? monitor.activeWorkspace.id === (index + 1 + offset) : false
 
         Layout.preferredWidth: 20
         Layout.preferredHeight: parent.height
@@ -42,7 +43,7 @@ Repeater {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: Hyprland.dispatch("workspace " + (index + 1))
+                onClicked: Hyprland.dispatch("workspace " + (index + 1 + parent.parent.offset))
             }
         }
     }
