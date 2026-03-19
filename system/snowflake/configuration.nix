@@ -38,7 +38,7 @@
     ../universal/applications/games.nix
 
     # VPNs
-    # ../universal/vpns/hamachi.nix
+    ../universal/vpns/hamachi.nix
     # ../universal/vpns/zerotier.nix
 
     # Extra options...
