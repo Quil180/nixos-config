@@ -1,0 +1,73 @@
+🌐 Local Network (or WAN from Modem)
+│
+├── 🗄️ Dell Server (Breadbox) —  Dedicated NAS
+│   │  OS: TrueNAS Core/Scale
+│   │  Specs: i7-4770 | 16 GB RAM | 128 GB SSD (OS)
+│   │  Memory Note: ~15 GB reserved for ZFS ARC Cache (dynamically adjusts)
+│   │
+│   ├── 📁 /mnt/media (Mounted by Toast & Croissant)
+│   ├── 📁 /mnt/photos (Mounted by Pancake)
+│   ├── 📁 /mnt/git_lfs (Mounted by Scone)
+│   ├── 📁 /mnt/backups
+│   ├── 📁 /mnt/pbs-store (Mounted by Pasta)
+│   │
+│   └── 📦 VM 1: Alpine [Secondary DNS] (Bagel)
+│       │  1 vCPU | 512 MB RAM | 8 GB DISK
+│       │
+│       └── 🛡️ AdGuard Home (Secondary)
+│
+└── 🖥️ Main Host — Proxmox VE (Bakery)
+    │  Specs: Threadripper 1950X | 64 GB RAM | 1 TB NVMe
+    │  Host Reservation: ~17.5 GB RAM (System, I/O buffers, safety margin)
+    │
+    ├── 📦 VM 0: FreeBSD [Core Firewall/Router] (Pretzel)  
+    │      2 vCPU | 2 GB RAM | 32 GB DISK 
+    │      🔌 NIC 1: WAN (Direct modem passthrough)
+    │      🔌 NIC 2: LAN (Proxmox vmbr0)
+    │      └── 🛡️ pfSense (Handles NAT, DHCP, Firewall rules)
+    │
+    ├── 📦 VM 1: NixOS [Edge Gateway] (Crust)
+    │      2 vCPU | 2 GB RAM | 24 GB DISK
+    │      ├── 🚦 Caddy (Reverse Proxy)
+    │      └── 🦅 NetBird (Mgmt + Signal)
+    │
+    ├── 📦 VM 2: NixOS [Remote Access] (Baguette)
+    │      2 vCPU | 2 GB RAM | 24 GB DISK
+    │      └── 🖥️ RustDesk Server (HBBS/HBBR)
+    │
+    ├── 📦 VM 3: Proxmox Backup Server (Pasta)
+    │      4 vCPU | 4 GB RAM | 64 GB DISK 
+    │      ├── 📦 Datastore: /mnt/pbs-store (NAS)
+    │      └── 🔁 Sync Job →  External/Offsite (Breadbox)
+    │
+    ├── 📦 VM 4: NixOS [Core Services] (Scone)
+    │      4 vCPU | 4 GB RAM | 64 GB DISK 
+    │      ├── 🐙 Gitea
+    │      ├── 📊 Homepage Dashboard
+    │      └── 🔗 /mnt/git_lfs (NAS)
+    │
+    ├── 📦 VM 5: NixOS [Heavy Apps] (Pancake)
+    │      6 vCPU | 12 GB RAM | 256 GB DISK
+    │      └── 🖼️ Immich
+    │          ├── ⚡ App + Postgres + Redis (Local)
+    │          └── 📂 Uploads/Library → /mnt/photos (NAS)
+    │
+    ├── 📦 VM 6: Debian [Game Servers] (Waffle)
+    │      6 vCPU | 12 GB RAM | 256 GB DISK 
+    │      └── 🦖 Pterodactyl Wings (Docker isolated)
+    │
+    ├── 📦 VM 7: NixOS [Acquisition] (Croissant) 
+    │      4 vCPU | 4 GB RAM | 32 GB DISK
+    │      ├── 🔗 /mnt/media (NAS)
+    │      ├── 🕵️ Sonarr, Radarr, Prowlarr
+    │      └── 🧲 qBittorrent + 🛡️ Gluetun (VPN Container w/ Killswitch)
+    │
+    ├── 🪆 LXC 1: Debian [Media] (Toast)
+    │      4 vCPU | 4 GB RAM | 24 GB DISK
+    │      └── 🍿 Jellyfin
+    │          ├── 🎮 HW Acceleration
+    │          └── 🔗 /mnt/media (NAS)
+    │
+    └── 🪆 LXC 2: Alpine [Primary DNS] (Crepe)
+           1 vCPU | 512 MB RAM | 8 GB DISK
+           └── 🛡️ AdGuard Home (Primary)
