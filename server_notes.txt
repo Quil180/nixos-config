@@ -1,9 +1,9 @@
-🌐 Local Network (or WAN from Modem)
+🌐 Local Network
 │
-├── 🗄️ Dell Server (Breadbox) —  Dedicated NAS
+├── 🗄️ Dell Server (Breadbox) — Dedicated NAS
 │   │  OS: TrueNAS Core/Scale
 │   │  Specs: i7-4770 | 16 GB RAM | 128 GB SSD (OS)
-│   │  Memory Note: ~15 GB reserved for ZFS ARC Cache (dynamically adjusts)
+│   │  Memory Note: 15 GB reserved for ZFS ARC Cache
 │   │
 │   ├── 📁 /mnt/media (Mounted by Toast & Croissant)
 │   ├── 📁 /mnt/photos (Mounted by Pancake)
@@ -11,63 +11,75 @@
 │   ├── 📁 /mnt/backups
 │   ├── 📁 /mnt/pbs-store (Mounted by Pasta)
 │   │
-│   └── 📦 VM 1: Alpine [Secondary DNS] (Bagel)
+│   └── 📦 VM 1: Debian [Secondary DNS] (Bagel)
 │       │  1 vCPU | 512 MB RAM | 8 GB DISK
-│       │
+│       │  Agents: Node Exporter, Promtail
 │       └── 🛡️ AdGuard Home (Secondary)
 │
 └── 🖥️ Main Host — Proxmox VE (Bakery)
     │  Specs: Threadripper 1950X | 64 GB RAM | 1 TB NVMe
-    │  Host Reservation: ~17.5 GB RAM (System, I/O buffers, safety margin)
+    │  Host Reservation: 11.5 GB RAM (Reduced slightly for new nodes)
+    │  Agents: Node Exporter, Promtail (Installed directly on Proxmox host)
     │
-    ├── 📦 VM 0: FreeBSD [Core Firewall/Router] (Pretzel)  
-    │      2 vCPU | 2 GB RAM | 32 GB DISK 
-    │      🔌 NIC 1: WAN (Direct modem passthrough)
-    │      🔌 NIC 2: LAN (Proxmox vmbr0)
+    ├── 📦 VM 0: FreeBSD [Core Firewall/Router] (Pretzel)
+    │      2 vCPU | 2 GB RAM | 32 GB DISK
+    │      🔌 NIC 1: WAN & NIC 2: LAN
     │      └── 🛡️ pfSense (Handles NAT, DHCP, Firewall rules)
     │
     ├── 📦 VM 1: NixOS [Edge Gateway] (Crust)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
+    │      Agents: Node Exporter, Promtail
     │      ├── 🚦 Caddy (Reverse Proxy)
     │      └── 🦅 NetBird (Mgmt + Signal)
     │
     ├── 📦 VM 2: NixOS [Remote Access] (Baguette)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
+    │      Agents: Node Exporter, Promtail
     │      └── 🖥️ RustDesk Server (HBBS/HBBR)
     │
     ├── 📦 VM 3: Proxmox Backup Server (Pasta)
-    │      4 vCPU | 4 GB RAM | 64 GB DISK 
-    │      ├── 📦 Datastore: /mnt/pbs-store (NAS)
-    │      └── 🔁 Sync Job →  External/Offsite (Breadbox)
+    │      4 vCPU | 4 GB RAM | 64 GB DISK
+    │      Agents: Node Exporter, Promtail
+    │      └── 📦 Datastore & Sync Job → Breadbox
     │
     ├── 📦 VM 4: NixOS [Core Services] (Scone)
-    │      4 vCPU | 4 GB RAM | 64 GB DISK 
-    │      ├── 🐙 Gitea
-    │      ├── 📊 Homepage Dashboard
+    │      4 vCPU | 4 GB RAM | 64 GB DISK
+    │      Agents: Node Exporter, Promtail
+    │      ├── 🐙 Gitea & 📊 Homepage Dashboard
     │      └── 🔗 /mnt/git_lfs (NAS)
     │
     ├── 📦 VM 5: NixOS [Heavy Apps] (Pancake)
     │      6 vCPU | 12 GB RAM | 256 GB DISK
-    │      └── 🖼️ Immich
-    │          ├── ⚡ App + Postgres + Redis (Local)
-    │          └── 📂 Uploads/Library → /mnt/photos (NAS)
+    │      Agents: Node Exporter, Promtail
+    │      └── 🖼️ Immich (App + Postgres + Redis)
     │
     ├── 📦 VM 6: Debian [Game Servers] (Waffle)
-    │      6 vCPU | 12 GB RAM | 256 GB DISK 
+    │      6 vCPU | 12 GB RAM | 256 GB DISK
+    │      Agents: Node Exporter, Promtail
     │      └── 🦖 Pterodactyl Wings (Docker isolated)
     │
-    ├── 📦 VM 7: NixOS [Acquisition] (Croissant) 
+    ├── 📦 VM 7: NixOS [Acquisition] (Croissant)
     │      4 vCPU | 4 GB RAM | 32 GB DISK
-    │      ├── 🔗 /mnt/media (NAS)
-    │      ├── 🕵️ Sonarr, Radarr, Prowlarr
-    │      └── 🧲 qBittorrent + 🛡️ Gluetun (VPN Container w/ Killswitch)
+    │      Agents: Node Exporter, Promtail
+    │      └── 🧲 *Arr Stack + qBittorrent/Gluetun
     │
-    ├── 🪆 LXC 1: Debian [Media] (Toast)
+    ├── 📦 VM 8: NixOS [Build Farm] (Biscotti)
+    │      12 vCPU | 4 GB RAM | 40 GB DISK
+    │      Agents: Node Exporter, Promtail
+    │      └── 🛠️ Nix Remote Builder (Receives offloaded compilation jobs via SSH)
+    │
+    ├── 🪆 LXC 1: NixOS [Observability] (Muffin)
+    │      2 vCPU | 2 GB RAM | 20 GB DISK
+    │      ├── 📈 Prometheus (Pulls metrics from Node Exporters)
+    │      ├── 🪵 Loki (Receives logs from Promtail agents)
+    │      └── 📊 Grafana (Visualizes metrics, ZFS ARC stats, and logs)
+    │
+    ├── 🪆 LXC 2: Debian [Media] (Toast)
     │      4 vCPU | 4 GB RAM | 24 GB DISK
-    │      └── 🍿 Jellyfin
-    │          ├── 🎮 HW Acceleration
-    │          └── 🔗 /mnt/media (NAS)
+    │      Agents: Node Exporter, Promtail
+    │      └── 🍿 Jellyfin w/ HW Accel
     │
-    └── 🪆 LXC 2: Alpine [Primary DNS] (Crepe)
+    └── 🪆 LXC 3: Debian [Primary DNS] (Crepe)
            1 vCPU | 512 MB RAM | 8 GB DISK
+           Agents: Node Exporter, Promtail
            └── 🛡️ AdGuard Home (Primary)
