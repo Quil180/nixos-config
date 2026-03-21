@@ -18,7 +18,7 @@
 │
 └── 🖥️ Main Host — Proxmox VE (Bakery)
     │  Specs: Threadripper 1950X | 64 GB RAM | 1 TB NVMe
-    │  Host Reservation: 11.5 GB RAM (Reduced slightly for new nodes)
+    │  Host Reservation: 7.5 GB RAM (Reduced slightly for new nodes)
     │  Agents: Node Exporter, Promtail (Installed directly on Proxmox host)
     │
     ├── 📦 VM 0: FreeBSD [Core Firewall/Router] (Pretzel)
@@ -67,6 +67,12 @@
     │      12 vCPU | 4 GB RAM | 40 GB DISK
     │      Agents: Node Exporter, Promtail
     │      └── 🛠️ Nix Remote Builder (Receives offloaded compilation jobs via SSH)
+    │
+    ├── 📦 VM 9: NixOS [Identity + Auth] (Macaron)
+    │      4 vCPU | 4 GB RAM | 32 GB DISK
+    │      Agents: Node Exporter, Promtail
+    │      ├── 🔐 Authentik (SSO, OIDC, Forward Auth Outpost)
+    │      └── 🗝️ Vaultwarden (Passwords & 2FA/TOTP Vault)
     │
     ├── 🪆 LXC 1: NixOS [Observability] (Muffin)
     │      2 vCPU | 2 GB RAM | 20 GB DISK
