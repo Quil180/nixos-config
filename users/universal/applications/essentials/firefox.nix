@@ -30,7 +30,7 @@
 
         # Disable some telemetry
         "app.shield.optoutstudies.enabled" = false;
-				"beacon.enabled" = false;
+				"beacon.enabled" = true;
         "browser.discovery.enabled" = false;
 				"browser.tabs.crashReporting.sendReport" = false;
         "browser.ping-centre.telemetry" = false;
@@ -65,7 +65,7 @@
         # Disable "save password" prompt
         "signon.rememberSignons" = false;
         # Harden Security
-        "privacy.trackingprotection.enabled" = true;
+        "privacy.trackingprotection.enabled" = false;
         "dom.security.https_only_mode" = true;
         # Disable crappy home activity stream page
         "browser.newtabpage.blocked" = lib.genAttrs [
@@ -108,17 +108,17 @@
 				# Extra Stuff
 				"pdfjs.enableScripting" = false;
 				"security.ssl3.rsa_des_ede3_sha" = false;
-				"security.ssl.require_safe_negotiation" = true;
+				"security.ssl.require_safe_negotiation" = false;
 
 				"identity.fxaccounts.enabled" = false;
-				"geo.enabled" = false;
+				"geo.enabled" = true;
 				"dom.webnotifications.enabled" = false;
 				"dom.event.clipboardevents.enabled" = true;
-				"media.navigator.enabled" = false;
+				"media.navigator.enabled" = true;
 				"privacy.donottrackheader.enabled" = true;
-				"browser.safebrowsing.malware.enabled" = false;
-				"browser.safebrowsing.phishing.enabled" = false;
-				"browser.safebrowsing.downloads.remote.enabled" = false;
+				"browser.safebrowsing.malware.enabled" = true;
+				"browser.safebrowsing.phishing.enabled" = true;
+				"browser.safebrowsing.downloads.remote.enabled" = true;
       };
 
       extensions = {
