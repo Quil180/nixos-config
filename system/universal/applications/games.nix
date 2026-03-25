@@ -2,6 +2,7 @@
   environment.systemPackages = with pkgs; [
     lutris
     mangohud
+    mangojuice
     goverlay
     steamtinkerlaunch # for modifying steam games
   ];
