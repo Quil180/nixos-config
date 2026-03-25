@@ -29,7 +29,7 @@
         };
         charger = {
           governor = "performance";
-          turbo = "always"; # Max clock speeds when plugged in
+          turbo = "never";
         };
       };
     };
