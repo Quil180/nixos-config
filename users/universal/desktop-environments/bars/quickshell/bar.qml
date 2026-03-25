@@ -865,7 +865,7 @@ Scope {
                 Text {
                     id: batteryIcon
                     visible: !root.isSecondary
-                    text: batteryWidget.charging ? "\uf0e7" : (batteryWidget.percentage > 75 ? "\uf240" : (batteryWidget.percentage > 50 ? "\uf241" : (batteryWidget.percentage > 25 ? "\uf242" : (batteryWidget.percentage > 10 ? "\uf243" : "\uf244"))))
+                    text: (batteryWidget.charging ? "\uf0e7" : (batteryWidget.percentage > 75 ? "\uf240" : (batteryWidget.percentage > 50 ? "\uf241" : (batteryWidget.percentage > 25 ? "\uf242" : (batteryWidget.percentage > 10 ? "\uf243" : "\uf244"))))) + "  " + batteryWidget.percentage + "%"
                     color: batteryMouse.containsMouse ? Modules.Theme.base04 : (batteryWidget.percentage <= 20 && !batteryWidget.charging ? Modules.Theme.alertColor : Modules.Theme.base03)
                     font {
                         family: Modules.Theme.fontFamily
