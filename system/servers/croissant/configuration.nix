@@ -65,10 +65,13 @@
   fileSystems."/mnt/media" = {
     device = "breadbox:/mnt/media";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" ];
+    options = [
+      "x-systemd.automount"
+      "noauto"
+    ];
   };
 
-  networking.firewall.allowedTCPPorts = [ 
+  networking.firewall.allowedTCPPorts = [
     9696 # Prowlarr
     8989 # Sonarr
     7878 # Radarr
