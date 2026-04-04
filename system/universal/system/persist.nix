@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   # system files we want to keep
   fileSystems."/persist".neededForBoot = true;
 
@@ -15,10 +16,10 @@
       "/var/lib/systemd/coredump"
       "/var/lib/libvirt"
       "/var/lib/logmein-hamachi"
-			"/var/lib/ollama"
-			"/var/lib/open-webui"
-			"/var/lib/llama-cpp"
-			# "/var/lib/private"
+      "/var/lib/ollama"
+      "/var/lib/open-webui"
+      "/var/lib/llama-cpp"
+      # "/var/lib/private"
       {
         directory = "/var/lib/colord";
         user = "colord";
