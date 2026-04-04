@@ -5,7 +5,7 @@
 
     # essential applications below
     ../universal/applications/essentials/bash.nix
-    ../universal/applications/essentials/chromium.nix
+    # ../universal/applications/essentials/chromium.nix
     ../universal/applications/essentials/firefox.nix
     ../universal/applications/essentials/music.nix
     ../universal/applications/essentials/neovim.nix
