@@ -135,6 +135,7 @@
       "quickshell/Modules/NotificationToast.qml".source = ./Modules/NotificationToast.qml;
       "quickshell/Modules/BarIcon.qml".source = ./Modules/BarIcon.qml;
       "quickshell/Modules/MiniProgress.qml".source = ./Modules/MiniProgress.qml;
+      "quickshell/Modules/Tray.qml".source = ./Modules/Tray.qml;
     };
   };
 }

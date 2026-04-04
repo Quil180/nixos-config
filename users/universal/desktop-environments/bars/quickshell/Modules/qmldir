@@ -29,3 +29,4 @@ NotificationToast 1.0 NotificationToast.qml
 BarIcon 1.0 BarIcon.qml
 MiniProgress 1.0 MiniProgress.qml
 AppLauncher 1.0 AppLauncher.qml
+Tray 1.0 Tray.qml

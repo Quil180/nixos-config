@@ -1,6 +1,8 @@
+//@ pragma UseQApplication
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Notifications
+import Quickshell.Services.SystemTray
 import Quickshell.Hyprland
 
 import QtQuick
@@ -772,49 +774,49 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Network Icon
-                Text {
-                    id: networkIcon
-                    visible: !root.isSecondary
-                    text: networkWidget.connected ? "\uf1eb" : "\uf467"
-                    color: networkWidget.connected ? Modules.Theme.base03 : Modules.Theme.alertColor
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-                        onEntered: {
-                            networkHideTimer.stop();
-                        }
-                        onExited: {
-                            if (networkPopupWindow.visible) {
-                                networkHideTimer.restart();
-                            }
-                        }
-                        onClicked: mouse => {
-                            if (mouse.button === Qt.RightButton) {
-                                // Right-click: show network selector and scan
-                                networkPopupWindow.visible = false;
-                                networkWidget.scanNetworks();
-                                networkSelectorWindow.visible = !networkSelectorWindow.visible;
-                            } else {
-                                // Left-click: show connection info
-                                networkSelectorWindow.visible = false;
-                                networkHideTimer.stop();
-                                networkPopupWindow.visible = !networkPopupWindow.visible;
-                            }
-                        }
-                    }
-                }
+                // Modules.Spacer {
+                //     visible: !root.isSecondary
+                // }
+                //
+                // // Network Icon
+                // Text {
+                //     id: networkIcon
+                //     visible: !root.isSecondary
+                //     text: networkWidget.connected ? "\uf1eb" : "\uf467"
+                //     color: networkWidget.connected ? Modules.Theme.base03 : Modules.Theme.alertColor
+                //     font {
+                //         family: Modules.Theme.fontFamily
+                //         pixelSize: Modules.Theme.fontSize
+                //         bold: true
+                //     }
+                //
+                //     MouseArea {
+                //         anchors.fill: parent
+                //         hoverEnabled: true
+                //         acceptedButtons: Qt.LeftButton | Qt.RightButton
+                //         onEntered: {
+                //             networkHideTimer.stop();
+                //         }
+                //         onExited: {
+                //             if (networkPopupWindow.visible) {
+                //                 networkHideTimer.restart();
+                //             }
+                //         }
+                //         onClicked: mouse => {
+                //             if (mouse.button === Qt.RightButton) {
+                //                 // Right-click: show network selector and scan
+                //                 networkPopupWindow.visible = false;
+                //                 networkWidget.scanNetworks();
+                //                 networkSelectorWindow.visible = !networkSelectorWindow.visible;
+                //             } else {
+                //                 // Left-click: show connection info
+                //                 networkSelectorWindow.visible = false;
+                //                 networkHideTimer.stop();
+                //                 networkPopupWindow.visible = !networkPopupWindow.visible;
+                //             }
+                //         }
+                //     }
+                // }
 
                 Modules.Spacer {
                     visible: !root.isSecondary
@@ -1058,6 +1060,16 @@ Scope {
                         }
                         onExited: calendarHideTimer.restart()
                     }
+                }
+
+                Modules.Spacer {
+                    visible: !root.isSecondary && SystemTray.items.length > 0
+                  }
+
+                Modules.Tray {
+                    visible: !root.isSecondary
+                    Layout.alignment: Qt.AlignVCenter
+                    parentWindow: root
                 }
             }
         }
