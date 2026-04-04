@@ -16,7 +16,10 @@
   fileSystems."/mnt/photos" = {
     device = "breadbox:/mnt/photos";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" ];
+    options = [
+      "x-systemd.automount"
+      "noauto"
+    ];
   };
 
   networking.firewall.allowedTCPPorts = [ 2283 ]; # Immich port

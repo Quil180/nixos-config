@@ -45,9 +45,12 @@
   # QEMU Guest Agent for Proxmox
   services.qemuGuest.enable = true;
 
+  age.secrets.quil_password.file = ../../../secrets/quil_password.age;
+
   # User configuration
   users.users.${username} = {
     isNormalUser = true;
+    hashedPasswordFile = config.age.secrets.quil_password.path;
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
       (builtins.readFile ../../keys/id_snowflake.pub)

@@ -10,6 +10,8 @@
 
   networking.hostName = "muffin";
 
+  age.secrets.grafana_admin_pass.file = ../../../secrets/grafana_admin_pass.age;
+
   services.prometheus = {
     enable = true;
     port = 9090;
@@ -17,7 +19,18 @@
       {
         job_name = "nixos-nodes";
         static_configs = [
-          { targets = [ "crust:9100" "baguette:9100" "scone:9100" "pancake:9100" "croissant:9100" "biscotti:9100" "macaron:9100" "muffin:9100" ]; }
+          {
+            targets = [
+              "crust:9100"
+              "baguette:9100"
+              "scone:9100"
+              "pancake:9100"
+              "croissant:9100"
+              "biscotti:9100"
+              "macaron:9100"
+              "muffin:9100"
+            ];
+          }
         ];
       }
     ];
@@ -42,16 +55,18 @@
           rules_directory = "/var/lib/loki/rules";
         };
       };
-      schema_config.configs = [{
-        from = "2020-10-24";
-        store = "tsdb";
-        object_store = "filesystem";
-        schema = "v13";
-        index = {
-          prefix = "index_";
-          period = "24h";
-        };
-      }];
+      schema_config.configs = [
+        {
+          from = "2020-10-24";
+          store = "tsdb";
+          object_store = "filesystem";
+          schema = "v13";
+          index = {
+            prefix = "index_";
+            period = "24h";
+          };
+        }
+      ];
     };
   };
 
@@ -66,5 +81,9 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 9090 3000 3100 ]; # Prometheus, Grafana, Loki
+  networking.firewall.allowedTCPPorts = [
+    9090
+    3000
+    3100
+  ]; # Prometheus, Grafana, Loki
 }
