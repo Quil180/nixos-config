@@ -138,6 +138,46 @@
             system/snowflake/configuration.nix
           ];
         };
+        crust = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/crust/configuration.nix ];
+        };
+        baguette = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/baguette/configuration.nix ];
+        };
+        scone = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/scone/configuration.nix ];
+        };
+        pancake = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/pancake/configuration.nix ];
+        };
+        croissant = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/croissant/configuration.nix ];
+        };
+        biscotti = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/biscotti/configuration.nix ];
+        };
+        macaron = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/macaron/configuration.nix ];
+        };
+        muffin = lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs system username dotfilesDir; };
+          modules = [ inputs.agenix.nixosModules.default system/servers/muffin/configuration.nix ];
+        };
       };
       homeConfigurations = {
         quil = home-manager.lib.homeManagerConfiguration {
