@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     pulseaudioFull
+    easyeffects
   ];
 
   # for good sound quality
