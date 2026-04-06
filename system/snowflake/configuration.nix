@@ -32,6 +32,7 @@
     # Sound?
     ../universal/system/sound.nix
     ../universal/system/bluetooth.nix
+    ../universal/system/security.nix
     # ../universal/system/persist.nix
     # ../universal/system/virtualisation.nix
 
