@@ -2,6 +2,7 @@
 {
   imports = [
     ../services/monitoring.nix
+    ./security.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -35,12 +36,6 @@
     wget
     inputs.agenix.packages.${system}.default
   ];
-
-  # SSH configuration
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = false;
-  };
 
   # QEMU Guest Agent for Proxmox
   services.qemuGuest.enable = true;

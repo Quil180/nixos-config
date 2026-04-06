@@ -1,5 +1,7 @@
 { lib, ... }:
 {
+  programs.fuse.userAllowOther = true;
+
   # system files we want to keep
   fileSystems."/persist".neededForBoot = true;
 
@@ -17,7 +19,7 @@
       "/var/lib/libvirt"
       "/var/lib/logmein-hamachi"
       "/var/lib/ollama"
-      "/var/lib/open-webui"
+      "/var/lib/private"
       "/var/lib/llama-cpp"
       # "/var/lib/private"
       {
@@ -32,10 +34,19 @@
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     mkdir /btrfs_tmp
     mount /dev/root_vg/root /btrfs_tmp
+
+    # Wipe /root
     if [[ -e /btrfs_tmp/root ]]; then
         mkdir -p /btrfs_tmp/old_roots
         timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
         mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+    fi
+
+    # Wipe /home
+    if [[ -e /btrfs_tmp/home ]]; then
+        mkdir -p /btrfs_tmp/old_homes
+        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/home)" "+%Y-%m-%-d_%H:%M:%S")
+        mv /btrfs_tmp/home "/btrfs_tmp/old_homes/$timestamp"
     fi
 
     delete_subvolume_recursively() {
@@ -46,11 +57,16 @@
         btrfs subvolume delete "$1"
     }
 
+    # Clean up old roots/homes older than 30 days
     for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+        delete_subvolume_recursively "$i"
+    done
+    for i in $(find /btrfs_tmp/old_homes/ -maxdepth 1 -mtime +30); do
         delete_subvolume_recursively "$i"
     done
 
     btrfs subvolume create /btrfs_tmp/root
+    btrfs subvolume create /btrfs_tmp/home
     umount /btrfs_tmp
   '';
 }

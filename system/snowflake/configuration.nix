@@ -13,6 +13,7 @@
     ./disko.nix
     # ../universal/system/determinate.nix
     # ./secrets.nix
+    ../universal/system/persist.nix
 
     # gpu support
     ../universal/gpu-support/amd.nix

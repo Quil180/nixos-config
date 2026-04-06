@@ -1,5 +1,7 @@
-{pkgs, username, ...}: {
+{pkgs, username, inputs, ...}: {
   imports = [
+    "${inputs.impermanence.outPath}/home-manager.nix"
+    ./persist.nix
     # desktop environments below
     ../universal/desktop-environments/hyprland/hyprland.nix
 
