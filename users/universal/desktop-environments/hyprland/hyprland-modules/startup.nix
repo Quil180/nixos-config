@@ -2,8 +2,8 @@
   dotfiles = "~/.dotfiles";
 in {
   wayland.windowManager.hyprland.settings.exec-once = [
-    "bash -c 'sleep 1 && swww-daemon'"
-    "bash -c 'sleep 1 && swwww img ${dotfiles}/wallpapers/wallpaper.jpg'"
+    "bash -c 'sleep 1 && awww-daemon'"
+    "bash -c 'sleep 1 && awwww img ${dotfiles}/wallpapers/wallpaper.jpg'"
     "bash -c 'sleep 1 && nm-applet --indicator'"
     "bash -c 'sleep 1 && asusctl -c 80'"
     "bash -c 'sleep 1 && asusctl led-mode static -c ffffff'"

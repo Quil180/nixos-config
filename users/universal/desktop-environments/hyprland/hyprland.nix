@@ -26,7 +26,7 @@
     rose-pine-cursor
     grimblast # for screenshotting
     nwg-look # gtk settings editor
-    swww # backgrounds/wallpapers
+    awww # backgrounds/wallpapers
     qt5.qtwayland # graphics backend
     qt6.qtwayland # graphics backend
     wayland-logout # for easy logout
