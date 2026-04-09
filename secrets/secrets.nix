@@ -2,18 +2,18 @@ let
   # Host keys: Used by the system to decrypt secrets at boot.
   # Replace these with the actual host keys once the systems are installed.
   # You can find the host key on the target machine in /etc/ssh/ssh_host_ed25519_key.pub
-  snowflake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOfBViNTsKy2t26QrSelb7cvrsfwErbrATPfcPacjtdx root@snowflake";
-  crust = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_crust_host_key root@crust";
-  baguette = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_baguette_host_key root@baguette";
-  scone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_scone_host_key root@scone";
-  pancake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_pancake_host_key root@pancake";
-  croissant = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_croissant_host_key root@croissant";
-  biscotti = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_biscotti_host_key root@biscotti";
-  macaron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_macaron_host_key root@macaron";
-  muffin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAPlaceholder_muffin_host_key root@muffin";
+  snowflake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  crust = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  baguette = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  scone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  pancake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  croissant = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  biscotti = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  macaron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
+  muffin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO7HCDZUqFG3bJSIhl/UCWlUvtWSpvumjz09cztb36VQ root@snowflake";
 
   # User keys: Used by you to encrypt/edit secrets.
-  user_quil = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINIHmKLah2TNwOeg1CiM2uXd0c0ICrpymUa1Q0A7zSdg quil@snowflake";
+  user_quil = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCvsgiHHVoD+q6QhHbhhiaSf5xPK7SQLLa+cko1T+0f quil@snowflake";
 
   # Grouping keys
   systems = [
