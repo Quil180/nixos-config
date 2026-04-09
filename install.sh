@@ -100,9 +100,25 @@ fresh_install() {
         --mode disko "$disko_config"
     log_success "Disk partitioning complete!"
 
+    # --- INJECT STORAGE BYPASS HERE ---
+    log_info "Bypassing RAM limits by mapping live storage to the physical disk..."
+    sudo mkdir -p /mnt/tmp
+    sudo mount --bind /mnt/tmp /tmp
+    sudo mkdir -p /mnt/nix-overlay/upper
+    sudo mkdir -p /mnt/nix-overlay/work
+    sudo mount -t overlay overlay -o lowerdir=/nix/store,upperdir=/mnt/nix-overlay/upper,workdir=/mnt/nix-overlay/work /nix/store
+    sudo systemctl restart nix-daemon
+    sleep 3 # Give the daemon a second to catch up
+    # ----------------------------------
+
     # Step 2: Install NixOS
     log_info "Step 2/4: Installing NixOS..."
-    sudo nixos-install --no-root-passwd --root /mnt --flake "${SCRIPT_DIR}#${system_choice}"
+
+    # 1. Build the system closure locally to bypass the /mnt gitTracked bug
+    nix --experimental-features "nix-command flakes" build "${SCRIPT_DIR}#nixosConfigurations.${system_choice}.config.system.build.toplevel"
+
+    # 2. Install the pre-built closure
+    sudo nixos-install --no-root-passwd --root /mnt --system ./result
     log_success "NixOS installation complete!"
 
     # Step 3: Copy dotfiles to new system
