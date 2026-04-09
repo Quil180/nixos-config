@@ -148,7 +148,9 @@
     defaultUserShell = pkgs.zsh;
     users.${username} = {
       isNormalUser = true;
-      hashedPasswordFile = config.age.secrets.quil_password.path;
+      mutableUsers = true;
+      password = "1234";
+      # hashedPasswordFile = config.age.secrets.quil_password.path;
       extraGroups = [
         "networkmanager"
         "wheel"
