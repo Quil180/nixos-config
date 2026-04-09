@@ -146,9 +146,9 @@
   # default user settings regardless of host/user
   users = {
     defaultUserShell = pkgs.zsh;
+    mutableUsers = true;
     users.${username} = {
       isNormalUser = true;
-      mutableUsers = true;
       password = "1234";
       # hashedPasswordFile = config.age.secrets.quil_password.path;
       extraGroups = [
