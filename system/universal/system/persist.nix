@@ -42,13 +42,6 @@
         mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
     fi
 
-    # Wipe /home
-    if [[ -e /btrfs_tmp/home ]]; then
-        mkdir -p /btrfs_tmp/old_homes
-        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/home)" "+%Y-%m-%-d_%H:%M:%S")
-        mv /btrfs_tmp/home "/btrfs_tmp/old_homes/$timestamp"
-    fi
-
     delete_subvolume_recursively() {
         IFS=$'\n'
         for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
@@ -57,16 +50,12 @@
         btrfs subvolume delete "$1"
     }
 
-    # Clean up old roots/homes older than 30 days
+    # Clean up old roots older than 30 days
     for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-        delete_subvolume_recursively "$i"
-    done
-    for i in $(find /btrfs_tmp/old_homes/ -maxdepth 1 -mtime +30); do
         delete_subvolume_recursively "$i"
     done
 
     btrfs subvolume create /btrfs_tmp/root
-    btrfs subvolume create /btrfs_tmp/home
     umount /btrfs_tmp
   '';
 }
