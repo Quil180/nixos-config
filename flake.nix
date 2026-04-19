@@ -92,114 +92,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs =
-    {
-      nixpkgs,
-      home-manager,
-      nixos-hardware,
-      stylix,
-      # nix-flatpak,
-      rust-overlay,
-      hyprland,
-      ...
-    }@inputs:
-    let
-      username = "quil";
-      dotfilesDir = "/home/${username}/.dotfiles";
-      system = "x86_64-linux";
-      lib = nixpkgs.lib;
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      nixosConfigurations = {
-        snowflake = lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit
-              inputs
-              system
-              username
-              dotfilesDir
-              ;
-          };
-          modules = [
-            inputs.disko.nixosModules.default
-            inputs.impermanence.nixosModules.impermanence
-            inputs.agenix.nixosModules.default
-            nixos-hardware.nixosModules.asus-zephyrus-ga402
-
-            system/snowflake/disko.nix
-            system/snowflake/configuration.nix
-          ];
-        };
-        crust = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/crust/configuration.nix ];
-        };
-        baguette = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/baguette/configuration.nix ];
-        };
-        scone = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/scone/configuration.nix ];
-        };
-        pancake = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/pancake/configuration.nix ];
-        };
-        croissant = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/croissant/configuration.nix ];
-        };
-        biscotti = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/biscotti/configuration.nix ];
-        };
-        macaron = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.disko.nixosModules.default inputs.agenix.nixosModules.default system/servers/macaron/configuration.nix ];
-        };
-        muffin = lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs system username dotfilesDir; };
-          modules = [ inputs.agenix.nixosModules.default system/servers/muffin/configuration.nix ];
-        };
-      };
-      homeConfigurations = {
-        quil = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {
-            inherit
-              inputs
-              system
-              username
-              dotfilesDir
-              ;
-          };
-          modules = [
-            users/${username}/home.nix
-
-            stylix.homeModules.stylix
-            hyprland.homeManagerModules.default
-            {
-              nixpkgs.overlays = [ rust-overlay.overlays.default ];
-            }
-          ];
-        };
-      };
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" "aarch64-linux" ];
+      imports = [
+        ./system/flake-module.nix
+        ./users/flake-module.nix
+      ];
     };
 }
