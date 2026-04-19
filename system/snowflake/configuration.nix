@@ -84,7 +84,7 @@
     hostName = "snowflake";
     networkmanager = {
       enable = true;
-      wifi.powersave = false;
+      wifi.powersave = true;
       plugins = with pkgs; [
         networkmanager-openconnect
         networkmanager-openvpn

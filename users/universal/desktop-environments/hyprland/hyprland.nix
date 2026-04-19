@@ -17,6 +17,7 @@
     hyprland-modules/misc.nix
     hyprland-modules/monitors.nix
     hyprland-modules/startup.nix
+    hyprland-modules/power-management.nix
   ];
 
   home.packages = with pkgs; [
