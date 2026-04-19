@@ -82,11 +82,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    # Latest version of neovim
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-    };
-
     winboat = {
       url = "github:Rexcrazy804/winboat?ref=fix-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -100,12 +95,24 @@
     };
   };
 
-  outputs = inputs@{ flake-parts, ... }:
+  outputs = inputs@{ flake-parts, nixpkgs, ... }:
+    let
+      lib = nixpkgs.lib;
+      # Recursively search for any `flake-module.nix`
+      scanFlakeModules = path:
+        let
+          dir = builtins.readDir path;
+          # Regular file named flake-module.nix
+          files = builtins.filter (name: dir.${name} == "regular" && name == "flake-module.nix") (builtins.attrNames dir);
+          # Directories, ignoring some conventional non-module ones for performance
+          dirs = builtins.filter (name: dir.${name} == "directory" && name != ".git" && name != "secrets") (builtins.attrNames dir);
+          subPaths = builtins.map (name: scanFlakeModules (path + "/${name}")) dirs;
+          currentPaths = builtins.map (name: path + "/${name}") files;
+        in
+          lib.flatten (currentPaths ++ subPaths);
+    in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" ];
-      imports = [
-        ./system/flake-module.nix
-        ./users/flake-module.nix
-      ];
+      imports = scanFlakeModules ./.;
     };
 }
