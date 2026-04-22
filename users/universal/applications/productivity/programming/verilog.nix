@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.verilog = 
 {pkgs, ...}:
 {
   home.packages = with pkgs; [
@@ -6,4 +9,6 @@
     gcc # for verilator
     gtkwave # waveform visualizer
   ];
+}
+;
 }

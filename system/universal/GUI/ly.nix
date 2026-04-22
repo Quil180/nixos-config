@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.ly = 
 {pkgs, ...}: {
   services = {
     # setting ly as default login screen
@@ -7,4 +10,6 @@
     # for any applications that require native X11
     xserver.enable = true;
   };
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.office = 
 {pkgs, ...}: {
   home.packages = with pkgs; [
     libreoffice-qt6
@@ -7,4 +10,6 @@
     corefonts
     vista-fonts
   ];
+}
+;
 }

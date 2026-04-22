@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.kernel-custom = 
 { pkgs, lib, ... }:
 
 let
@@ -21,7 +24,19 @@ let
                                                 name != "0003-platform-x86-asus-armoury-add-support-for-FA507UV.patch" && 
                                                 name != "PATCH-v10-00-11-HID-asus-Fix-ASUS-ROG-Laptop-s-Keyboard-backlight-handling-id1-id2-pr_err.patch" &&
                                                 name != "PATCH-v10-00-11-HID-asus-Fix-ASUS-ROG-Laptop-s-Keyboard-backlight-handling.patch" &&
-                                                name != "sys-kernel_arch-sources-g14_files-0004-more-uarches-for-kernel-6.15.patch"
+                                                name != "sys-kernel_arch-sources-g14_files-0004-more-uarches-for-kernel-6.15.patch" &&
+                                                name != "0001-platform-x86-asus-wmi-export-symbols-used-for-read-w.patch" &&
+                                                name != "0002-platform-x86-asus-armoury-move-existing-tunings-to-a.patch" &&
+                                                name != "0003-platform-x86-asus-armoury-add-panel_hd_mode-attribut.patch" &&
+                                                name != "0004-platform-x86-asus-armoury-add-apu-mem-control-suppor.patch" &&
+                                                name != "0005-platform-x86-asus-armoury-add-screen-auto-brightness.patch" &&
+                                                name != "0006-platform-x86-asus-wmi-deprecate-bios-features.patch" &&
+                                                name != "0007-platform-x86-asus-wmi-rename-ASUS_WMI_DEVID_PPT_FPPT.patch" &&
+                                                name != "0008-platform-x86-asus-armoury-add-ppt_-and-nv_-tuning-kn.patch" &&
+                                                name != "PATCH-asus-wmi-fixup-screenpad-brightness.patch" &&
+                                                name != "0081-amdgpu-adjust_plane_init_off_by_one.patch" &&
+                                                name != "0084-enable-steam-deck-hdr.patch" &&
+                                                name != "PATCH-v5-00-11-Improvements-to-S5-power-consumption.patch"
                                    ) files;
     in
       lib.mapAttrsToList (name: _: {
@@ -37,4 +52,6 @@ in {
       extraMeta.branch = "6.18.2"; # Update this to match approximate version if needed
     };
   }));
+}
+;
 }

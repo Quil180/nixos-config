@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.power-management = 
 { pkgs, ... }:
 let
   power-monitor = pkgs.writeShellScriptBin "power-monitor" ''
@@ -56,4 +59,6 @@ in
   wayland.windowManager.hyprland.settings.exec-once = [
     "${power-monitor}/bin/power-monitor"
   ];
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.ranger = 
 {pkgs, ...}: {
   home.packages = with pkgs; [
     ranger
@@ -8,4 +11,6 @@
     enable = true;
     # extraConfig = "set preview_images true\nset preview_images_method foot";
   };
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.sound = 
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     pulseaudioFull
@@ -18,4 +21,6 @@
     jack.enable = true;
     pulse.enable = true;
   };
+}
+;
 }

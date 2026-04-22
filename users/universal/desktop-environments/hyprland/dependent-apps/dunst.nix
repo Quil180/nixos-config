@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.dunst = 
 {pkgs, ...}:{
   home.packages = with pkgs; [
     dunst
@@ -29,4 +32,6 @@
       };
     };
   };
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  configurations.nixos.snowflake.module = 
 {
   pkgs,
   inputs,
@@ -7,53 +10,7 @@
   ...
 }:
 {
-  imports = [
-    # importing sops for secrets management systemwide
-    ./hardware-configuration.nix
-    ./disko.nix
-    # ../universal/system/determinate.nix
-    # ./secrets.nix
-    ../universal/system/persist.nix
-
-    # gpu support
-    ../universal/gpu-support/amd.nix
-
-    # optional stuff
-
-    # Display Manager
-    # ../universal/GUI/ly.nix
-    ../universal/GUI/sddm.nix
-
-    # System GUI I want (if any):
-    # ../universal/GUI/dwm/dwm.nix
-    ../universal/GUI/hyprland/hyprland.nix
-    # ../universal/GUI/cinnamon/cinnamon.nix
-
-    # Sound?
-    ../universal/system/sound.nix
-    ../universal/system/bluetooth.nix
-    ../universal/system/security.nix
-    # ../universal/system/persist.nix
-    # ../universal/system/virtualisation.nix
-
-    # Game Applications setup/installed?
-    ../universal/applications/games.nix
-
-    # VPNs
-    ../universal/vpns/hamachi.nix
-    # ../universal/vpns/zerotier.nix
-
-    # Extra options...
-    # ../universal/virtualisation/docker.nix
-    ../universal/system/flatpak.nix
-    ../universal/g14/g14.nix
-    # ../universal/applications/kiwix.nix
-    # ../universal/services/ollama.nix
-    # ../universal/services/llamacpp.nix
-    ../universal/applications/teamviewer.nix
-    #../universal/applications/vncviewer.nix
-    ../universal/applications/winboat.nix
-  ];
+  imports = [ topConfig.flake.nixosModules.snowflake_hardware topConfig.flake.nixosModules.disko topConfig.flake.nixosModules.determinate topConfig.flake.nixosModules.secrets topConfig.flake.nixosModules.persist topConfig.flake.nixosModules.amd topConfig.flake.nixosModules.sddm topConfig.flake.nixosModules.dwm topConfig.flake.nixosModules.hyprland topConfig.flake.nixosModules.cinnamon topConfig.flake.nixosModules.sound topConfig.flake.nixosModules.bluetooth topConfig.flake.nixosModules.security topConfig.flake.nixosModules.virtualisation topConfig.flake.nixosModules.games topConfig.flake.nixosModules.hamachi topConfig.flake.nixosModules.zerotier topConfig.flake.nixosModules.docker topConfig.flake.nixosModules.flatpak topConfig.flake.nixosModules.g14 topConfig.flake.nixosModules.kiwix topConfig.flake.nixosModules.ollama topConfig.flake.nixosModules.llamacpp topConfig.flake.nixosModules.teamviewer topConfig.flake.nixosModules.vncviewer topConfig.flake.nixosModules.winboat ];
 
   # Use the systemd-boot EFI boot loader.
   boot = {
@@ -250,4 +207,6 @@
 
     };
   };
+}
+;
 }

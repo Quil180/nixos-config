@@ -1,9 +1,9 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  configurations.nixos.baguette.module = 
 { pkgs, ... }:
 {
-  imports = [
-    ../../universal/system/server_base.nix
-    ../../universal/system/proxmox_vm.nix
-  ];
+  imports = [ topConfig.flake.nixosModules.server_base topConfig.flake.nixosModules.proxmox_vm ];
 
   networking.hostName = "baguette";
 
@@ -25,4 +25,6 @@
     21119
   ];
   networking.firewall.allowedUDPPorts = [ 21116 ];
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.hyprland = 
 {
   pkgs,
   inputs,
@@ -5,20 +8,7 @@
 }:
 {
   # importing configs for waybar, foot, and wlogout, and rofi
-  imports = [
-    # app configs below
-    # ../bars/waybar/waybar.nix
-    ../bars/quickshell/quickshell.nix
-    # dependent-apps/dunst.nix
-    dependent-apps/rofi.nix
-
-    # Hyprland modules below
-    hyprland-modules/binds.nix
-    hyprland-modules/misc.nix
-    hyprland-modules/monitors.nix
-    hyprland-modules/startup.nix
-    hyprland-modules/power-management.nix
-  ];
+  imports = [ topConfig.flake.homeModules.waybar topConfig.flake.homeModules.quickshell topConfig.flake.homeModules.dunst topConfig.flake.homeModules.rofi topConfig.flake.homeModules.binds topConfig.flake.homeModules.misc topConfig.flake.homeModules.monitors topConfig.flake.homeModules.startup topConfig.flake.homeModules.power-management ];
 
   home.packages = with pkgs; [
     # bare essentials
@@ -124,4 +114,6 @@
       };
     };
   };
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.determinate = 
 {pkgs, ...}:
 {
 	environment.etc = {
@@ -23,4 +26,6 @@ eval-cores = 0
 			'';
 		};
   };
+}
+;
 }

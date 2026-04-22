@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.simple_disko = 
 { ... }: {
   disko.devices = {
     disk = {
@@ -29,4 +32,6 @@
       };
     };
   };
+}
+;
 }

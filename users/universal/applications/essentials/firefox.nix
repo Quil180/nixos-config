@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.firefox = 
 {
   pkgs,
   lib,
@@ -152,4 +155,6 @@
   stylix.targets.firefox.profileNames = [
     "${username}"
   ];
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.hamachi = 
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
@@ -6,4 +9,6 @@
 
   programs.haguichi.enable = true;
   networking.firewall.trustedInterfaces = [ "ham0" ];
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.openwebui = 
 { ... }:
 
 {
@@ -14,4 +17,6 @@
       OPENAI_API_BASE_URL = "http://localhost:8081/v1";
     };
   };
+}
+;
 }

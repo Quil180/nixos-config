@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.neovim = 
 {
   pkgs,
   inputs,
@@ -20,8 +23,6 @@
       # Place all language servers here!!!!
       # Lua
       lua-language-server
-      # Rust
-      rust-analyzer
       # C/C++
       clang-tools
       # SystemVerilog
@@ -78,4 +79,6 @@
     			$DRY_RUN_CMD ${pkgs.gnumake}/bin/make BUILD_FROM_SOURCE=true || true
     		fi
     	'';
+}
+;
 }

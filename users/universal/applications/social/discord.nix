@@ -1,11 +1,12 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.discord = 
 {
   pkgs,
   inputs,
   ...
 }: {
-  imports = [
-    inputs.nixcord.homeModules.nixcord
-  ];
+  imports = [ ];
 
   programs.nixcord = {
     enable = true;
@@ -157,4 +158,6 @@
       };
     };
   };
+}
+;
 }

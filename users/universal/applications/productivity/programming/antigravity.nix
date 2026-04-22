@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.antigravity = 
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
@@ -7,4 +10,6 @@
     # you can try the FHS version instead:
     antigravity-fhs
   ];
+}
+;
 }

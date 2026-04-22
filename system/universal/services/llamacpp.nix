@@ -1,9 +1,10 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.llamacpp = 
 { pkgs, config, lib, ... }:
 
 {
-  imports = [
-    ./openwebui.nix
-  ];
+  imports = [ topConfig.flake.nixosModules.openwebui ];
 
   services.llama-cpp = {
     enable = true;
@@ -29,4 +30,6 @@
     DynamicUser = lib.mkForce false;
     ProtectHome = lib.mkForce false;
   };
+}
+;
 }

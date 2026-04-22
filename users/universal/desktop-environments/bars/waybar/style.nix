@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.style = 
 {config, ...}: {
   programs.waybar.style = with config.lib.stylix.colors.withHashtag; ''
     @define-color red       #cc241d;
@@ -182,4 +185,6 @@
       background-color: ${base01};
     }
   '';
+}
+;
 }

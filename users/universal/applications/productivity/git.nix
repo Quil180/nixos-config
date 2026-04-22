@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.git = 
 {...}: {
   # git config
   programs.git = {
@@ -14,4 +17,6 @@
   programs.gh = {
     enable = true;
   };
+}
+;
 }

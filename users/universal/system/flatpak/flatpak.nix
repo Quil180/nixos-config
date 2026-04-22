@@ -1,11 +1,12 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.flatpak = 
 {
   pkgs,
   inputs,
   ...
 }: {
-  imports = [
-    inputs.nix-flatpak.homeManagerModules.nix-flatpak
-  ];
+  imports = [ ];
 
   # enabling core things, if not enabled
   xdg.enable = true;
@@ -32,4 +33,6 @@
   home.packages = with pkgs; [
     flatpak
   ];
+}
+;
 }

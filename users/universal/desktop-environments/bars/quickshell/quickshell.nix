@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.quickshell = 
 {
   pkgs,
   inputs,
@@ -138,4 +141,6 @@
       "quickshell/Modules/Tray.qml".source = ./Modules/Tray.qml;
     };
   };
+}
+;
 }

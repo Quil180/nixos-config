@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.winboat = 
 { pkgs, username, ... }:
 {
   users.users.${username}.extraGroups = [ "docker" ];
@@ -10,4 +13,6 @@
       npmFlags = (oldAttrs.npmFlags or []) ++ [ "--legacy-peer-deps" ];
     }))
   ];
+}
+;
 }

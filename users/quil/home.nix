@@ -1,51 +1,8 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  configurations.home.quil.module = 
 {pkgs, username, inputs, ...}: {
-  imports = [
-    "${inputs.impermanence.outPath}/home-manager.nix"
-    ./persist.nix
-    # desktop environments below
-    ../universal/desktop-environments/hyprland/hyprland.nix
-
-    # essential applications below
-    ../universal/applications/essentials/bash.nix
-    # ../universal/applications/essentials/chromium.nix
-    ../universal/applications/essentials/firefox.nix
-    ../universal/applications/essentials/music.nix
-    ../universal/applications/essentials/neovim.nix
-    ../universal/applications/essentials/password-manager.nix
-    ../universal/applications/essentials/ranger.nix
-    # ../universal/applications/essentials/vivaldi.nix
-
-    # gaming applications below
-    ../universal/applications/gaming/games.nix
-    # ../universal/applications/gaming/creamlinux.nix
-
-    # productivity applications below
-    # ../universal/applications/productivity/filezilla.nix
-    ../universal/applications/productivity/git.nix
-    ../universal/applications/productivity/kicad.nix
-    ../universal/applications/productivity/latex.nix
-    ../universal/applications/productivity/office.nix
-    # ../universal/applications/productivity/zoom.nix
-
-    # programming languages
-    ../universal/applications/productivity/programming/cpp.nix
-    ../universal/applications/productivity/programming/verilog.nix
-    # ../universal/applications/productivity/programming/rust.nix
-    # ../universal/applications/productivity/programming/python.nix
-
-    # IDEs
-    ../universal/applications/productivity/programming/antigravity.nix
-    # ../universal/applications/productivity/programming/vscode.nix
-
-    # ricing applications below
-    ../universal/applications/ricing/stylix.nix
-
-    # social applications below
-    ../universal/applications/social/discord.nix
-    # ../universal/applications/social/revolt.nix
-
-    ../universal/system/flatpak/flatpak.nix
-  ];
+  imports = [ topConfig.flake.homeModules.persist topConfig.flake.homeModules.hyprland topConfig.flake.homeModules.bash topConfig.flake.homeModules.chromium topConfig.flake.homeModules.firefox topConfig.flake.homeModules.music topConfig.flake.homeModules.neovim topConfig.flake.homeModules.password-manager topConfig.flake.homeModules.ranger topConfig.flake.homeModules.vivaldi topConfig.flake.homeModules.games topConfig.flake.homeModules.filezilla topConfig.flake.homeModules.git topConfig.flake.homeModules.kicad topConfig.flake.homeModules.latex topConfig.flake.homeModules.office topConfig.flake.homeModules.zoom topConfig.flake.homeModules.cpp topConfig.flake.homeModules.verilog topConfig.flake.homeModules.rust topConfig.flake.homeModules.python topConfig.flake.homeModules.antigravity topConfig.flake.homeModules.vscode topConfig.flake.homeModules.stylix topConfig.flake.homeModules.discord topConfig.flake.homeModules.revolt topConfig.flake.homeModules.flatpak ];
 
   nixpkgs.config = {
     allowUnfree = true;
@@ -83,4 +40,6 @@
   };
 
   programs.home-manager.enable = true;
+}
+;
 }

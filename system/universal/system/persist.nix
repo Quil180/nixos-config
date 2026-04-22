@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.persist = 
 { lib, ... }:
 {
   programs.fuse.userAllowOther = true;
@@ -66,4 +69,6 @@
       umount /btrfs_tmp
     '';
   };
+}
+;
 }

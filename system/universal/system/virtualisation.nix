@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.virtualisation = 
 { pkgs, username, ... }: 
 {
 
@@ -50,13 +53,21 @@
 	boot = {
 		initrd = {
 			availableKernelModules = [ "vfio-pci" ];
-			preDeviceCommands = ''
-				DEVS="0000:03:00.0 0000:03:00.1"
-				for DEV in $DEVS; do
-					echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
-				done
-				modprobe -i vfio-pci
-			'';
+						systemd.services.vfio-pci-override = {
+				description = "VFIO PCI Override";
+				wantedBy = [ "initrd.target" ];
+				after = [ "initrd-root-device.target" ];
+				before = [ "sysroot.mount" ];
+				unitConfig.DefaultDependencies = "no";
+				serviceConfig.Type = "oneshot";
+				script = ''
+					DEVS="0000:03:00.0 0000:03:00.1"
+					for DEV in $DEVS; do
+						echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
+					done
+					modprobe -i vfio-pci
+				'';
+			};
 		};
 		kernelParams = [ "pcie_aspm=off" ];
 		kernelModules = [ "kvm-amd" "vendor-reset" ];
@@ -200,4 +211,6 @@ sleep 1
 			chmod 755 "$targetFile"
 		'';
 	};
+}
+;
 }

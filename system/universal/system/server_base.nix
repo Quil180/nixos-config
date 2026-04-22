@@ -1,9 +1,9 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.server_base = 
 { pkgs, config, username, inputs, system, ... }:
 {
-  imports = [
-    ../services/monitoring.nix
-    ./security.nix
-  ];
+  imports = [ topConfig.flake.nixosModules.monitoring topConfig.flake.nixosModules.security ];
 
   # Use the systemd-boot EFI boot loader.
   boot = {
@@ -40,6 +40,8 @@
   # QEMU Guest Agent for Proxmox
   services.qemuGuest.enable = true;
 
+  services.openssh.enable = true;
+
   age.secrets.quil_password.file = ../../../secrets/quil_password.age;
 
   # User configuration
@@ -57,4 +59,6 @@
   nixpkgs.config.allowUnfree = true;
 
   system.stateVersion = "26.05";
+}
+;
 }

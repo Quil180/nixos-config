@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.startup = 
 {pkgs, ...}: let
   dotfiles = "~/.dotfiles";
 in {
@@ -15,4 +18,6 @@ in {
     "bash -c 'sleep 1 && rog-control-center'"
     "bash -c 'sleep 1 && quickshell -p ~/.config/quickshell/bar.qml'"
   ];
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.bash = 
 { config, ... }:
 let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
@@ -41,6 +44,8 @@ in
       updatelog = "systemctl status nixos-upgrade.service";
       # wifi reset full (drivers)
       restartwifi = "sudo modprobe -r mt7921e && sudo modprobe mt7921e";
+      hibernate = "sudo systemctl hibernate";
+      suspend = "sudo systemctl suspend";
 
       # NixOS configuration manager
       polaris = "${dotfiles}/install.sh";
@@ -124,4 +129,6 @@ in
       path = "${config.xdg.dataHome}/zsh/history";
     };
   };
+}
+;
 }

@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.games = 
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     lutris
@@ -16,4 +19,6 @@
       localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
     };
   };
+}
+;
 }

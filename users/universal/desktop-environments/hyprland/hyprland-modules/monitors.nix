@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.monitors = 
 {...}: {
   wayland.windowManager.hyprland = {
     settings = {
@@ -45,4 +48,6 @@
       workspace=110,monitor:HDMI-A-1
     '';
   };
+}
+;
 }

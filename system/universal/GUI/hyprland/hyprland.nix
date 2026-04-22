@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.hyprland = 
 { pkgs, inputs, ... }:
 {
   fonts.packages = with pkgs; [
@@ -45,4 +48,6 @@
       xdg-desktop-portal-gtk
     ];
   };
+}
+;
 }

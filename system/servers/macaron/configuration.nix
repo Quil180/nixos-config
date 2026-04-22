@@ -1,10 +1,9 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  configurations.nixos.macaron.module = 
 { pkgs, ... }:
 {
-  imports = [
-    ../../universal/system/server_base.nix
-    ../../universal/system/proxmox_vm.nix
-    ../../universal/virtualisation/docker.nix
-  ];
+  imports = [ topConfig.flake.nixosModules.server_base topConfig.flake.nixosModules.proxmox_vm topConfig.flake.nixosModules.docker ];
 
   networking.hostName = "macaron";
 
@@ -26,4 +25,6 @@
     443
     8222
   ];
+}
+;
 }

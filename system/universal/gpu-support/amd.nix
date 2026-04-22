@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.amd = 
 { pkgs, ... }:
 {
   services = {
@@ -24,4 +27,6 @@
   environment.systemPackages = with pkgs; [
     clinfo
   ];
+}
+;
 }

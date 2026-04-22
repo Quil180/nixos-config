@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.cinnamon = 
 { pkgs, ... }:
 {
   # Enable Cinnamon desktop environment
@@ -19,4 +22,6 @@
     cinnamon-common
     nemo # Cinnamon's file manager
   ];
+}
+;
 }

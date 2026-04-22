@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.vscode = 
 {pkgs, ...}: {
   programs = {
     vscode = {
@@ -44,4 +47,6 @@
 			};
     };
   };
+}
+;
 }

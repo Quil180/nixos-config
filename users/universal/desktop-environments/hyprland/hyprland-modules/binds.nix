@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.binds = 
 {...}: {
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
@@ -106,4 +109,6 @@
       "$mod CTRL, up, resizeactive,      0  -60"
     ];
   };
+}
+;
 }

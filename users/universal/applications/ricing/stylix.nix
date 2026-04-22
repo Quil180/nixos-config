@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.stylix = 
 {pkgs, ...}: let
   wallpaper = ../../../../wallpaper.png;
 in {
@@ -40,4 +43,6 @@ in {
       };
     };
   };
+}
+;
 }

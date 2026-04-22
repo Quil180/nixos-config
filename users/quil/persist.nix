@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.persist = 
 {
   # Standalone home-manager needs this to bypass the "manual import" assertion
   home._nixosModuleImported = true;
@@ -37,4 +40,6 @@
     ];
     allowOther = true;
   };
+}
+;
 }

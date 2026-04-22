@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.misc = 
 {
   config,
   lib,
@@ -48,4 +51,6 @@
   };
 
   services.network-manager-applet.enable = true;
+}
+;
 }

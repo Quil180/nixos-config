@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.disko = 
 { config ? {}, ... }: {
   disko.devices = {
     disk = {
@@ -89,3 +92,5 @@
   fileSystems."/persist".neededForBoot = true;
 }
 
+;
+}

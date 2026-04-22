@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.security = 
 { username, ... }:
 {
   # SSH Hardening
@@ -43,4 +46,6 @@
 
   # Restrict some namespaces if not needed (can break some apps like Chrome)
   # boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 0;
+}
+;
 }

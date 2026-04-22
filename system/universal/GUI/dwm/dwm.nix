@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.dwm = 
 {pkgs, ...}: let
   dwm-logout = pkgs.writeShellScriptBin "dwm-logout" ''
     choices="Shutdown\nReboot\nLogout\nSuspend"
@@ -49,4 +52,6 @@ in {
       };
     })
   ];
+}
+;
 }

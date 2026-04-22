@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.bluetooth = 
 {...}: {
   hardware = {
     bluetooth = {
@@ -15,4 +18,6 @@
   services.blueman = {
     enable = true;
   };
+}
+;
 }

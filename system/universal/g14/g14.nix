@@ -1,9 +1,9 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.g14 = 
 { pkgs, ... }:
 {
-  imports = [
-    # Uncomment the following line to compile the custom linux-g14 kernel
-    # ./kernel-custom.nix
-  ];
+  imports = [ topConfig.flake.nixosModules.kernel-custom ];
 
   environment.systemPackages = with pkgs; [
     asusctl
@@ -80,4 +80,6 @@
     enable = true;
     powertop.enable = true;
   };
+}
+;
 }

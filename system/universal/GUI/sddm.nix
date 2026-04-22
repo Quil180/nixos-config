@@ -1,3 +1,6 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.nixosModules.sddm = 
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     kdePackages.sddm
@@ -13,4 +16,6 @@
     # for any applications that require native X11
     xserver.enable = true;
   };
+}
+;
 }

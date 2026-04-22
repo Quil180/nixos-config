@@ -1,9 +1,9 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  configurations.nixos.muffin.module = 
 { pkgs, modulesPath, ... }:
 {
-  imports = [
-    (modulesPath + "/virtualisation/proxmox-lxc.nix")
-    ../../universal/system/server_base.nix
-  ];
+  imports = [ (modulesPath + "/virtualisation/proxmox-lxc.nix") topConfig.flake.nixosModules.server_base ];
 
   boot.loader.systemd-boot.enable = pkgs.lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = pkgs.lib.mkForce false;
@@ -86,4 +86,6 @@
     3000
     3100
   ]; # Prometheus, Grafana, Loki
+}
+;
 }

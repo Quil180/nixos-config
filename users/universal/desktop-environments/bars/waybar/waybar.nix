@@ -1,11 +1,12 @@
+{ topConfig, lib, pkgs, ... }:
+{
+  flake.homeModules.waybar = 
 {pkgs, ...}: {
   home.packages = with pkgs; [
     waybar
   ];
 
-  imports = [
-    ./style.nix
-  ];
+  imports = [ topConfig.flake.homeModules.style ];
 
   programs.waybar = {
     enable = true;
@@ -200,4 +201,6 @@
       };
     };
   };
+}
+;
 }
