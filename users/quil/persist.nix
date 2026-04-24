@@ -13,6 +13,7 @@
       "Pictures"
       "Videos"
       "Desktop"
+      "winboat"
       ".ssh"
       ".gnupg"
       ".mozilla" # Firefox

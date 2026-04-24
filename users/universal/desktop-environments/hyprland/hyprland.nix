@@ -7,8 +7,8 @@
   ...
 }:
 {
-  # importing configs for waybar, foot, and wlogout, and rofi
-  imports = [ topConfig.flake.homeModules.waybar topConfig.flake.homeModules.quickshell topConfig.flake.homeModules.dunst topConfig.flake.homeModules.rofi topConfig.flake.homeModules.binds topConfig.flake.homeModules.misc topConfig.flake.homeModules.monitors topConfig.flake.homeModules.startup topConfig.flake.homeModules.power-management ];
+  # importing configs for quickshell, foot, and wlogout, and rofi
+  imports = [ topConfig.flake.homeModules.quickshell topConfig.flake.homeModules.dunst topConfig.flake.homeModules.rofi topConfig.flake.homeModules.binds topConfig.flake.homeModules.misc topConfig.flake.homeModules.monitors topConfig.flake.homeModules.startup topConfig.flake.homeModules.power-management ];
 
   home.packages = with pkgs; [
     # bare essentials

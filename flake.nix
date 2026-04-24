@@ -56,83 +56,94 @@
     };
   };
 
-  outputs = inputs@{ flake-parts, nixpkgs, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } ({ config, lib, ... }: {
-      imports = [
-        (inputs.import-tree ./system)
-        (inputs.import-tree ./users)
-      ];
+  outputs =
+    inputs@{ flake-parts, nixpkgs, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      { config, lib, ... }:
+      {
+        imports = [
+          (inputs.import-tree ./system)
+          (inputs.import-tree ./users)
+        ];
 
-      options = {
-        flake.homeModules = lib.mkOption {
-          type = lib.types.lazyAttrsOf lib.types.unspecified;
-          default = {};
-        };
-        configurations = {
-          nixos = lib.mkOption {
-            type = lib.types.lazyAttrsOf (
-              lib.types.submodule {
-                options.module = lib.mkOption {
-                  type = lib.types.deferredModule;
-                };
-              }
-            );
+        options = {
+          flake.homeModules = lib.mkOption {
+            type = lib.types.lazyAttrsOf lib.types.unspecified;
+            default = { };
           };
-          home = lib.mkOption {
-            type = lib.types.lazyAttrsOf (
-              lib.types.submodule {
-                options.module = lib.mkOption {
-                  type = lib.types.deferredModule;
-                };
-              }
-            );
+          configurations = {
+            nixos = lib.mkOption {
+              type = lib.types.lazyAttrsOf (
+                lib.types.submodule {
+                  options.module = lib.mkOption {
+                    type = lib.types.deferredModule;
+                  };
+                }
+              );
+            };
+            home = lib.mkOption {
+              type = lib.types.lazyAttrsOf (
+                lib.types.submodule {
+                  options.module = lib.mkOption {
+                    type = lib.types.deferredModule;
+                  };
+                }
+              );
+            };
           };
         };
-      };
 
-      config = {
-        _module.args = { topConfig = config; };
+        config = {
+          _module.args = {
+            topConfig = config;
+          };
 
-        systems = [ "x86_64-linux" "aarch64-linux" ];
+          systems = [
+            "x86_64-linux"
+            "aarch64-linux"
+          ];
 
-        flake.nixosConfigurations = lib.mapAttrs (name: host:
-          nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {
-              inherit inputs;
-              username = "quil";
+          flake.nixosConfigurations = lib.mapAttrs (
+            name: host:
+            nixpkgs.lib.nixosSystem {
               system = "x86_64-linux";
-            };
-            modules = [
-              host.module
-              inputs.agenix.nixosModules.default
-              inputs.disko.nixosModules.disko
-              inputs.impermanence.nixosModules.impermanence
-              inputs.stylix.nixosModules.stylix
-              inputs.nix-flatpak.nixosModules.nix-flatpak
-            ];
-          }
-        ) config.configurations.nixos;
+              specialArgs = {
+                inherit inputs;
+                username = "quil";
+                system = "x86_64-linux";
+              };
+              modules = [
+                host.module
+                inputs.agenix.nixosModules.default
+                inputs.disko.nixosModules.disko
+                inputs.impermanence.nixosModules.impermanence
+                inputs.stylix.nixosModules.stylix
+                inputs.nix-flatpak.nixosModules.nix-flatpak
+              ];
+            }
+          ) config.configurations.nixos;
 
-        flake.homeConfigurations = lib.mapAttrs (name: user:
-          inputs.home-manager.lib.homeManagerConfiguration {
-            pkgs = nixpkgs.legacyPackages."x86_64-linux";
-            extraSpecialArgs = {
-              inherit inputs;
-              username = name;
-              system = "x86_64-linux";
-              dotfilesDir = "/home/quil/.dotfiles";
-            };
-            modules = [
-              user.module
-              inputs.stylix.homeModules.stylix
-              inputs.hyprland.homeManagerModules.default
-              inputs.nixcord.homeModules.nixcord
-              "${inputs.impermanence}/home-manager.nix"
-              inputs.nix-flatpak.homeManagerModules.nix-flatpak
-            ];
-          }
-        ) config.configurations.home;
-      };
-    });
+          flake.homeConfigurations = lib.mapAttrs (
+            name: user:
+            inputs.home-manager.lib.homeManagerConfiguration {
+              pkgs = nixpkgs.legacyPackages."x86_64-linux";
+              extraSpecialArgs = {
+                inherit inputs;
+                username = name;
+                system = "x86_64-linux";
+                dotfilesDir = "/home/quil/.dotfiles";
+              };
+              modules = [
+                user.module
+                inputs.stylix.homeModules.stylix
+                inputs.hyprland.homeManagerModules.default
+                inputs.nixcord.homeModules.nixcord
+                "${inputs.impermanence}/home-manager.nix"
+                inputs.nix-flatpak.homeManagerModules.nix-flatpak
+              ];
+            }
+          ) config.configurations.home;
+        };
+      }
+    );
 }
