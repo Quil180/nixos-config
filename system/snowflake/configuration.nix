@@ -106,19 +106,27 @@
         nerd-fonts.symbols-only
       ];
 
-      age.secrets.snowflake = {
-        file = ../../secrets/snowflake.age;
-        owner = username;
-      };
-      age.secrets.luks.file = ../../secrets/luks.age;
-      age.secrets.quil_password.file = ../../secrets/quil_password.age;
-      age.secrets.github_token = {
-        file = ../../secrets/github_token.age;
-        owner = username;
-      };
-      age.secrets.git_identity = {
-        file = ../../secrets/git_identity.age;
-        owner = username;
+      age = {
+        identityPaths = [
+          "/persist/system/etc/ssh/ssh_host_ed25519_key"
+          "/persist/system/etc/ssh/ssh_host_rsa_key"
+        ];
+        secrets = {
+          snowflake = {
+            file = ../../secrets/snowflake.age;
+            owner = username;
+          };
+          luks.file = ../../secrets/luks.age;
+          quil_password.file = ../../secrets/quil_password.age;
+          github_token = {
+            file = ../../secrets/github_token.age;
+            owner = username;
+          };
+          git_identity = {
+            file = ../../secrets/git_identity.age;
+            owner = username;
+          };
+        };
       };
 
       # default user settings regardless of host/user
@@ -225,7 +233,6 @@
           substituters = [ "https://hyprland.cachix.org" ];
           trusted-substituters = [ "https://hyprland.cachix.org" ];
           trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
-
         };
       };
     };
