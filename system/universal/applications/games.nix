@@ -3,7 +3,7 @@
   flake.nixosModules.games = 
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    lutris
+    # lutris
     mangohud
     mangojuice
     goverlay

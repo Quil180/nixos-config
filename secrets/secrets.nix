@@ -2,15 +2,15 @@ let
   # Host keys: Used by the system to decrypt secrets at boot.
   # Replace these with the actual host keys once the systems are installed.
   # You can find the host key on the target machine in /etc/ssh/ssh_host_ed25519_key.pub
-  snowflake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  crust = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  baguette = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  scone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  pancake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  croissant = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  biscotti = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  macaron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
-  muffin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICe6LWNndnFYbTa9ZTx1DjknFXJ//WwDVzPb4sZkYrRf root@snowflake";
+  snowflake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  crust = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  baguette = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  scone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  pancake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  croissant = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  biscotti = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  macaron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
+  muffin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMJIqUQfbg7JmJV8U8IRKDZvzH2s24xXXFPM7t2G7E8w root@snowflake";
 
   # User keys: Used by you to encrypt/edit secrets.
   user_quil = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCvsgiHHVoD+q6QhHbhhiaSf5xPK7SQLLa+cko1T+0f quil@snowflake";
