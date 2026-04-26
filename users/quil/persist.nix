@@ -16,7 +16,7 @@
       "winboat"
       ".ssh"
       ".gnupg"
-      ".mozilla" # Firefox
+      ".mozilla"
       ".config/discord"
       ".config/nixcord"
       ".config/gh"

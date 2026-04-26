@@ -14,6 +14,7 @@
       "/etc/nixos"
       "/etc/determinate"
       "/etc/NetworkManager/system-connections"
+      "/etc/ssh"
       "/etc/sudoers.d"
       "/var/log"
       "/var/lib/bluetooth"
