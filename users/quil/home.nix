@@ -70,7 +70,7 @@
         enable = true;
         enableDefaultConfig = false;
         matchBlocks."*" = {
-          identityFile = "/home/${username}/.ssh/id_snowflake";
+          identityFile = "/run/agenix/snowflake";
         };
       };
 

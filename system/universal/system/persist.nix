@@ -33,6 +33,10 @@
         mode = "u=rwx,g=rx,o=";
       }
     ];
+    files = [
+      "/var/lib/systemd/credential.secret"
+      "/etc/machine-id"
+    ];
   };
 
   boot.initrd.systemd.services.wipe-root = {

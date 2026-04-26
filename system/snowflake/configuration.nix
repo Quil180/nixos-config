@@ -27,7 +27,7 @@
         sound
         bluetooth
         security
-        virtualisation
+        # virtualisation
         games
         hamachi
         flatpak
@@ -108,9 +108,7 @@
 
       age.secrets.snowflake = {
         file = ../../secrets/snowflake.age;
-        path = "/home/${username}/.ssh/id_snowflake";
         owner = username;
-        mode = "600";
       };
       age.secrets.luks.file = ../../secrets/luks.age;
       age.secrets.quil_password.file = ../../secrets/quil_password.age;
