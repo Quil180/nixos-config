@@ -107,7 +107,7 @@
       ];
 
       age = {
-        identityPaths = [
+        identityPaths = lib.mkForce [
           "/persist/system/etc/ssh/ssh_host_ed25519_key"
           "/persist/system/etc/ssh/ssh_host_rsa_key"
         ];
@@ -209,6 +209,9 @@
         # For authentication
         gnome.gnome-keyring.enable = true;
       };
+
+      systemd.services.nvidia-powerd.enable = lib.mkForce false;
+      systemd.user.services.blueman-applet.enable = lib.mkForce false;
 
       nixpkgs.config = {
         allowUnfree = true;

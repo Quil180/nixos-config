@@ -16,6 +16,8 @@
     # for any applications that require native X11
     xserver.enable = true;
   };
+
+  security.pam.services.sddm.enableGnomeKeyring = true;
 }
 ;
 }

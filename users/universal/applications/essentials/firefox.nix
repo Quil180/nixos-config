@@ -41,6 +41,7 @@
         "datareporting.healthreport.uploadEnabled" = false;
         "datareporting.policy.dataSubmissionEnabled" = false;
         "datareporting.sessions.current.clean" = true;
+        "browser.sessionstore.resume_from_crash" = false;
         "devtools.onboarding.telemetry.logged" = false;
         "toolkit.telemetry.archive.enabled" = false;
         "toolkit.telemetry.bhrPing.enabled" = false;

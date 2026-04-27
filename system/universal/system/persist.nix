@@ -15,6 +15,7 @@
       "/etc/determinate"
       "/etc/NetworkManager/system-connections"
       "/etc/ssh"
+      "/etc/asusd"
       "/etc/sudoers.d"
       "/var/db/sudo"
       "/var/log"
