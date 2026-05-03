@@ -1,4 +1,9 @@
-{ topConfig, lib, pkgs, ... }:
+{
+  topConfig,
+  lib,
+  pkgs,
+  ...
+}:
 {
   flake.nixosModules.hermes =
     {
@@ -21,7 +26,7 @@
         settings = {
           model = {
             provider = "custom";
-            default = "harmonic-hermes-9b";
+            default = "gemma-4-E4B-it";
             base_url = "http://localhost:8081/v1";
             api_mode = "chat_completions";
           };
@@ -33,9 +38,8 @@
       # Llama.cpp with TurboQuant optimizations
       services.llama-cpp = {
         enable = true;
-        package = inputs.llama-cpp-turboquant.packages.${system}.default;
-        # Assuming model exists at this location (standard for this config)
-        model = "/home/quil/Documents/llamacpp/harmonic-hermes-9b.Q4_K_M.gguf";
+        package = inputs.llama-cpp-turboquant.packages.${system}.rocm;
+        model = "/home/quil/Documents/llamacpp/gemma-4-e4b-it.Q4_K_M.gguf";
         port = 8081;
         extraFlags = [
           "--cache-type-k" "turbo3"
@@ -46,16 +50,27 @@
         ];
       };
 
-      systemd.services.llama-cpp.environment = {
-        # Force ROCm to use the correct GFX version for RX 6800S (G14 2022)
-        HSA_OVERRIDE_GFX_VERSION = "10.3.0";
-      };
-
-      systemd.services.llama-cpp.serviceConfig = {
-        User = "quil";
-        Group = "users";
-        DynamicUser = lib.mkForce false;
-        ProtectHome = lib.mkForce false;
+      systemd.services.llama-cpp = {
+        preStart = ''
+          MODEL_DIR="/home/quil/Documents/llamacpp"
+          MODEL_PATH="$MODEL_DIR/gemma-4-e4b-it.Q4_K_M.gguf"
+          mkdir -p "$MODEL_DIR"
+          if [ ! -f "$MODEL_PATH" ]; then
+            echo "Downloading Gemma-4 model..."
+            ${pkgs.curl}/bin/curl -L "https://huggingface.co/bartowski/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-e4b-it-Q4_K_M.gguf" -o "$MODEL_PATH"
+            chown quil:users "$MODEL_PATH"
+          fi
+        '';
+        environment = {
+          # Force ROCm to use the correct GFX version for RX 6800S (G14 2022)
+          HSA_OVERRIDE_GFX_VERSION = "10.3.0";
+        };
+        serviceConfig = {
+          User = "quil";
+          Group = "users";
+          DynamicUser = lib.mkForce false;
+          ProtectHome = lib.mkForce false;
+        };
       };
     };
 }
