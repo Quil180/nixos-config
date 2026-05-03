@@ -33,6 +33,7 @@
         flatpak
         g14
         winboat
+        hermes
       ];
 
       # Use the systemd-boot EFI boot loader.

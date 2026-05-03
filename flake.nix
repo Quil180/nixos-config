@@ -54,6 +54,14 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    llama-cpp-turboquant = {
+      url = "github:TheTom/llama-cpp-turboquant";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

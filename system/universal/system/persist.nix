@@ -45,7 +45,7 @@
   boot.initrd.systemd.services.wipe-root = {
     description = "Wipe Root BTRFS Subvolume";
     wantedBy = [ "initrd.target" ];
-    after = [ "initrd-root-device.target" ];
+    after = [ "initrd-root-device.target" "systemd-hibernate-resume.service" ];
     before = [ "sysroot.mount" ];
     unitConfig.DefaultDependencies = "no";
     serviceConfig.Type = "oneshot";
