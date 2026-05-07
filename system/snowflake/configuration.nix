@@ -16,24 +16,59 @@
     }:
     {
       imports = with topConfig.flake.nixosModules; [
+        # --- Core System & Hardware ---
         snowflake_hardware
         disko
+        # simple_disko
         determinate
         secrets
         persist
+        security
+        # proxmox_vm
+        # server_base
+
+        # --- Hardware Support ---
         amd
-        sddm
+        g14
+        # kernel-custom
+
+        # --- Desktop Environments & Window Managers ---
         hyprland
+        # cinnamon
+        # dwm
+
+        # --- Display Managers ---
+        sddm
+        # ly
+
+        # --- System Services ---
         sound
         bluetooth
-        security
+        # qt5
+        # monitoring
+
+        # --- Virtualization & Containers ---
         # virtualisation
-        games
-        hamachi
+        # docker
         flatpak
-        g14
+
+        # --- VPNs & Networking ---
+        hamachi
+        # tailscale
+        # zerotier
+
+        # --- Applications & Gaming ---
+        games
         winboat
-        hermes
+        # kiwix
+        # teamviewer
+        # vncviewer
+
+        # --- AI Services ---
+        # hermes
+        # ollama
+        # llamacpp
+        # openwebui
       ];
 
       # Use the systemd-boot EFI boot loader.
