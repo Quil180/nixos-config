@@ -30,7 +30,11 @@
         WLR_NO_HARDWARE_CURSORS = "1";
         AQ_NO_HARDWARE_CURSORS = "1";
         AQ_DRM_DEVICES = "/dev/dri/card2:/dev/dri/card2";
-        MOX_ENABLE_WAYLAND = "1";
+        MOZ_ENABLE_WAYLAND = "1";
+        SDL_VIDEODRIVER = "wayland";
+        PROTON_ENABLE_WAYLAND = "1";
+        QT_QPA_PLATFORM = "wayland;xcb";
+        GDK_BACKEND = "wayland,x11";
       };
 
       # enabling xdg
