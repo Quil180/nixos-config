@@ -29,7 +29,7 @@
         NIXOS_OZONE_WL = "1";
         WLR_NO_HARDWARE_CURSORS = "1";
         AQ_NO_HARDWARE_CURSORS = "1";
-        AQ_DRM_DEVICES = "/dev/dri/card2:/dev/dri/card2";
+        AQ_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card2";
         MOZ_ENABLE_WAYLAND = "1";
         SDL_VIDEODRIVER = "wayland";
         PROTON_ENABLE_WAYLAND = "1";

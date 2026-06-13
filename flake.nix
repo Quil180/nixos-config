@@ -62,6 +62,7 @@
       url = "github:TheTom/llama-cpp-turboquant";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
   };
 
   outputs =
@@ -127,6 +128,7 @@
                 inputs.impermanence.nixosModules.impermanence
                 inputs.stylix.nixosModules.stylix
                 inputs.nix-flatpak.nixosModules.nix-flatpak
+                inputs.jovian.nixosModules.default
               ];
             }
           ) config.configurations.nixos;

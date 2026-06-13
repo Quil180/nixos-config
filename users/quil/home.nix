@@ -42,6 +42,9 @@
       nixpkgs.config = {
         allowUnfree = true;
         allowUnfreePredicate = _: true;
+        permittedInsecurePackages = [
+          "electron-39.8.10"
+        ];
       };
 
       home = {
@@ -69,11 +72,12 @@
       programs.ssh = {
         enable = true;
         enableDefaultConfig = false;
-        matchBlocks."*" = {
-          identityFile = "/run/agenix/snowflake";
+        settings = {
+          "*" = {
+            identityFile = "/run/agenix/snowflake";
+          };
         };
       };
-
       programs.home-manager.enable = true;
     };
 }

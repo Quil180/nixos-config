@@ -29,6 +29,7 @@
   # enabling hyprland and xwayland
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage =
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
@@ -62,7 +63,7 @@
         "GDK_SCALE,2"
         "ELECTRON_OZONE_PLATFORM_HINT, wayland"
 
-        "AQ_DRM_DEVICES,/dev/dri/card2:/dev/dri/card1"
+        "AQ_DRM_DEVICES,/dev/dri/card1:/dev/dri/card2"
 
         "MOZ_ENABLE_WAYLAND,1"
       ];
