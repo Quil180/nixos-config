@@ -29,8 +29,8 @@
     ├── 📦 VM 1: NixOS [Edge Gateway] (Crust)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
     │      Agents: Node Exporter, Promtail
-    │      ├── 🚦 Caddy (Reverse Proxy)
-    │      └── 🦅 NetBird (Mgmt + Signal)
+    │      ├── 🚦 Caddy (SSL Signing)
+    │      └── 🦅 wg-easy (VPN into Network)
     │
     ├── 📦 VM 2: NixOS [Remote Access] (Baguette)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
