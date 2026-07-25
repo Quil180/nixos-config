@@ -1,91 +1,124 @@
 🌐 Local Network
 │
+├── 📡 Router/Firewall Appliance (Pretzel) — dedicated mini PC (~$100, N100-class, 2 NICs)
+│      OS: pfSense
+│      🛡️ Handles NAT, DHCP, Firewall — independent of Proxmox uptime
+│
 ├── 🗄️ Dell Server (Breadbox) — Dedicated NAS
-│   │  OS: TrueNAS Core/Scale
-│   │  Specs: i7-4770 | 16 GB RAM | 128 GB SSD (OS)
-│   │  Memory Note: 15 GB reserved for ZFS ARC Cache
+│   │  OS: TrueNAS Community Edition (migrated off EOL Core)
+│   │  Specs: i7-4770 | 32 GB RAM | 128 GB SSD (OS)
+│   │  Memory Note: ~20 GB ARC reservation, ~12 GB free for OS + VMs
 │   │
 │   ├── 📁 /mnt/media (Mounted by Toast & Croissant)
 │   ├── 📁 /mnt/photos (Mounted by Pancake)
 │   ├── 📁 /mnt/git_lfs (Mounted by Scone)
+│   ├── 📁 /mnt/documents (Mounted by Biscuit)
 │   ├── 📁 /mnt/backups
-│   ├── 📁 /mnt/pbs-store (Mounted by Pasta)
+│   ├── 📁 /mnt/pbs-store ← moved here from Bakery
 │   │
-│   └── 📦 VM 1: Debian [Secondary DNS] (Bagel)
-│       │  1 vCPU | 512 MB RAM | 8 GB DISK
-│       │  Agents: Node Exporter, Promtail
-│       └── 🛡️ AdGuard Home (Secondary)
+│   ├── 📦 VM 1: NixOS [Secondary DNS] (Bagel)
+│   │   │  1 vCPU | 512 MB RAM | 8 GB DISK
+│   │   │  Agents: Node Exporter, Promtail
+│   │   └── 🛡️ AdGuard Home (Secondary) — services.adguardhome module
+│   │
+│   └── 📦 VM 2: Proxmox Backup Server (Pasta) ← MOVED from Bakery
+│       2 vCPU | 4 GB RAM | 64 GB DISK
+│       └── 📦 Datastore lives locally on Breadbox — no more same-host
+│                backup loop with the thing it's backing up
+│       ⚠️ Remaining ~8 GB free on Breadbox for OS + Bagel + Pasta headroom
 │
 └── 🖥️ Main Host — Proxmox VE (Bakery)
-    │  Specs: Threadripper 1950X | 64 GB RAM | 1 TB NVMe
-    │  Host Reservation: 7.5 GB RAM (Reduced slightly for new nodes)
-    │  Agents: Node Exporter, Promtail (Installed directly on Proxmox host)
+    │  Specs: Threadripper 1950X | 64 GB RAM | 1 TB NVMe + 1 TB NVMe (ZFS Mirror)
+    │  + Discrete GPU (passthrough target for Jellyfin)
+    │  Host Reservation: 6 GB RAM
+    │  Agents: Node Exporter, Promtail (on Proxmox host directly)
     │
-    ├── 📦 VM 0: FreeBSD [Core Firewall/Router] (Pretzel)
-    │      2 vCPU | 2 GB RAM | 32 GB DISK
-    │      🔌 NIC 1: WAN & NIC 2: LAN
-    │      └── 🛡️ pfSense (Handles NAT, DHCP, Firewall rules)
+    │  ⚠️ ARCHITECTURE NOTES — DO NOT FORGET:
+    │  ┌─────────────────────────────────────────────────────────────────┐
+    │  │ 1. Enable Memory Ballooning on every VM (Hardware → Memory →     │
+    │  │    check "Ballooning Device"). Requires qemu-guest-agent inside  │
+    │  │    each VM — NixOS: `services.qemuGuestAgent.enable = true;`     │
+    │  │    Debian: `apt install qemu-guest-agent`.                       │
+    │  │ 2. Enable KSM on the Proxmox HOST (host-wide, not per-VM):       │
+    │  │      `echo 1 > /sys/kernel/mm/ksm/run`, persist via ksmtuned.    │
+    │  │ 3. Auth model: WireGuard gates access, each service handles its  │
+    │  │    own login/2FA natively. No forward-auth layer needed.        │
+    │  │ 4. GPU passthrough: enable IOMMU in BIOS + GRUB                  │
+    │  │    (`intel_iommu=on` or `amd_iommu=on`), bind GPU to vfio-pci    │
+    │  │    if passing to a VM. Toast is an LXC, so instead bind-mount    │
+    │  │    /dev/dri (and /dev/nvidia* if Nvidia) into the container and  │
+    │  │    set cgroup device permissions (unprivileged LXC needs the    │
+    │  │    idmap/device allow lines in the .conf) — no vfio needed.     │
+    │  │ 5. PBS now lives on Breadbox, not Bakery — a Bakery boot-drive   │
+    │  │    failure no longer takes out your restore path. Residual risk │
+    │  │    is now Breadbox itself: it holds live data AND backups. See  │
+    │  │    off-box copy note under Pasta below.                         │
+    │  │ 6. Recheck Grafana RAM panels after ~1 week uptime for real trim │
+    │  │    candidates — you now have a few GB more headroom from moving │
+    │  │    Pasta off Bakery; Biscotti below already uses some of it.    │
+    │  └─────────────────────────────────────────────────────────────────┘
     │
     ├── 📦 VM 1: NixOS [Edge Gateway] (Crust)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
-    │      Agents: Node Exporter, Promtail
-    │      ├── 🚦 Caddy (SSL Signing)
+    │      ├── 🚦 Caddy (SSL Signing) — DNS-01 challenge required
+    │      │      (no public HTTP-01 possible on a WireGuard-only network;
+    │      │       configure Caddy's DNS provider plugin for your
+    │      │       registrar's API to get trusted internal certs)
     │      └── 🦅 wg-easy (VPN into Network)
     │
     ├── 📦 VM 2: NixOS [Remote Access] (Baguette)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
-    │      Agents: Node Exporter, Promtail
     │      └── 🖥️ RustDesk Server (HBBS/HBBR)
     │
-    ├── 📦 VM 3: Proxmox Backup Server (Pasta)
+    ├── 📦 VM 3: NixOS [Core Services] (Scone)
     │      4 vCPU | 4 GB RAM | 64 GB DISK
-    │      Agents: Node Exporter, Promtail
-    │      └── 📦 Datastore & Sync Job → Breadbox
-    │
-    ├── 📦 VM 4: NixOS [Core Services] (Scone)
-    │      4 vCPU | 4 GB RAM | 64 GB DISK
-    │      Agents: Node Exporter, Promtail
     │      ├── 🐙 Gitea & 📊 Homepage Dashboard
     │      └── 🔗 /mnt/git_lfs (NAS)
     │
-    ├── 📦 VM 5: NixOS [Heavy Apps] (Pancake)
+    ├── 📦 VM 4: NixOS [Heavy Apps] (Pancake)
     │      6 vCPU | 12 GB RAM | 256 GB DISK
-    │      Agents: Node Exporter, Promtail
     │      └── 🖼️ Immich (App + Postgres + Redis)
     │
-    ├── 📦 VM 6: Debian [Game Servers] (Waffle)
+    ├── 📦 VM 5: Debian [Game Servers] (Waffle)
     │      6 vCPU | 12 GB RAM | 256 GB DISK
-    │      Agents: Node Exporter, Promtail
     │      └── 🦖 Pterodactyl Wings (Docker isolated)
     │
-    ├── 📦 VM 7: NixOS [Acquisition] (Croissant)
+    ├── 📦 VM 6: NixOS [Acquisition] (Croissant)
     │      4 vCPU | 4 GB RAM | 32 GB DISK
-    │      Agents: Node Exporter, Promtail
     │      └── 🧲 *Arr Stack + qBittorrent/Gluetun
     │
-    ├── 📦 VM 8: NixOS [Build Farm] (Biscotti)
-    │      12 vCPU | 4 GB RAM | 40 GB DISK
-    │      Agents: Node Exporter, Promtail
-    │      └── 🛠️ Nix Remote Builder (Receives offloaded compilation jobs via SSH)
+    ├── 📦 VM 7: NixOS [Build Farm] (Biscotti)
+    │      8 vCPU | 8 GB RAM | 40 GB DISK ← bumped from 4 GB
+    │      └── 🛠️ Nix Remote Builder
+    │             Set `nix.settings.max-jobs` to match real parallel
+    │             capacity (not just vCPU count) — 8GB/8 vCPU still means
+    │             ~1GB/thread; cap max-jobs lower if builds are C++-heavy
+    │             rather than relying on RAM alone to prevent OOM kills.
     │
-    ├── 📦 VM 9: NixOS [Identity + Auth] (Macaron)
-    │      4 vCPU | 4 GB RAM | 32 GB DISK
-    │      Agents: Node Exporter, Promtail
-    │      ├── 🔐 Authentik (SSO, OIDC, Forward Auth Outpost)
-    │      └── 🗝️ Vaultwarden (Passwords & 2FA/TOTP Vault)
+    ├── 📦 VM 8: NixOS [Documents] (Biscuit)
+    │      2 vCPU | 3 GB RAM | 40 GB DISK
+    │      ├── 📄 Paperless-ngx (App + Postgres + Redis) — services.paperless
+    │      │                    module handles OCR/consume pipeline natively
+    │      └── 🔗 /mnt/documents (NAS) — mounted as the consume/media dir
     │
     ├── 🪆 LXC 1: NixOS [Observability] (Muffin)
     │      2 vCPU | 2 GB RAM | 20 GB DISK
-    │      ├── 📈 Prometheus (Pulls metrics from Node Exporters)
-    │      ├── 🪵 Loki (Receives logs from Promtail agents)
-    │      └── 📊 Grafana (Visualizes metrics, ZFS ARC stats, and logs)
+    │      ├── 📈 Prometheus
+    │      ├── 🪵 Loki
+    │      └── 📊 Grafana
     │
-    ├── 🪆 LXC 2: Debian [Media] (Toast)
+    ├── 🪆 LXC 2: NixOS [Media] (Toast)
     │      4 vCPU | 4 GB RAM | 24 GB DISK
-    │      Agents: Node Exporter, Promtail
-    │      └── 🍿 Jellyfin w/ HW Accel
+    │      └── 🍿 Jellyfin w/ real HW Accel — GPU passed through via
+    │                                    /dev/dri bind-mount (see Note 4
+    │                                    above), hardware.graphics.enable
+    │                                    for the driver stack inside
     │
-    └── 🪆 LXC 3: Debian [Primary DNS] (Crepe)
-           1 vCPU | 512 MB RAM | 8 GB DISK
-           Agents: Node Exporter, Promtail
-           └── 🛡️ AdGuard Home (Primary)
+    ├── 🪆 LXC 3: NixOS [Primary DNS] (Crepe)
+    │      1 vCPU | 512 MB RAM | 8 GB DISK
+    │      └── 🛡️ AdGuard Home (Primary) — services.adguardhome module
+    │
+    └── 🪆 LXC 4: NixOS [Vault] (Macaron)
+           1 vCPU | 1 GB RAM | 8 GB DISK
+           └── 🗝️ Vaultwarden (Passwords & 2FA/TOTP Vault) — services.vaultwarden
+                                module, SQLite backend is plenty for this scale
