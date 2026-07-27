@@ -71,7 +71,6 @@
           "amdgpu.sg_display=0" # Fix for display issues on resume
           "amdgpu.dcdebugmask=0x10" # Fix for DCN timeouts
           "resume_offset=533760"
-          "mem_sleep_default=s2idle"
           "snd_hda_intel.power_save=1" # Audio power saving
         ];
       };
