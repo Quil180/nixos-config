@@ -27,11 +27,7 @@ Rectangle {
     signal mouseEntered()
     signal mouseExited()
     
-    // Computed hover state - true if any part of popup is hovered
-    readonly property bool isHovered: mainHover.containsMouse || 
-                                       (typeof controlPrev !== 'undefined' && controlPrev.containsMouse) ||
-                                       (typeof controlPlay !== 'undefined' && controlPlay.containsMouse) ||
-                                       (typeof controlNext !== 'undefined' && controlNext.containsMouse)
+    readonly property bool isHovered: mainHover.hovered
     
     onIsHoveredChanged: {
         if (isHovered) {
@@ -41,14 +37,8 @@ Rectangle {
         }
     }
     
-    MouseArea {
+    HoverHandler {
         id: mainHover
-        anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-        onClicked: mouse => mouse.accepted = false
-        onPressed: mouse => mouse.accepted = false
-        onReleased: mouse => mouse.accepted = false
     }
 
     ColumnLayout {

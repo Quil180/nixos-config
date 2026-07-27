@@ -12,7 +12,7 @@ Rectangle {
     signal mouseExited()
     signal actionTriggered()
     
-    readonly property bool isHovered: mainHover.containsMouse
+    readonly property bool isHovered: mainHover.hovered
     
     onIsHoveredChanged: {
         if (isHovered) {
@@ -29,14 +29,8 @@ Rectangle {
     border.color: Theme.base01
     border.width: 1
     
-    MouseArea {
+    HoverHandler {
         id: mainHover
-        anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-        onClicked: mouse => mouse.accepted = false
-        onPressed: mouse => mouse.accepted = false
-        onReleased: mouse => mouse.accepted = false
     }
     
     // Action processes

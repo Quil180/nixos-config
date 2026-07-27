@@ -15,6 +15,7 @@ Repeater {
         property int offset: monitor && monitor.activeWorkspace ? Math.floor((monitor.activeWorkspace.id - 1) / 10) * 10 : 0
         property var workspaceData: Hyprland.workspaces.values.find(workspace => workspace.id === (index + 1 + offset) && workspace.toplevels.values.length > 0) ?? null
         property bool isFocused: monitor && monitor.activeWorkspace ? monitor.activeWorkspace.id === (index + 1 + offset) : false
+        property bool isOccupied: workspaceData !== null
 
         Layout.preferredWidth: 20
         Layout.preferredHeight: parent.height
@@ -23,21 +24,26 @@ Repeater {
         Text {
             id: workspacesText
             text: index + 1
-            color: parent.isFocused ? Theme.base03 : (parent.workspaceData ? Theme.base02 : Theme.base01)
+            anchors.centerIn: parent
+            color: parent.isFocused ? Theme.base0D : (parent.workspaceData ? Theme.base05 : Theme.base04)
 
             font {
                 family: Theme.fontFamily
                 pixelSize: Theme.fontSize
-                bold: true
+                bold: parent.isFocused || parent.workspaceData
             }
 
             Rectangle {
-                width: 20
-                height: 1
-                color: parent.parent.isFocused ? Theme.base04 : Theme.base00
+                width: 18
+                height: 1.5
+                radius: 1
+                visible: parent.parent.isFocused || parent.parent.isOccupied
+                color: parent.parent.isFocused ? Theme.base0D : Theme.base05
+                opacity: parent.parent.isFocused ? 1.0 : 0.7
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                     bottom: parent.bottom
+                    bottomMargin: 2
                 }
             }
 

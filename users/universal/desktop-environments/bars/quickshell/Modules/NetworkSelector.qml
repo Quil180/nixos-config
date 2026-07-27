@@ -14,8 +14,7 @@ Rectangle {
     signal mouseEntered()
     signal mouseExited()
     
-    // Computed hover state - checks main area and all network item mouse areas
-    readonly property bool isHovered: mainHover.containsMouse
+    readonly property bool isHovered: mainHover.hovered
     
     onIsHoveredChanged: {
         if (isHovered) {
@@ -33,14 +32,8 @@ Rectangle {
     border.width: 1
     clip: true
     
-    MouseArea {
+    HoverHandler {
         id: mainHover
-        anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-        onClicked: mouse => mouse.accepted = false
-        onPressed: mouse => mouse.accepted = false
-        onReleased: mouse => mouse.accepted = false
     }
 
 

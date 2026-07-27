@@ -16,7 +16,7 @@ Scope {
         console.log("Quickshell.screens length: " + Quickshell.screens.length);
         console.log("WlrLayer exists: " + (typeof WlrLayer !== 'undefined'));
         if (typeof WlrLayer !== 'undefined') {
-            console.log("WlrLayer.Overlay: " + WlrLayer.Overlay);
+            console.log("WlrLayer.Overlay: " + WlrLayer.Background);
         }
         console.log("WlrLayershell exists: " + (typeof WlrLayershell !== 'undefined'));
     }
@@ -55,6 +55,128 @@ Scope {
     Modules.WeatherWidget {
         id: weatherWidget
     }
+    Modules.WallpaperWidget {
+        id: wallpaperWidgetData
+    }
+
+    // Desktop Wallpaper Windows (Layer Shell Background)
+    Instantiator {
+        model: Quickshell.screens
+        delegate: PanelWindow {
+            id: wallpaperWindow
+            visible: true
+            screen: modelData
+
+            WlrLayershell.namespace: "quickshell-wallpaper"
+            WlrLayershell.layer: WlrLayer.Background
+
+            anchors {
+                top: true
+                bottom: true
+                left: true
+                right: true
+            }
+
+            color: "black"
+
+            property bool useImage1: true
+
+            Image {
+                id: bgImage1
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                smooth: true
+                mipmap: true
+                asynchronous: true
+                opacity: 1.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 800
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
+                onStatusChanged: {
+                    if (status === Image.Ready && !wallpaperWindow.useImage1 && bgImage1.source !== "") {
+                        wallpaperWindow.useImage1 = true
+                        bgImage1.opacity = 1.0
+                        bgImage2.opacity = 0.0
+                    }
+                }
+            }
+
+            Image {
+                id: bgImage2
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                smooth: true
+                mipmap: true
+                asynchronous: true
+                opacity: 0.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 800
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
+                onStatusChanged: {
+                    if (status === Image.Ready && wallpaperWindow.useImage1 && bgImage2.source !== "") {
+                        wallpaperWindow.useImage1 = false
+                        bgImage2.opacity = 1.0
+                        bgImage1.opacity = 0.0
+                    }
+                }
+            }
+
+            Connections {
+                target: wallpaperWidgetData
+                function onCurrentWallpaperChanged() {
+                    var newPath = wallpaperWidgetData.currentWallpaper
+                    if (!newPath) return
+                    var newSource = "file://" + newPath
+
+                    if (bgImage1.source == "" && bgImage2.source == "") {
+                        bgImage1.source = newSource
+                        bgImage1.opacity = 1.0
+                        bgImage2.opacity = 0.0
+                        wallpaperWindow.useImage1 = true
+                        return
+                    }
+
+                    if (wallpaperWindow.useImage1) {
+                        if (bgImage1.source == newSource) return
+                        bgImage2.source = newSource
+                        if (bgImage2.status === Image.Ready) {
+                            wallpaperWindow.useImage1 = false
+                            bgImage2.opacity = 1.0
+                            bgImage1.opacity = 0.0
+                        }
+                    } else {
+                        if (bgImage2.source == newSource) return
+                        bgImage1.source = newSource
+                        if (bgImage1.status === Image.Ready) {
+                            wallpaperWindow.useImage1 = true
+                            bgImage1.opacity = 1.0
+                            bgImage2.opacity = 0.0
+                        }
+                    }
+                }
+            }
+
+            Component.onCompleted: {
+                if (wallpaperWidgetData.currentWallpaper) {
+                    bgImage1.source = "file://" + wallpaperWidgetData.currentWallpaper
+                    bgImage1.opacity = 1.0
+                    bgImage2.opacity = 0.0
+                    wallpaperWindow.useImage1 = true
+                }
+            }
+        }
+    }
+
 
     // Notification Server (replaces dunst)
     NotificationServer {
@@ -473,6 +595,54 @@ Scope {
                 }
             }
 
+            // Timer for wallpaper popup
+            Timer {
+                id: wallpaperHideTimer
+                interval: 500
+                onTriggered: wallpaperPopupWindow.visible = false
+            }
+
+            // Wallpaper picker popup window
+            PopupWindow {
+                id: wallpaperPopupWindow
+                visible: false
+                implicitWidth: wallpaperPicker.implicitWidth
+                implicitHeight: wallpaperPicker.implicitHeight
+                anchor {
+                    item: wallpaperIcon
+                    edges: Edges.Bottom
+                    gravity: Edges.Bottom
+                }
+                color: "transparent"
+
+                Modules.WallpaperPicker {
+                    id: wallpaperPicker
+                    wallpaperWidget: wallpaperWidgetData
+
+                    transformOrigin: Item.Top
+                    opacity: wallpaperPopupWindow.visible ? 1 : 0
+                    scale: wallpaperPopupWindow.visible ? 1 : 0.8
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 200
+                            easing.type: Easing.OutBack
+                        }
+                    }
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 200
+                            easing.type: Easing.OutBack
+                            easing.overshoot: 1.5
+                        }
+                    }
+
+                    onWallpaperSelected: wallpaperPopupWindow.visible = false
+                    onMouseEntered: wallpaperHideTimer.stop()
+                    onMouseExited: wallpaperHideTimer.restart()
+                }
+            }
+
             RowLayout {
                 id: barLayout
                 anchors {
@@ -525,7 +695,7 @@ Scope {
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         Text {
-                            text: "\uf4bc " + cpuWidget.cpuUsage + "%"
+                            text: "\uf4bc  " + cpuWidget.cpuUsage + "%"
                             color: Modules.Theme.usageColor(cpuWidget.cpuUsage)
                             font {
                                 family: Modules.Theme.fontFamily
@@ -552,7 +722,7 @@ Scope {
                         }
                         Text {
                             id: memText
-                            text: parent.showMB ? "\uefc5 " + memWidget.memUsed + "MB" : "\uefc5 " + memWidget.memUsage + "%"
+                            text: parent.showMB ? "\uefc5  " + memWidget.memUsed + "MB" : "\uefc5  " + memWidget.memUsage + "%"
                             color: Modules.Theme.usageColor(memWidget.memUsage)
                             font {
                                 family: Modules.Theme.fontFamily
@@ -582,7 +752,7 @@ Scope {
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         Text {
-                            text: "\uef2a " + tempWidget.tempCPU + "°"
+                            text: "\uef2a  " + tempWidget.tempCPU + "°"
                             color: Modules.Theme.tempColor(tempWidget.tempCPU)
                             font {
                                 family: Modules.Theme.fontFamily
@@ -610,7 +780,7 @@ Scope {
                     // Brightness
                     Text {
                         text: "\udb80\udce0  " + brightnessWidget.brightnessMain + "%"
-                        color: Modules.Theme.base03
+                        color: Modules.Theme.base04
                         font {
                             family: Modules.Theme.fontFamily
                             pixelSize: Modules.Theme.fontSize
@@ -627,7 +797,7 @@ Scope {
                             id: volumeText
                             anchors.centerIn: parent
                             text: volumeWidget.muted ? "\ueee8" : "\uf028  " + volumeWidget.volume + "%"
-                            color: volumeMouse.containsMouse ? Modules.Theme.base04 : (volumeWidget.muted ? Modules.Theme.alertColor : Modules.Theme.base03)
+                            color: volumeMouse.containsMouse ? Modules.Theme.base05 : (volumeWidget.muted ? Modules.Theme.alertColor : Modules.Theme.base04)
                             font {
                                 family: Modules.Theme.fontFamily
                                 pixelSize: Modules.Theme.fontSize
@@ -671,7 +841,7 @@ Scope {
                     id: weatherIcon
                     visible: !root.isSecondary
                     text: "\uf0c2"
-                    color: weatherMouse.containsMouse ? Modules.Theme.base04 : Modules.Theme.base03
+                    color: weatherMouse.containsMouse ? Modules.Theme.base05 : Modules.Theme.base04
                     font {
                         family: Modules.Theme.fontFamily
                         pixelSize: Modules.Theme.fontSize
@@ -712,7 +882,7 @@ Scope {
                     id: batteryIcon
                     visible: !root.isSecondary
                     text: (batteryWidget.charging ? "\uf0e7" : (batteryWidget.percentage > 75 ? "\uf240" : (batteryWidget.percentage > 50 ? "\uf241" : (batteryWidget.percentage > 25 ? "\uf242" : (batteryWidget.percentage > 10 ? "\uf243" : "\uf244"))))) + "  " + batteryWidget.percentage + "%"
-                    color: batteryMouse.containsMouse ? Modules.Theme.base04 : (batteryWidget.percentage <= 20 && !batteryWidget.charging ? Modules.Theme.alertColor : Modules.Theme.base03)
+                    color: batteryMouse.containsMouse ? Modules.Theme.base05 : (batteryWidget.percentage <= 20 && !batteryWidget.charging ? Modules.Theme.alertColor : Modules.Theme.base04)
                     font {
                         family: Modules.Theme.fontFamily
                         pixelSize: Modules.Theme.fontSize
@@ -753,7 +923,7 @@ Scope {
                     id: bluetoothIcon
                     visible: !root.isSecondary
                     text: "\uf293"
-                    color: bluetoothMouse.containsMouse ? Modules.Theme.base04 : (bluetoothWidget.connected ? Modules.Theme.base0D : (bluetoothWidget.powered ? Modules.Theme.base03 : Modules.Theme.base02))
+                    color: bluetoothMouse.containsMouse ? Modules.Theme.base05 : (bluetoothWidget.connected ? Modules.Theme.base0D : (bluetoothWidget.powered ? Modules.Theme.base04 : Modules.Theme.base03))
                     font {
                         family: Modules.Theme.fontFamily
                         pixelSize: Modules.Theme.fontSize
@@ -795,7 +965,7 @@ Scope {
                     id: notificationIcon
                     visible: !root.isSecondary
                     text: notificationServer.dndEnabled ? "\uf1f6" : "\uf0f3"
-                    color: notificationMouse.containsMouse ? Modules.Theme.base04 : (notificationServer.dndEnabled ? Modules.Theme.alertColor : (notificationServer.notificationHistory.length > 0 ? Modules.Theme.base0A : Modules.Theme.base03))
+                    color: notificationMouse.containsMouse ? Modules.Theme.base05 : (notificationServer.dndEnabled ? Modules.Theme.alertColor : (notificationServer.notificationHistory.length > 0 ? Modules.Theme.base0A : Modules.Theme.base04))
                     font {
                         family: Modules.Theme.fontFamily
                         pixelSize: Modules.Theme.fontSize
@@ -828,12 +998,58 @@ Scope {
                     }
                 }
 
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
+
+                // Wallpaper Icon
+                Text {
+                    id: wallpaperIcon
+                    visible: !root.isSecondary
+                    text: "\uf03e"
+                    color: wallpaperMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
+                    font {
+                        family: Modules.Theme.fontFamily
+                        pixelSize: Modules.Theme.fontSize
+                        bold: true
+                    }
+                    scale: wallpaperMouse.containsMouse ? 1.15 : 1.0
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+                    }
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.OutQuad
+                        }
+                    }
+
+                    MouseArea {
+                        id: wallpaperMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onEntered: {
+                            wallpaperHideTimer.stop();
+                            wallpaperPopupWindow.visible = true;
+                        }
+                        onExited: wallpaperHideTimer.restart()
+                        onClicked: wallpaperPopupWindow.visible = !wallpaperPopupWindow.visible
+                    }
+                }
+
+                Modules.Spacer {
+                    visible: !root.isSecondary
+                }
+
                 // Power Icon
                 Text {
                     id: powerIcon
                     visible: !root.isSecondary
                     text: "\uf011"
-                    color: powerMouse.containsMouse ? Modules.Theme.alertColor : Modules.Theme.base03
+                    color: powerMouse.containsMouse ? Modules.Theme.alertColor : Modules.Theme.base04
                     font {
                         family: Modules.Theme.fontFamily
                         pixelSize: Modules.Theme.fontSize
@@ -909,7 +1125,7 @@ Scope {
                 Modules.Spacer {
                     visible: !root.isSecondary && SystemTray.items.length > 0
                 }
-
+                
                 Modules.Tray {
                     visible: !root.isSecondary
                     Layout.alignment: Qt.AlignVCenter

@@ -4,6 +4,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     waybar
+    (python3.withPackages (ps: [ ps.pillow ]))
   ];
 
   imports = [ topConfig.flake.homeModules.style ];

@@ -64,6 +64,10 @@ in
       dedicated = "supergfxctl -m AsusMuxDgpu && sudo reboot now";
     };
     initContent = ''
+      if [ -f "$HOME/.cache/terminal/sequences" ]; then
+        cat "$HOME/.cache/terminal/sequences"
+      fi
+
       runa() {
         temp=""
         for arg in "$@"

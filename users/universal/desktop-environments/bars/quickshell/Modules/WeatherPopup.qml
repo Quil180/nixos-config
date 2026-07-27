@@ -14,7 +14,7 @@ Rectangle {
     signal mouseEntered()
     signal mouseExited()
     
-    readonly property bool isHovered: mainHover.containsMouse
+    readonly property bool isHovered: mainHover.hovered
     
     onIsHoveredChanged: {
         if (isHovered) {
@@ -42,10 +42,8 @@ Rectangle {
     border.color: Theme.base01
     border.width: 1
     
-    MouseArea {
+    HoverHandler {
         id: mainHover
-        anchors.fill: parent
-        hoverEnabled: true
     }
 
     ColumnLayout {

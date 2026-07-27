@@ -10,10 +10,7 @@ Rectangle {
     signal mouseEntered()
     signal mouseExited()
     
-    // Computed hover state - includes navigation buttons
-    readonly property bool isHovered: mainHover.containsMouse || 
-                                       (typeof prevMouse !== 'undefined' && prevMouse.containsMouse) ||
-                                       (typeof nextMouse !== 'undefined' && nextMouse.containsMouse)
+    readonly property bool isHovered: mainHover.hovered
     
     property var currentDate: new Date()
     property int displayedMonth: currentDate.getMonth()
@@ -60,10 +57,8 @@ Rectangle {
     border.color: Theme.base01
     border.width: 1
     
-    MouseArea {
+    HoverHandler {
         id: mainHover
-        anchors.fill: parent
-        hoverEnabled: true
     }
 
     ColumnLayout {

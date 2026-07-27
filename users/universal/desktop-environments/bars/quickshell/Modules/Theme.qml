@@ -3,22 +3,44 @@ import QtQuick
 
 QtObject {
     // Base16 Color Scheme
-    readonly property color base00: "#1b1d29"
-    readonly property color base01: "#364852"
-    readonly property color base02: "#5a697c"
-    readonly property color base03: "#999da8"
-    readonly property color base04: "#cbb785"
-    readonly property color base05: "#ffdeb3"
-    readonly property color base06: "#fdefca"
-    readonly property color base07: "#f5f0ed"
-    readonly property color base08: "#8c929e"
-    readonly property color base09: "#8b919d"
-    readonly property color base0A: "#a48f60"
-    readonly property color base0B: "#898f9b"
-    readonly property color base0C: "#8d939f"
-    readonly property color base0D: "#8a909c"
-    readonly property color base0E: "#909196"
-    readonly property color base0F: "#8b919d"
+    property color base00: "#1b1d29"
+    property color base01: "#364852"
+    property color base02: "#5a697c"
+    property color base03: "#999da8"
+    property color base04: "#cbb785"
+    property color base05: "#ffdeb3"
+    property color base06: "#fdefca"
+    property color base07: "#f5f0ed"
+    property color base08: "#8c929e"
+    property color base09: "#8b919d"
+    property color base0A: "#a48f60"
+    property color base0B: "#898f9b"
+    property color base0C: "#8d939f"
+    property color base0D: "#8a909c"
+    property color base0E: "#909196"
+    property color base0F: "#8b919d"
+
+    // Dynamic Color Updating
+    function updateColors(palette) {
+        if (!palette) return;
+        console.log("[Theme] Applying new color scheme palette");
+        if (palette.base00) base00 = palette.base00;
+        if (palette.base01) base01 = palette.base01;
+        if (palette.base02) base02 = palette.base02;
+        if (palette.base03) base03 = palette.base03;
+        if (palette.base04) base04 = palette.base04;
+        if (palette.base05) base05 = palette.base05;
+        if (palette.base06) base06 = palette.base06;
+        if (palette.base07) base07 = palette.base07;
+        if (palette.base08) base08 = palette.base08;
+        if (palette.base09) base09 = palette.base09;
+        if (palette.base0A) base0A = palette.base0A;
+        if (palette.base0B) base0B = palette.base0B;
+        if (palette.base0C) base0C = palette.base0C;
+        if (palette.base0D) base0D = palette.base0D;
+        if (palette.base0E) base0E = palette.base0E;
+        if (palette.base0F) base0F = palette.base0F;
+    }
 
     // Alert Colors
     readonly property color alertColor: "#CD5C5C"

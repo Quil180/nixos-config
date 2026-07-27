@@ -33,12 +33,20 @@ Rectangle {
         onTriggered: toast.dismissed()
     }
     
+    HoverHandler {
+        id: toastHover
+        onHoveredChanged: {
+            if (hovered) {
+                dismissTimer.stop();
+            } else {
+                dismissTimer.restart();
+            }
+        }
+    }
+    
     MouseArea {
         anchors.fill: parent
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onEntered: dismissTimer.stop()
-        onExited: dismissTimer.restart()
         onClicked: {
             if (notification) {
                 notification.dismiss();
