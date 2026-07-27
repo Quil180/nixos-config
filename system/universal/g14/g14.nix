@@ -73,7 +73,6 @@
           "resume_offset=533760"
           "mem_sleep_default=s2idle"
           "snd_hda_intel.power_save=1" # Audio power saving
-          "pcie_aspm=force" # Force PCIe Active State Power Management
         ];
       };
 

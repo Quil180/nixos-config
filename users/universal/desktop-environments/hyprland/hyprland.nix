@@ -77,40 +77,99 @@
             };
           };
           env = [
-            { _args = [ "HYPRCURSOR_THEME" "rose-pine-hyprcursor" ]; }
-            { _args = [ "HYPRCURSOR_SIZE" "24" ]; }
-            { _args = [ "XCURSOR_THEME" "rose-pine-hyprcursor" ]; }
-            { _args = [ "XCURSOR_SIZE" "24" ]; }
+            {
+              _args = [
+                "HYPRCURSOR_THEME"
+                "rose-pine-hyprcursor"
+              ];
+            }
+            {
+              _args = [
+                "HYPRCURSOR_SIZE"
+                "24"
+              ];
+            }
+            {
+              _args = [
+                "XCURSOR_THEME"
+                "rose-pine-hyprcursor"
+              ];
+            }
+            {
+              _args = [
+                "XCURSOR_SIZE"
+                "24"
+              ];
+            }
 
-            { _args = [ "WLR_NO_HARDWARE_CURSORS" "1" ]; }
-            { _args = [ "AQ_NO_HARDWARE_CURSORS" "1" ]; }
+            {
+              _args = [
+                "WLR_NO_HARDWARE_CURSORS"
+                "1"
+              ];
+            }
+            {
+              _args = [
+                "AQ_NO_HARDWARE_CURSORS"
+                "1"
+              ];
+            }
 
-            { _args = [ "GDK_SCALE" "2" ]; }
-            { _args = [ "ELECTRON_OZONE_PLATFORM_HINT" "wayland" ]; }
+            {
+              _args = [
+                "GDK_SCALE"
+                "2"
+              ];
+            }
+            {
+              _args = [
+                "ELECTRON_OZONE_PLATFORM_HINT"
+                "wayland"
+              ];
+            }
 
-            { _args = [ "AQ_DRM_DEVICES" "/dev/dri/card1:/dev/dri/card2" ]; }
+            {
+              _args = [
+                "AQ_DRM_DEVICES"
+                "/dev/dri/card1:/dev/dri/card2"
+              ];
+            }
 
-            { _args = [ "MOZ_ENABLE_WAYLAND" "1" ]; }
+            {
+              _args = [
+                "MOZ_ENABLE_WAYLAND"
+                "1"
+              ];
+            }
           ];
           window_rule = [
             # XWayland Video Bridge
             {
-              match = { class = "xwaylandvideobridge"; };
+              match = {
+                class = "xwaylandvideobridge";
+              };
               opacity = "0.0 override";
               no_anim = true;
               no_initial_focus = true;
-              max_size = [ 1 1 ];
+              max_size = [
+                1
+                1
+              ];
               no_blur = true;
               no_focus = true;
             }
 
             # Terminal & Browser Opacity
             {
-              match = { class = "foot"; };
+              match = {
+                class = "foot";
+              };
               opacity = "0.9 override 0.85 override";
             }
             {
-              match = { class = "firefox"; };
+              match = {
+                class = "firefox";
+              };
               opacity = "1.0 override 0.95 override";
             }
           ];
