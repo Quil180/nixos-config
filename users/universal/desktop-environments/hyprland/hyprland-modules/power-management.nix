@@ -56,8 +56,16 @@ in
 {
   home.packages = [ power-monitor ];
 
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "${power-monitor}/bin/power-monitor"
+  wayland.windowManager.hyprland.settings.on = [
+    {
+      _args = [
+        "hyprland.start"
+        (lib.generators.mkLuaInline ''
+          function()
+            hl.exec_cmd("${power-monitor}/bin/power-monitor")
+          end'')
+      ];
+    }
   ];
 }
 ;

@@ -132,7 +132,6 @@
         fixSpotifyEmbeds.enable = true;
         fixYoutubeEmbeds.enable = true;
         forceOwnerCrown.enable = true;
-        friendsSince.enable = true;
         gifPaste.enable = true;
         iLoveSpam.enable = true;
         # imageZoom.enable = true;

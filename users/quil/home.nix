@@ -28,11 +28,8 @@
         kicad
         latex
         office
-        zoom
         cpp
         verilog
-        rust
-        python
         antigravity
         stylix
         discord
@@ -51,6 +48,7 @@
         username = "${username}";
         homeDirectory = "/home/${username}";
         stateVersion = "26.05";
+        pointerCursor.enable = true;
         sessionVariables = {
           EDITOR = "nvim";
           BROWSER = "firefox";

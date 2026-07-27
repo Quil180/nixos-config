@@ -1,23 +1,36 @@
-{ topConfig, lib, pkgs, ... }:
 {
-  flake.homeModules.startup = 
-{pkgs, ...}: let
-  dotfiles = "~/.dotfiles";
-in {
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "bash -c 'sleep 1 && awww-daemon'"
-    "bash -c 'sleep 1 && awwww img ${dotfiles}/wallpapers/wallpaper.jpg'"
-    "bash -c 'sleep 1 && nm-applet --indicator'"
-    "bash -c 'sleep 1 && asusctl -c 80'"
-    "bash -c 'sleep 1 && asusctl led-mode static -c ffffff'"
-    "bash -c 'sleep 1 && wl-paste --watch cliphist store'"
-    "bash -c 'sleep 1 && xwaylandvideobridge'" # for xwayland screensharing
-    "bash -c 'sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP --all'"
-    "bash -c 'sleep 1 && ${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1'"
-    "bash -c 'sleep 1 && hyprctl setcursor rose-pine-hyprcursor 24'"
-    "bash -c 'sleep 1 && rog-control-center'"
-    "bash -c 'sleep 1 && quickshell -p ~/.config/quickshell/bar.qml'"
-  ];
-}
-;
+  topConfig,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  flake.homeModules.startup =
+    { pkgs, ... }:
+    let
+      dotfiles = "~/.dotfiles";
+    in
+    {
+      wayland.windowManager.hyprland.settings.on = [
+        {
+          _args = [
+            "hyprland.start"
+            (lib.generators.mkLuaInline ''
+              function()
+                hl.exec_cmd("awww-daemon")
+                hl.exec_cmd("awwww img ${dotfiles}/wallpapers/wallpaper.jpg")
+                hl.exec_cmd("nm-applet --indicator")
+                hl.exec_cmd("wl-paste --watch cliphist store")
+                hl.exec_cmd("xwaylandvideobridge")
+                hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP --all")
+                hl.exec_cmd("systemctl --user enable --now hyprpolkitagent.service")
+                hl.exec_cmd("hyprctl setcursor rose-pine-hyprcursor 24")
+                hl.exec_cmd("quickshell -p ~/.config/quickshell/bar.qml")
+                hl.exec_cmd("[workspace 1 silent] discord --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland")
+                hl.exec_cmd("[workspace 2 silent] firefox --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland")
+              end'')
+          ];
+        }
+      ];
+    };
 }

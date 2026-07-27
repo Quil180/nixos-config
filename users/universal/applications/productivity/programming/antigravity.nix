@@ -8,7 +8,7 @@
     google-chrome
     # If you encounter issues with extensions or binaries, 
     # you can try the FHS version instead:
-    antigravity-fhs
+    antigravity-ide-fhs
   ];
 }
 ;

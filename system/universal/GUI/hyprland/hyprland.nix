@@ -47,11 +47,8 @@
             "org.freedesktop.portal.OpenURI" = [ "gtk" ];
           };
           hyprland = {
-            default = [
-              "gtk"
-              "hyprland"
-            ];
-            "org.freedesktop.portal.OpenURI" = [ "gtk" ];
+            default = [ "hyprland" ];
+            "org.freedesktop.portal.OpenURI" = [ "hyprland" ];
           };
         };
         extraPortals = with pkgs; [

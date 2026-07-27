@@ -8,8 +8,6 @@
   flake.nixosModules.g14 =
     { pkgs, ... }:
     {
-      imports = [ topConfig.flake.nixosModules.kernel-custom ];
-
       environment.systemPackages = with pkgs; [
         asusctl
       ];
@@ -60,11 +58,6 @@
         };
       };
 
-      systemd.services = {
-        systemd-suspend.serviceConfig.Environment = "SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0";
-        systemd-hibernate.serviceConfig.Environment = "SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0";
-        systemd-hybrid-sleep.serviceConfig.Environment = "SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0";
-      };
       systemd.tmpfiles.rules = [
         "d /etc/asusd 0755 root root -"
       ];
