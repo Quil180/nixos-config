@@ -1,23 +1,22 @@
-{ topConfig, lib, pkgs, ... }:
 {
-  flake.nixosModules.sddm = 
-{pkgs, ...}: {
-  environment.systemPackages = with pkgs; [
-    kdePackages.sddm
-  ];
+  topConfig,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  flake.nixosModules.sddm = { pkgs, ... }: {
+    environment.systemPackages = with pkgs; [
+      kdePackages.sddm
+    ];
 
-  services = {
-    # setting sddm as default login screen
-    displayManager.sddm = {
+    services.displayManager.sddm = {
       enable = true;
       enableHidpi = true;
       autoNumlock = true;
+      wayland.enable = true;
     };
-    # for any applications that require native X11
-    xserver.enable = true;
-  };
 
-  security.pam.services.sddm.enableGnomeKeyring = true;
-}
-;
+    security.pam.services.sddm.enableGnomeKeyring = true;
+  };
 }

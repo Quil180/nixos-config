@@ -4,7 +4,6 @@
 { pkgs, ... }:
 {
   services = {
-    xserver.enable = true;
     lact.enable = true;
   };
 
