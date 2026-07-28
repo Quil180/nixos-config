@@ -778,13 +778,46 @@ Scope {
                     spacing: 12
 
                     // Brightness
-                    Text {
-                        text: "\udb80\udce0  " + brightnessWidget.brightnessMain + "%"
-                        color: Modules.Theme.base04
-                        font {
-                            family: Modules.Theme.fontFamily
-                            pixelSize: Modules.Theme.fontSize
-                            bold: true
+                    Item {
+                        implicitWidth: brightnessText.implicitWidth
+                        implicitHeight: brightnessText.implicitHeight
+
+                        Text {
+                            id: brightnessText
+                            anchors.centerIn: parent
+                            text: "\udb80\udce0  " + brightnessWidget.brightnessMain + "%"
+                            color: brightnessMouse.containsMouse ? Modules.Theme.base05 : Modules.Theme.base04
+                            font {
+                                family: Modules.Theme.fontFamily
+                                pixelSize: Modules.Theme.fontSize
+                                bold: true
+                            }
+                            scale: brightnessMouse.containsMouse ? 1.1 : 1.0
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+                            }
+                            Behavior on scale {
+                                NumberAnimation {
+                                    duration: 100
+                                    easing.type: Easing.OutQuad
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: brightnessMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onWheel: (wheel) => {
+                                if (wheel.angleDelta.y > 0) {
+                                    brightnessWidget.brightnessUp();
+                                } else if (wheel.angleDelta.y < 0) {
+                                    brightnessWidget.brightnessDown();
+                                }
+                            }
                         }
                     }
 
@@ -823,6 +856,13 @@ Scope {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: volumeWidget.toggleMute()
+                            onWheel: (wheel) => {
+                                if (wheel.angleDelta.y > 0) {
+                                    volumeWidget.volumeUp();
+                                } else if (wheel.angleDelta.y < 0) {
+                                    volumeWidget.volumeDown();
+                                }
+                            }
                             onEntered: {
                                 musicHideTimer.stop();
                                 musicPopupWindow.visible = true;

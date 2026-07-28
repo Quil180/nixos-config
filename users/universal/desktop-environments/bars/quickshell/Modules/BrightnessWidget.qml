@@ -7,6 +7,36 @@ Item {
     property int brightnessMain: 0
     property int refreshInterval: 200
 
+    function brightnessUp() {
+        brightUpProcess.running = false;
+        brightUpProcess.running = true;
+    }
+
+    function brightnessDown() {
+        brightDownProcess.running = false;
+        brightDownProcess.running = true;
+    }
+
+    Process {
+        id: brightUpProcess
+        command: ["brightnessctl", "set", "+1%"]
+        onRunningChanged: {
+            if (!running) {
+                brightnessProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: brightDownProcess
+        command: ["brightnessctl", "set", "1%-"]
+        onRunningChanged: {
+            if (!running) {
+                brightnessProcess.running = true;
+            }
+        }
+    }
+
     Process {
         id: brightnessProcess
         command: ["bash", "-c", "brightnessctl -m"]

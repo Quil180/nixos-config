@@ -87,7 +87,7 @@
           ];
         };
         "backlight" = {
-          scroll-step = 5;
+          scroll-step = 1;
           format = "{icon} {percent}%";
           format-icons = [
             ""
@@ -121,7 +121,7 @@
           ];
         };
         "wireplumber" = {
-          scroll-step = 5;
+          scroll-step = 1;
           format = "{icon}  {volume}%";
           format-bluetooth = "{icon}  {volume}% ";
           format-bluetooth-muted = " {icon}";

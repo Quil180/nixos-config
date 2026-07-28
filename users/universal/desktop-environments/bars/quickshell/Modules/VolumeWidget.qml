@@ -12,9 +12,39 @@ Item {
         muteProcess.running = true;
     }
 
+    function volumeUp() {
+        volUpProcess.running = false;
+        volUpProcess.running = true;
+    }
+
+    function volumeDown() {
+        volDownProcess.running = false;
+        volDownProcess.running = true;
+    }
+
     Process {
         id: muteProcess
         command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
+        onRunningChanged: {
+            if (!running) {
+                volumeProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: volUpProcess
+        command: ["wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "1%+"]
+        onRunningChanged: {
+            if (!running) {
+                volumeProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: volDownProcess
+        command: ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "1%-"]
         onRunningChanged: {
             if (!running) {
                 volumeProcess.running = true;
