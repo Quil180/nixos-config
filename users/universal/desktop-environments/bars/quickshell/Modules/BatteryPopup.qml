@@ -27,9 +27,9 @@ Rectangle {
 
     implicitWidth: 200
     implicitHeight: 90
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     
     HoverHandler {
@@ -54,7 +54,7 @@ Rectangle {
                       (popup.percentage > 50 ? "\uf241" :
                       (popup.percentage > 25 ? "\uf242" :
                       (popup.percentage > 10 ? "\uf243" : "\uf244"))))
-                color: popup.percentage <= 20 && !popup.charging ? Theme.alertColor : Theme.base04
+                color: popup.percentage <= 20 && !popup.charging ? Theme.base08 : Theme.base04
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize + 4
@@ -75,7 +75,7 @@ Rectangle {
             
             Text {
                 text: popup.status
-                color: popup.charging ? Theme.base0B : Theme.base03
+                color: popup.charging ? Theme.base0D : Theme.base03
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize - 2
@@ -87,15 +87,15 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             height: 8
-            color: Theme.base01
+            color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.4)
             radius: 4
             
             Rectangle {
                 width: parent.width * (popup.percentage / 100)
                 height: parent.height
                 radius: 4
-                color: popup.percentage <= 20 ? Theme.alertColor :
-                       (popup.percentage <= 50 ? Theme.base0A : Theme.base0B)
+                color: popup.percentage <= 20 ? Theme.base08 :
+                       (popup.percentage <= 50 ? Theme.base0A : Theme.base0D)
             }
         }
 

@@ -26,11 +26,25 @@ Row {
             // The item from the SystemTray service
             property var trayItem: modelData
             
+            Rectangle {
+                id: trayHoverBg
+                anchors.centerIn: parent
+                width: 24
+                height: 24
+                radius: width / 2
+                color: Modules.Theme.base0D
+                opacity: trayItemDelegate.containsMouse ? 0.20 : 0
+                
+                Behavior on opacity {
+                    NumberAnimation { duration: 150 }
+                }
+            }
+
             IconImage {
                 anchors.centerIn: parent
                 source: trayItemDelegate.trayItem.icon
-                width: 22
-                height: 22
+                width: 18
+                height: 18
             }
             
             onClicked: (mouse) => {

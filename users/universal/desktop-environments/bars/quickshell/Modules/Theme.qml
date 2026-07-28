@@ -42,12 +42,13 @@ QtObject {
         if (palette.base0F) base0F = palette.base0F;
     }
 
-    // Alert Colors
-    readonly property color alertColor: "#CD5C5C"
-    readonly property color successColor: "#7ec699"
-    readonly property color warningColor: "#e5c07b"
-    readonly property color blueColor: "#61afef"
-    readonly property color orangeColor: "#d19a66"
+    // Dynamic Accent & Alert Colors (Material-You / Caelestia aesthetic)
+    property color accentColor: base0D
+    property color alertColor: base08
+    property color warningColor: base0A
+    property color successColor: base0B
+    property color blueColor: base0D
+    property color orangeColor: base09
 
     // Typography
     readonly property string fontFamily: "Iosevka Nerd Font"

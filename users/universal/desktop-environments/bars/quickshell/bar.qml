@@ -7,6 +7,7 @@ import Quickshell.Hyprland
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 
 import "Modules" as Modules
 
@@ -69,6 +70,7 @@ Scope {
 
             WlrLayershell.namespace: "quickshell-wallpaper"
             WlrLayershell.layer: WlrLayer.Background
+            WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
             anchors {
                 top: true
@@ -219,7 +221,7 @@ Scope {
             property bool isSecondary: root.screen !== Quickshell.screens[0]
 
             WlrLayershell.namespace: "quickshell-bar"
-            WlrLayershell.layer: WlrLayer.Background
+            WlrLayershell.layer: WlrLayer.Top
 
             anchors {
                 top: true
@@ -227,10 +229,15 @@ Scope {
                 right: true
             }
 
-            // Setting the maximum height to be 30
-            implicitHeight: 30
-            color: Modules.Theme.base00
-            exclusiveZone: implicitHeight
+            margins {
+                top: 8
+                left: 10
+                right: 10
+            }
+
+            implicitHeight: 38
+            color: "transparent"
+            exclusiveZone: implicitHeight + 8
 
             // Timer for hiding network selector popup
             Timer {
@@ -643,48 +650,95 @@ Scope {
                 }
             }
 
+            // Floating Bar Visual Container (Transparent for floating island pills)
+            Rectangle {
+                id: barBackground
+                anchors.fill: parent
+                color: "transparent"
+                border.color: "transparent"
+                border.width: 0
+            }
+
             RowLayout {
                 id: barLayout
                 anchors {
                     fill: parent
-                    margins: 5
+                    leftMargin: 8
+                    rightMargin: 8
+                    topMargin: 0
+                    bottomMargin: 0
+                }
+                spacing: 8
+
+                // Inline Pill component definition
+                component Pill: Item {
+                    id: pillRoot
+                    default property alias content: inner.data
+                    implicitHeight: 30
+                    implicitWidth: inner.implicitWidth + 24
+                    Layout.alignment: Qt.AlignVCenter
+
+                    Rectangle {
+                        id: pill
+                        anchors.fill: parent
+                        radius: 16
+                        color: Qt.rgba(Modules.Theme.base00.r, Modules.Theme.base00.g, Modules.Theme.base00.b, 0.85)
+                        border.color: Qt.rgba(Modules.Theme.base02.r, Modules.Theme.base02.g, Modules.Theme.base02.b, 0.4)
+                        border.width: 1
+
+                        RowLayout {
+                            id: inner
+                            anchors.centerIn: parent
+                            spacing: 10
+                        }
+                    }
                 }
 
-                // Workspaces showing!!
-                // Hidden on secondary screens
-                Modules.Workspaces {
-                    id: workspaces
-                    monitorName: root.screen.name
+                // Workspaces Pill
+                Pill {
+                    id: workspacesPill
+                    Modules.Workspaces {
+                        id: workspaces
+                        monitorName: root.screen.name
+                    }
                 }
 
                 // Spacer
-                Modules.Spacer {}
-
-                // Active Window Title
-                Text {
-                    property var monitor: Hyprland.monitors.values.find(m => m.name === root.screen.name)
-                    text: monitor && monitor.activeWorkspace && monitor.activeWorkspace.toplevels.values.length > 0 ? (monitor.activeWorkspace.toplevels.values.find(t => t.focused) || monitor.activeWorkspace.toplevels.values[0]).title : ""
-                    color: Modules.Theme.base04
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    Layout.fillWidth: true
-                    Layout.leftMargin: 8
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
-                }
-
-                // Spacer to push rest to the very right
                 Item {
                     Layout.fillWidth: true
                 }
 
-                // System Stats Group (no separators between them)
-                RowLayout {
+                // Active Window Title Pill
+                Pill {
+                    id: windowTitlePill
+                    visible: windowTitleText.text !== ""
+                    Layout.maximumWidth: 400
+
+                    Text {
+                        id: windowTitleText
+                        property var monitor: Hyprland.monitors.values.find(m => m.name === root.screen.name)
+                        text: monitor && monitor.activeWorkspace && monitor.activeWorkspace.toplevels.values.length > 0 ? (monitor.activeWorkspace.toplevels.values.find(t => t.focused) || monitor.activeWorkspace.toplevels.values[0]).title : ""
+                        color: Modules.Theme.base04
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        elide: Text.ElideRight
+                        maximumLineCount: 1
+                        Layout.maximumWidth: 380
+                    }
+                }
+
+                // Spacer to push rest to the right
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                // System Stats Group (CPU, Mem, Temp)
+                Pill {
+                    id: systemStatsPill
                     visible: !root.isSecondary
-                    spacing: 12
 
                     // CPU Usage with mini progress
                     Row {
@@ -768,14 +822,10 @@ Scope {
                     }
                 }
 
-                Modules.Spacer {
+                // Quick Controls & Status Pill
+                Pill {
+                    id: quickControlsPill
                     visible: !root.isSecondary
-                }
-
-                // Audio/Display Group
-                RowLayout {
-                    visible: !root.isSecondary
-                    spacing: 12
 
                     // Brightness
                     Item {
@@ -786,7 +836,7 @@ Scope {
                             id: brightnessText
                             anchors.centerIn: parent
                             text: "\udb80\udce0  " + brightnessWidget.brightnessMain + "%"
-                            color: brightnessMouse.containsMouse ? Modules.Theme.base05 : Modules.Theme.base04
+                            color: brightnessMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
                             font {
                                 family: Modules.Theme.fontFamily
                                 pixelSize: Modules.Theme.fontSize
@@ -830,7 +880,7 @@ Scope {
                             id: volumeText
                             anchors.centerIn: parent
                             text: volumeWidget.muted ? "\ueee8" : "\uf028  " + volumeWidget.volume + "%"
-                            color: volumeMouse.containsMouse ? Modules.Theme.base05 : (volumeWidget.muted ? Modules.Theme.alertColor : Modules.Theme.base04)
+                            color: volumeMouse.containsMouse ? Modules.Theme.base0D : (volumeWidget.muted ? Modules.Theme.base08 : Modules.Theme.base04)
                             font {
                                 family: Modules.Theme.fontFamily
                                 pixelSize: Modules.Theme.fontSize
@@ -870,306 +920,358 @@ Scope {
                             onExited: musicHideTimer.restart()
                         }
                     }
-                }
 
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Weather Icon
-                Text {
-                    id: weatherIcon
-                    visible: !root.isSecondary
-                    text: "\uf0c2"
-                    color: weatherMouse.containsMouse ? Modules.Theme.base05 : Modules.Theme.base04
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    scale: weatherMouse.containsMouse ? 1.15 : 1.0
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-
-                    MouseArea {
-                        id: weatherMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            weatherHideTimer.stop();
-                            weatherPopupWindow.visible = true;
-                        }
-                        onExited: weatherHideTimer.restart()
-                    }
-                }
-
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Battery Icon
-                Text {
-                    id: batteryIcon
-                    visible: !root.isSecondary
-                    text: (batteryWidget.charging ? "\uf0e7" : (batteryWidget.percentage > 75 ? "\uf240" : (batteryWidget.percentage > 50 ? "\uf241" : (batteryWidget.percentage > 25 ? "\uf242" : (batteryWidget.percentage > 10 ? "\uf243" : "\uf244"))))) + "  " + batteryWidget.percentage + "%"
-                    color: batteryMouse.containsMouse ? Modules.Theme.base05 : (batteryWidget.percentage <= 20 && !batteryWidget.charging ? Modules.Theme.alertColor : Modules.Theme.base04)
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    scale: batteryMouse.containsMouse ? 1.15 : 1.0
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-
-                    MouseArea {
-                        id: batteryMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            batteryHideTimer.stop();
-                            batteryPopupWindow.visible = true;
-                        }
-                        onExited: batteryHideTimer.restart()
-                    }
-                }
-
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Bluetooth Icon
-                Text {
-                    id: bluetoothIcon
-                    visible: !root.isSecondary
-                    text: "\uf293"
-                    color: bluetoothMouse.containsMouse ? Modules.Theme.base05 : (bluetoothWidget.connected ? Modules.Theme.base0D : (bluetoothWidget.powered ? Modules.Theme.base04 : Modules.Theme.base03))
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    scale: bluetoothMouse.containsMouse ? 1.15 : 1.0
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-
-                    MouseArea {
-                        id: bluetoothMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            bluetoothHideTimer.stop();
-                            bluetoothPopupWindow.visible = true;
-                        }
-                        onExited: bluetoothHideTimer.restart()
-                    }
-                }
-
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Notification/DND Icon (merged: hover=notifications, click=toggle DND)
-                // Hidden on secondary screens
-                Text {
-                    id: notificationIcon
-                    visible: !root.isSecondary
-                    text: notificationServer.dndEnabled ? "\uf1f6" : "\uf0f3"
-                    color: notificationMouse.containsMouse ? Modules.Theme.base05 : (notificationServer.dndEnabled ? Modules.Theme.alertColor : (notificationServer.notificationHistory.length > 0 ? Modules.Theme.base0A : Modules.Theme.base04))
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    scale: notificationMouse.containsMouse ? 1.15 : 1.0
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-
-                    MouseArea {
-                        id: notificationMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            notificationHideTimer.stop();
-                            notificationPopupWindow.visible = true;
-                        }
-                        onExited: notificationHideTimer.restart()
-                        onClicked: notificationServer.dndEnabled = !notificationServer.dndEnabled
-                    }
-                }
-
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Wallpaper Icon
-                Text {
-                    id: wallpaperIcon
-                    visible: !root.isSecondary
-                    text: "\uf03e"
-                    color: wallpaperMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    scale: wallpaperMouse.containsMouse ? 1.15 : 1.0
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-
-                    MouseArea {
-                        id: wallpaperMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            wallpaperHideTimer.stop();
-                            wallpaperPopupWindow.visible = true;
-                        }
-                        onExited: wallpaperHideTimer.restart()
-                        onClicked: wallpaperPopupWindow.visible = !wallpaperPopupWindow.visible
-                    }
-                }
-
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Power Icon
-                Text {
-                    id: powerIcon
-                    visible: !root.isSecondary
-                    text: "\uf011"
-                    color: powerMouse.containsMouse ? Modules.Theme.alertColor : Modules.Theme.base04
-                    font {
-                        family: Modules.Theme.fontFamily
-                        pixelSize: Modules.Theme.fontSize
-                        bold: true
-                    }
-                    scale: powerMouse.containsMouse ? 1.15 : 1.0
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-
-                    MouseArea {
-                        id: powerMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            powerHideTimer.stop();
-                            powerMenuWindow.visible = true;
-                        }
-                        onExited: powerHideTimer.restart()
-                    }
-                }
-
-                Modules.Spacer {
-                    visible: !root.isSecondary
-                }
-
-                // Clock with calendar popup
-                // Hidden on secondary screens
-                Item {
-                    id: clockItem
-                    implicitWidth: clockText.implicitWidth
-                    implicitHeight: clockText.implicitHeight
-
+                    // Weather Icon
                     Text {
-                        id: clockText
-                        text: Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm:ss AP")
-                        color: Modules.Theme.base04
+                        id: weatherIcon
+                        text: "\uf0c2"
+                        color: weatherMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
                         font {
                             family: Modules.Theme.fontFamily
                             pixelSize: Modules.Theme.fontSize
                             bold: true
                         }
-                    }
-
-                    Timer {
-                        interval: 1000
-                        running: true
-                        repeat: true
-                        onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm:ss AP")
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onEntered: {
-                            calendarHideTimer.stop();
-                            calendarPopupWindow.visible = true;
+                        scale: weatherMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
                         }
-                        onExited: calendarHideTimer.restart()
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+
+                        Rectangle {
+                            id: weatherHoverBg
+                            z: -1
+                            anchors.centerIn: parent
+                            width: Math.max(26, Math.max(parent.width, parent.height) + 8)
+                            height: width
+                            radius: width / 2
+                            color: Modules.Theme.base0D
+                            opacity: weatherMouse.containsMouse ? 0.20 : 0
+
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 150
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: weatherMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                weatherHideTimer.stop();
+                                weatherPopupWindow.visible = true;
+                            }
+                            onExited: weatherHideTimer.restart()
+                        }
+                    }
+
+                    // Battery Icon
+                    Text {
+                        id: batteryIcon
+                        text: (batteryWidget.charging ? "\uf0e7" : (batteryWidget.percentage > 75 ? "\uf240" : (batteryWidget.percentage > 50 ? "\uf241" : (batteryWidget.percentage > 25 ? "\uf242" : (batteryWidget.percentage > 10 ? "\uf243" : "\uf244"))))) + "  " + batteryWidget.percentage + "%"
+                        color: batteryMouse.containsMouse ? Modules.Theme.base0D : (batteryWidget.percentage <= 20 && !batteryWidget.charging ? Modules.Theme.base08 : Modules.Theme.base04)
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        scale: batteryMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+
+                        MouseArea {
+                            id: batteryMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                batteryHideTimer.stop();
+                                batteryPopupWindow.visible = true;
+                            }
+                            onExited: batteryHideTimer.restart()
+                        }
+                    }
+
+                    // Bluetooth Icon
+                    Text {
+                        id: bluetoothIcon
+                        text: "\uf293"
+                        color: bluetoothMouse.containsMouse ? Modules.Theme.base0D : (bluetoothWidget.connected ? Modules.Theme.base0D : (bluetoothWidget.powered ? Modules.Theme.base04 : Modules.Theme.base03))
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        scale: bluetoothMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+
+                        Rectangle {
+                            id: bluetoothHoverBg
+                            z: -1
+                            anchors.centerIn: parent
+                            width: Math.max(26, Math.max(parent.width, parent.height) + 8)
+                            height: width
+                            radius: width / 2
+                            color: Modules.Theme.base0D
+                            opacity: bluetoothMouse.containsMouse ? 0.20 : 0
+
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 150
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: bluetoothMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                bluetoothHideTimer.stop();
+                                bluetoothPopupWindow.visible = true;
+                            }
+                            onExited: bluetoothHideTimer.restart()
+                        }
+                    }
+
+                    // Notification/DND Icon
+                    Text {
+                        id: notificationIcon
+                        text: notificationServer.dndEnabled ? "\uf1f6" : "\uf0f3"
+                        color: notificationMouse.containsMouse ? Modules.Theme.base0D : (notificationServer.dndEnabled ? Modules.Theme.base08 : (notificationServer.notificationHistory.length > 0 ? Modules.Theme.base0A : Modules.Theme.base04))
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        scale: notificationMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+
+                        Rectangle {
+                            id: notificationHoverBg
+                            z: -1
+                            anchors.centerIn: parent
+                            width: Math.max(26, Math.max(parent.width, parent.height) + 8)
+                            height: width
+                            radius: width / 2
+                            color: Modules.Theme.base0D
+                            opacity: notificationMouse.containsMouse ? 0.20 : 0
+
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 150
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: notificationMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                notificationHideTimer.stop();
+                                notificationPopupWindow.visible = true;
+                            }
+                            onExited: notificationHideTimer.restart()
+                            onClicked: notificationServer.dndEnabled = !notificationServer.dndEnabled
+                        }
+                    }
+
+                    // Wallpaper Icon
+                    Text {
+                        id: wallpaperIcon
+                        text: "\uf03e"
+                        color: wallpaperMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        scale: wallpaperMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+
+                        Rectangle {
+                            id: wallpaperHoverBg
+                            z: -1
+                            anchors.centerIn: parent
+                            width: Math.max(26, Math.max(parent.width, parent.height) + 8)
+                            height: width
+                            radius: width / 2
+                            color: Modules.Theme.base0D
+                            opacity: wallpaperMouse.containsMouse ? 0.20 : 0
+
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 150
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: wallpaperMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                wallpaperHideTimer.stop();
+                                wallpaperPopupWindow.visible = true;
+                            }
+                            onExited: wallpaperHideTimer.restart()
+                            onClicked: wallpaperPopupWindow.visible = !wallpaperPopupWindow.visible
+                        }
+                    }
+
+                    // Power Icon
+                    Text {
+                        id: powerIcon
+                        text: "\uf011"
+                        color: powerMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        scale: powerMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
+                        }
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+
+                        Rectangle {
+                            id: powerHoverBg
+                            z: -1
+                            anchors.centerIn: parent
+                            width: Math.max(26, Math.max(parent.width, parent.height) + 8)
+                            height: width
+                            radius: width / 2
+                            color: Modules.Theme.base0D
+                            opacity: powerMouse.containsMouse ? 0.20 : 0
+
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 150
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: powerMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                powerHideTimer.stop();
+                                powerMenuWindow.visible = true;
+                            }
+                            onExited: powerHideTimer.restart()
+                        }
                     }
                 }
 
-                Modules.Spacer {
-                    visible: !root.isSecondary && SystemTray.items.length > 0
-                }
-                
-                Modules.Tray {
+                // System Tray & Clock Pill
+                Pill {
+                    id: trayClockPill
                     visible: !root.isSecondary
-                    Layout.alignment: Qt.AlignVCenter
-                    parentWindow: root
+
+                    // Clock
+                    Item {
+                        id: clockItem
+                        implicitWidth: clockText.implicitWidth
+                        implicitHeight: clockText.implicitHeight
+
+                        Text {
+                            id: clockText
+                            text: Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm:ss AP")
+                            color: Modules.Theme.base04
+                            font {
+                                family: Modules.Theme.fontFamily
+                                pixelSize: Modules.Theme.fontSize
+                                bold: true
+                            }
+                        }
+
+                        Timer {
+                            interval: 1000
+                            running: true
+                            repeat: true
+                            onTriggered: clockText.text = Qt.formatDateTime(new Date(), "ddd MMM d  -  h:mm:ss AP")
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                calendarHideTimer.stop();
+                                calendarPopupWindow.visible = true;
+                            }
+                            onExited: calendarHideTimer.restart()
+                        }
+                    }
+
+                    // System Tray
+                    Modules.Tray {
+                        visible: SystemTray.items.length > 0
+                        Layout.alignment: Qt.AlignVCenter
+                        parentWindow: root
+                    }
                 }
             }
         }

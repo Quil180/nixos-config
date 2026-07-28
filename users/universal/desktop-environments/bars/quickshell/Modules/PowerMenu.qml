@@ -24,9 +24,9 @@ Rectangle {
 
     implicitWidth: 160
     implicitHeight: menuColumn.height + 24
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     
     HoverHandler {
@@ -63,7 +63,7 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 height: 32
-                color: itemMouse.containsMouse ? Theme.base01 : "transparent"
+                color: itemMouse.containsMouse ? Qt.rgba(Theme.base0D.r, Theme.base0D.g, Theme.base0D.b, 0.25) : "transparent"
                 radius: 4
                 
                 RowLayout {
@@ -74,7 +74,7 @@ Rectangle {
                     
                     Text {
                         text: modelData.icon
-                        color: modelData.action === "shutdown" ? Theme.alertColor : Theme.base03
+                        color: itemMouse.containsMouse ? Theme.base0D : (modelData.action === "shutdown" ? Theme.base08 : Theme.base03)
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize
@@ -83,7 +83,7 @@ Rectangle {
                     
                     Text {
                         text: modelData.label
-                        color: modelData.action === "shutdown" ? Theme.alertColor : Theme.base04
+                        color: itemMouse.containsMouse ? Theme.base0D : (modelData.action === "shutdown" ? Theme.base08 : Theme.base04)
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize

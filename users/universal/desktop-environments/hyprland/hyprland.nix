@@ -175,6 +175,16 @@
               opacity = "1.0 override 0.95 override";
             }
           ];
+          layer_rule = [
+            {
+              match = {
+                namespace = "quickshell-bar";
+              };
+              blur = true;
+              xray = 1;
+              ignore_alpha = 0.2;
+            }
+          ];
         };
         plugins = [
           # to add more plugins just use the following

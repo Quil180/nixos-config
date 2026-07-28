@@ -37,9 +37,9 @@ Rectangle {
 
     implicitWidth: 180
     implicitHeight: 80
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     
     HoverHandler {
@@ -59,7 +59,7 @@ Rectangle {
             
             Text {
                 text: popup.getWeatherIcon(popup.conditions)
-                color: Theme.base0A
+                color: Theme.base0D
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize + 8

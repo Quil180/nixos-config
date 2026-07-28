@@ -73,9 +73,9 @@ Rectangle {
 
     implicitWidth: 460
     implicitHeight: 380
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     clip: true
 
@@ -111,7 +111,7 @@ Rectangle {
                 width: 28
                 height: 28
                 radius: 4
-                color: randomHover.containsMouse ? Theme.base01 : "transparent"
+                color: randomHover.containsMouse ? Qt.rgba(Theme.base0D.r, Theme.base0D.g, Theme.base0D.b, 0.25) : "transparent"
 
                 Text {
                     anchors.centerIn: parent
@@ -141,9 +141,9 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             height: 30
-            color: Theme.base01
+            color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.3)
             radius: 6
-            border.color: searchInput.activeFocus ? Theme.base0D : "transparent"
+            border.color: searchInput.activeFocus ? Theme.base0D : Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
             border.width: 1
 
             RowLayout {
@@ -186,7 +186,7 @@ Rectangle {
                 Text {
                     visible: searchInput.text.length > 0
                     text: "\uf00d"
-                    color: clearMouse.containsMouse ? Theme.alertColor : Theme.base03
+                    color: clearMouse.containsMouse ? Theme.base0D : Theme.base03
                     font {
                         family: Theme.fontFamily
                         pixelSize: Theme.fontSize - 2
@@ -207,7 +207,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             height: 1
-            color: Theme.base01
+            color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
         }
 
         // Empty state / Loading
@@ -253,8 +253,8 @@ Rectangle {
                     anchors.fill: parent
                     anchors.margins: 4
                     radius: 6
-                    color: Theme.base01
-                    border.color: isCurrent ? Theme.base0D : (cardHover.containsMouse ? Theme.base0D : Theme.base02)
+                    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.6)
+                    border.color: isCurrent ? Theme.base0D : (cardHover.containsMouse ? Theme.base0D : Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.4))
                     border.width: isCurrent ? 2 : 1
                     clip: true
                     scale: cardHover.containsMouse ? 1.03 : 1.0

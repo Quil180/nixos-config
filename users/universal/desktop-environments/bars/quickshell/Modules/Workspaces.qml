@@ -2,54 +2,90 @@ import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 
-Repeater {
+Item {
     id: root
 
     property int workspaceCount: 9
     property string monitorName: ""
 
-    model: workspaceCount
+    implicitWidth: rowLayout.implicitWidth
+    implicitHeight: rowLayout.implicitHeight
+
+    property var monitor: Hyprland.monitors.values.find(m => m.name === root.monitorName)
+    property int offset: monitor && monitor.activeWorkspace ? Math.floor((monitor.activeWorkspace.id - 1) / 10) * 10 : 0
+    property int activeWorkspaceId: monitor && monitor.activeWorkspace ? monitor.activeWorkspace.id : 1
+    property int activeIndex: {
+        let idx = activeWorkspaceId - 1 - offset;
+        return (idx >= 0 && idx < workspaceCount) ? idx : 0;
+    }
 
     Rectangle {
-        property var monitor: Hyprland.monitors.values.find(m => m.name === root.monitorName)
-        property int offset: monitor && monitor.activeWorkspace ? Math.floor((monitor.activeWorkspace.id - 1) / 10) * 10 : 0
-        property var workspaceData: Hyprland.workspaces.values.find(workspace => workspace.id === (index + 1 + offset) && workspace.toplevels.values.length > 0) ?? null
-        property bool isFocused: monitor && monitor.activeWorkspace ? monitor.activeWorkspace.id === (index + 1 + offset) : false
-        property bool isOccupied: workspaceData !== null
+        id: activePill
+        z: 0
+        radius: height / 2
+        color: Theme.base0D
+        width: 22
+        height: 22
+        anchors.verticalCenter: parent.verticalCenter
 
-        Layout.preferredWidth: 20
-        Layout.preferredHeight: parent.height
-        color: "transparent"
+        property Item targetItem: repeater.itemAt(root.activeIndex)
+        x: targetItem ? targetItem.x + (targetItem.width - width) / 2 : root.activeIndex * (22 + rowLayout.spacing)
 
-        Text {
-            id: workspacesText
-            text: index + 1
-            anchors.centerIn: parent
-            color: parent.isFocused ? Theme.base0D : (parent.workspaceData ? Theme.base05 : Theme.base04)
-
-            font {
-                family: Theme.fontFamily
-                pixelSize: Theme.fontSize
-                bold: parent.isFocused || parent.workspaceData
+        Behavior on x {
+            NumberAnimation {
+                duration: 250
+                easing.type: Easing.OutExpo
             }
+        }
+    }
+
+    Row {
+        id: rowLayout
+        z: 1
+        anchors.fill: parent
+        spacing: 4
+
+        Repeater {
+            id: repeater
+            model: root.workspaceCount
 
             Rectangle {
-                width: 18
-                height: 1.5
-                radius: 1
-                visible: parent.parent.isFocused || parent.parent.isOccupied
-                color: parent.parent.isFocused ? Theme.base0D : Theme.base05
-                opacity: parent.parent.isFocused ? 1.0 : 0.7
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    bottom: parent.bottom
-                    bottomMargin: 2
-                }
-            }
+                id: delegate
+                property int wsId: index + 1 + root.offset
+                property var workspaceData: Hyprland.workspaces.values.find(w => w.id === wsId && w.toplevels.values.length > 0) ?? null
+                property bool isFocused: root.activeIndex === index
+                property bool isOccupied: workspaceData !== null
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: Hyprland.dispatch("workspace " + (index + 1 + parent.parent.offset))
+                width: 22
+                height: 22
+                color: "transparent"
+
+                Text {
+                    id: workspacesText
+                    text: index + 1
+                    anchors.centerIn: parent
+                    color: delegate.isFocused ? Theme.base00 : (wsMouse.containsMouse ? Theme.base0D : (delegate.isOccupied ? Theme.base05 : Theme.base04))
+
+                    font {
+                        family: Theme.fontFamily
+                        pixelSize: Theme.fontSize
+                        bold: delegate.isFocused || delegate.isOccupied
+                    }
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: wsMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Hyprland.dispatch("hl.dsp.focus({ workspace = " + delegate.wsId + " })")
+                }
             }
         }
     }

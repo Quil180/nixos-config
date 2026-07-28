@@ -19,9 +19,9 @@ Rectangle {
 
     implicitWidth: 280
     implicitHeight: 100
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     
     signal mouseEntered()
@@ -69,7 +69,7 @@ Rectangle {
             // Title
             Text {
                 text: popup.title
-                color: Theme.base04
+                color: Theme.base05
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize
@@ -101,7 +101,7 @@ Rectangle {
             // Previous
             Text {
                 text: "\uf048"
-                color: controlPrev.containsMouse ? Theme.base04 : Theme.base03
+                color: controlPrev.containsMouse ? Theme.base0D : Theme.base03
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize + 4
@@ -119,7 +119,7 @@ Rectangle {
             // Play/Pause
             Text {
                 text: popup.status === "Playing" ? "\uf04c" : "\uf04b"
-                color: controlPlay.containsMouse ? Theme.base04 : Theme.base03
+                color: controlPlay.containsMouse ? Theme.base0D : (popup.status === "Playing" ? Theme.base0D : Theme.base04)
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize + 8
@@ -137,7 +137,7 @@ Rectangle {
             // Next
             Text {
                 text: "\uf051"
-                color: controlNext.containsMouse ? Theme.base04 : Theme.base03
+                color: controlNext.containsMouse ? Theme.base0D : Theme.base03
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize + 4

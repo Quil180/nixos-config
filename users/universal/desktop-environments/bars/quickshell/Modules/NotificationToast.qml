@@ -13,9 +13,9 @@ Rectangle {
     
     implicitWidth: 350
     implicitHeight: contentColumn.height + 24
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     
     // Slide in animation
@@ -82,7 +82,7 @@ Rectangle {
             
             Text {
                 text: "\uf00d"
-                color: closeMouse.containsMouse ? Theme.alertColor : Theme.base02
+                color: closeMouse.containsMouse ? Theme.base0D : Theme.base02
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize - 2
@@ -141,7 +141,7 @@ Rectangle {
                 model: notification ? notification.actions : []
                 
                 Rectangle {
-                    color: actionMouse.containsMouse ? Theme.base02 : Theme.base01
+                    color: actionMouse.containsMouse ? Qt.rgba(Theme.base0D.r, Theme.base0D.g, Theme.base0D.b, 0.25) : Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.4)
                     radius: 4
                     implicitWidth: actionText.width + 16
                     implicitHeight: actionText.height + 8
@@ -150,7 +150,7 @@ Rectangle {
                         id: actionText
                         anchors.centerIn: parent
                         text: modelData.text || ""
-                        color: Theme.base04
+                        color: actionMouse.containsMouse ? Theme.base0D : Theme.base04
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize - 2

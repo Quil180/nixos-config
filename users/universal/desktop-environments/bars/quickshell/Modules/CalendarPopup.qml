@@ -52,9 +52,9 @@ Rectangle {
 
     implicitWidth: 240
     implicitHeight: 260
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     
     HoverHandler {
@@ -74,7 +74,7 @@ Rectangle {
             
             Text {
                 text: "\uf053"
-                color: prevMouse.containsMouse ? Theme.base04 : Theme.base03
+                color: prevMouse.containsMouse ? Theme.base0D : Theme.base03
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize
@@ -105,7 +105,7 @@ Rectangle {
             
             Text {
                 text: "\uf054"
-                color: nextMouse.containsMouse ? Theme.base04 : Theme.base03
+                color: nextMouse.containsMouse ? Theme.base0D : Theme.base03
                 font {
                     family: Theme.fontFamily
                     pixelSize: Theme.fontSize
@@ -153,6 +153,7 @@ Rectangle {
                 model: 42
                 
                 Rectangle {
+                    id: dayCell
                     width: (parent.width - (6 * parent.spacing)) / 7
                     height: (parent.height - (5 * parent.spacing)) / 6
                     radius: 4
@@ -168,17 +169,25 @@ Rectangle {
                                            popup.displayedMonth === popup.currentDate.getMonth() &&
                                            popup.displayedYear === popup.currentDate.getFullYear()
                     
-                    color: isToday ? Theme.base0D : "transparent"
+                    color: isToday ? Theme.base0D : (cellHover.containsMouse && dayNum > 0 ? Qt.rgba(Theme.base0D.r, Theme.base0D.g, Theme.base0D.b, 0.25) : "transparent")
                     
                     Text {
                         anchors.centerIn: parent
                         text: parent.dayNum > 0 ? parent.dayNum : ""
-                        color: parent.isToday ? Theme.base00 : Theme.base04
+                        color: parent.isToday ? Theme.base00 : (cellHover.containsMouse ? Theme.base0D : Theme.base04)
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize - 3
                             bold: parent.isToday
                         }
+                    }
+
+                    MouseArea {
+                        id: cellHover
+                        anchors.fill: parent
+                        hoverEnabled: parent.dayNum > 0
+                        enabled: parent.dayNum > 0
+                        onEntered: popup.mouseEntered()
                     }
                 }
             }

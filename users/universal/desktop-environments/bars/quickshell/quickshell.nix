@@ -78,12 +78,13 @@
                     if (palette.base0F) base0F = palette.base0F;
                 }
 
-                // Alert Colors
-                readonly property color alertColor: "#CD5C5C"
-                readonly property color successColor: "#7ec699"
-                readonly property color warningColor: "#e5c07b"
-                readonly property color blueColor: "#61afef"
-                readonly property color orangeColor: "#d19a66"
+                // Dynamic Accent & Alert Colors (Material-You / Caelestia aesthetic)
+                property alias accentColor: base0D
+                property alias alertColor: base08
+                property alias warningColor: base0A
+                property alias successColor: base0B
+                property alias blueColor: base0D
+                property alias orangeColor: base09
 
                 // Typography
                 readonly property string fontFamily: "Iosevka Nerd Font"
@@ -168,6 +169,7 @@
           "quickshell/Modules/Tray.qml".source = ./Modules/Tray.qml;
           "quickshell/Modules/WallpaperWidget.qml".source = ./Modules/WallpaperWidget.qml;
           "quickshell/Modules/WallpaperPicker.qml".source = ./Modules/WallpaperPicker.qml;
+          "quickshell/Modules/Pill.qml".source = ./Modules/Pill.qml;
         };
 
       };

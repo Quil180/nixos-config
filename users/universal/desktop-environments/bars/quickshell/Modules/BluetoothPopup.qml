@@ -30,9 +30,9 @@ Rectangle {
 
     implicitWidth: 250
     implicitHeight: Math.min(contentColumn.height + 24, 250)
-    color: Theme.base00
+    color: Qt.rgba(Theme.base01.r, Theme.base01.g, Theme.base01.b, 0.80)
     radius: 8
-    border.color: Theme.base01
+    border.color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
     border.width: 1
     clip: true
     
@@ -71,7 +71,7 @@ Rectangle {
                 width: 40
                 height: 20
                 radius: 10
-                color: popup.powered ? Theme.base0B : Theme.base01
+                color: popup.powered ? Theme.base0D : Theme.base01
                 
                 Rectangle {
                     width: 16
@@ -99,14 +99,14 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             height: 1
-            color: Theme.base01
+            color: Qt.rgba(Theme.base02.r, Theme.base02.g, Theme.base02.b, 0.5)
         }
 
         // Connection status
         Text {
             visible: popup.connected
             text: "\uf00c  " + popup.connectedDevice
-            color: Theme.base0B
+            color: Theme.base0D
             font {
                 family: Theme.fontFamily
                 pixelSize: Theme.fontSize - 2
@@ -130,7 +130,7 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 height: 32
-                color: deviceMouse.containsMouse ? Theme.base01 : "transparent"
+                color: deviceMouse.containsMouse ? Qt.rgba(Theme.base0D.r, Theme.base0D.g, Theme.base0D.b, 0.20) : "transparent"
                 radius: 4
                 
                 RowLayout {
@@ -140,7 +140,7 @@ Rectangle {
                     
                     Text {
                         text: "\uf025"
-                        color: Theme.base03
+                        color: deviceMouse.containsMouse ? Theme.base0D : Theme.base03
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize - 2
@@ -149,7 +149,7 @@ Rectangle {
                     
                     Text {
                         text: modelData.name
-                        color: (popup.connectedDevice === modelData.name) ? Theme.base04 : Theme.base03
+                        color: (popup.connectedDevice === modelData.name) ? Theme.base0D : (deviceMouse.containsMouse ? Theme.base05 : Theme.base03)
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize - 2
@@ -162,7 +162,7 @@ Rectangle {
                     Text {
                         visible: popup.connectedDevice === modelData.name
                         text: "\uf00c"
-                        color: Theme.base0B
+                        color: Theme.base0D
                         font {
                             family: Theme.fontFamily
                             pixelSize: Theme.fontSize - 2
