@@ -64,7 +64,7 @@
 
       # Performance-optimized power settings for 6900HS/6800S
       boot = {
-        kernelModules = [ ];
+        kernelModules = [ "cpuid" ];
         kernelParams = [
           "initcall_blacklist=acpi_cpufreq_init"
           "amd_pstate=active" # Active mode for best performance scaling
@@ -72,7 +72,23 @@
           "amdgpu.dcdebugmask=0x10" # Fix for DCN timeouts
           "resume_offset=533760"
           "snd_hda_intel.power_save=1" # Audio power saving
+          # Following are to try and optimize suspend
+          "pcie_aspm=force"
         ];
+        kernelPackages = pkgs.linuxPackages_latest;
+        resumeDevice = "/dev/mapper/root_vg-root";
+        loader = {
+          systemd-boot.enable = false;
+          efi = {
+            canTouchEfiVariables = true;
+          };
+          grub = {
+            enable = true;
+            configurationLimit = 5;
+            device = "nodev";
+            efiSupport = true;
+          };
+        };
       };
 
       # Ensuring that Hibernate and Suspend

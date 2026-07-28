@@ -1,31 +1,34 @@
-{ topConfig, lib, pkgs, ... }:
 {
-  flake.nixosModules.amd = 
-{ pkgs, ... }:
+  topConfig,
+  lib,
+  pkgs,
+  ...
+}:
 {
-  services = {
-    lact.enable = true;
-  };
+  flake.nixosModules.amd =
+    { pkgs, ... }:
+    {
+      services = {
+        lact.enable = true;
+      };
 
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-      extraPackages = with pkgs; [
-        libva-vdpau-driver
-        libvdpau-va-gl
+      hardware = {
+        graphics = {
+          enable = true;
+          enable32Bit = true;
+          extraPackages = with pkgs; [
+            libva-vdpau-driver
+            libvdpau-va-gl
+          ];
+        };
+        firmware = [
+          pkgs.linux-firmware
+        ];
+      };
+
+      # System packages for monitoring
+      environment.systemPackages = with pkgs; [
+        clinfo
       ];
     };
-    firmware = [
-      pkgs.linux-firmware
-    ];
-    amdgpu.overdrive.enable = true;
-  };
-
-  # System packages for monitoring
-  environment.systemPackages = with pkgs; [
-    clinfo
-  ];
-}
-;
 }

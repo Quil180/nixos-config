@@ -30,7 +30,6 @@
         # --- Hardware Support ---
         amd
         g14
-        # kernel-custom
 
         # --- Desktop Environments & Window Managers ---
         hyprland
@@ -71,29 +70,6 @@
         # openwebui
       ];
 
-      # Use the systemd-boot EFI boot loader.
-      boot = {
-        resumeDevice = "/dev/mapper/root_vg-root";
-        loader = {
-          systemd-boot.enable = false;
-          efi = {
-            canTouchEfiVariables = true;
-          };
-          grub = {
-            enable = true;
-            configurationLimit = 5;
-            device = "nodev";
-            efiSupport = true;
-          };
-        };
-        kernelModules = [
-        ];
-        # Using the latest kernel is recommended for Asus Rog Zephyrus G14 (GA402) support
-        # This provides the necessary drivers and patches for this hardware.
-        # To compile the specific linux-g14 kernel instead, check system/universal/g14/g14.nix
-        kernelPackages = pkgs.linuxPackages_latest;
-      };
-
       networking = {
         hostName = "snowflake";
         networkmanager = {
@@ -112,6 +88,7 @@
         };
       };
       # To ensure all firmware is loaded
+      hardware.enableAllFirmware = true;
       hardware.enableRedistributableFirmware = true;
 
       time.timeZone = "America/New_York";
@@ -242,6 +219,9 @@
 
         # For authentication
         gnome.gnome-keyring.enable = true;
+
+        # For firmware updating
+        fwupd.enable = true;
       };
 
       systemd.services.nvidia-powerd.enable = lib.mkForce false;
