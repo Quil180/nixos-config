@@ -32,7 +32,7 @@ Row {
                 width: 24
                 height: 24
                 radius: width / 2
-                color: Modules.Theme.base0D
+                color: Theme.base0D
                 opacity: trayItemDelegate.containsMouse ? 0.20 : 0
                 
                 Behavior on opacity {

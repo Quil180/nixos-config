@@ -169,6 +169,7 @@
           "quickshell/Modules/BarIcon.qml".source = ./Modules/BarIcon.qml;
           "quickshell/Modules/MiniProgress.qml".source = ./Modules/MiniProgress.qml;
           "quickshell/Modules/Tray.qml".source = ./Modules/Tray.qml;
+          "quickshell/Modules/TrayPopup.qml".source = ./Modules/TrayPopup.qml;
           "quickshell/Modules/WallpaperWidget.qml".source = ./Modules/WallpaperWidget.qml;
           "quickshell/Modules/WallpaperPicker.qml".source = ./Modules/WallpaperPicker.qml;
           "quickshell/Modules/Pill.qml".source = ./Modules/Pill.qml;

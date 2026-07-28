@@ -30,6 +30,7 @@ BarIcon 1.0 BarIcon.qml
 MiniProgress 1.0 MiniProgress.qml
 AppLauncher 1.0 AppLauncher.qml
 Tray 1.0 Tray.qml
+TrayPopup 1.0 TrayPopup.qml
 WallpaperWidget 1.0 WallpaperWidget.qml
 WallpaperPicker 1.0 WallpaperPicker.qml
 Pill 1.0 Pill.qml

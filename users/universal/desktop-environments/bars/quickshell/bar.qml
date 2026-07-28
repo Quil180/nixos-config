@@ -609,6 +609,46 @@ Scope {
                 onTriggered: wallpaperPopupWindow.visible = false
             }
 
+            // Timer for tray popup
+            Timer {
+                id: trayHideTimer
+                interval: 500
+                onTriggered: trayPopupWindow.visible = false
+            }
+
+            // Tray popup window
+            PopupWindow {
+                id: trayPopupWindow
+                visible: false
+                implicitWidth: trayPopup.implicitWidth
+                implicitHeight: trayPopup.implicitHeight
+                anchor {
+                    item: trayIcon
+                    edges: Edges.Bottom
+                    gravity: Edges.Bottom
+                }
+                color: "transparent"
+
+                Modules.TrayPopup {
+                    id: trayPopup
+                    parentWindow: root
+
+                    transformOrigin: Item.Top
+                    opacity: trayPopupWindow.visible ? 1 : 0
+                    scale: trayPopupWindow.visible ? 1 : 0.8
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: 200; easing.type: Easing.OutBack }
+                    }
+                    Behavior on scale {
+                        NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1.5 }
+                    }
+
+                    onMouseEntered: trayHideTimer.stop()
+                    onMouseExited: trayHideTimer.restart()
+                }
+            }
+
             // Wallpaper picker popup window
             PopupWindow {
                 id: wallpaperPopupWindow
@@ -1171,6 +1211,33 @@ Scope {
                         }
                     }
 
+                    // Tray Icon
+                    Text {
+                        id: trayIcon
+                        text: "\uf03a"
+                        color: trayIconMouse.containsMouse ? Modules.Theme.base0D : Modules.Theme.base04
+                        font {
+                            family: Modules.Theme.fontFamily
+                            pixelSize: Modules.Theme.fontSize
+                            bold: true
+                        }
+                        scale: trayIconMouse.containsMouse ? 1.15 : 1.0
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                        Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutQuad } }
+
+                        MouseArea {
+                            id: trayIconMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onEntered: {
+                                trayHideTimer.stop();
+                                trayPopupWindow.visible = true;
+                            }
+                            onExited: trayHideTimer.restart()
+                        }
+                    }
+
                     // Power Icon
                     Text {
                         id: powerIcon
@@ -1264,13 +1331,6 @@ Scope {
                             }
                             onExited: calendarHideTimer.restart()
                         }
-                    }
-
-                    // System Tray
-                    Modules.Tray {
-                        visible: SystemTray.items.length > 0
-                        Layout.alignment: Qt.AlignVCenter
-                        parentWindow: root
                     }
                 }
             }
