@@ -30,10 +30,10 @@
         office
         cpp
         verilog
-        antigravity
+        # antigravity
         stylix
         discord
-        flatpak
+        # flatpak
       ];
 
       nixpkgs.config = {
@@ -62,8 +62,6 @@
           pavucontrol # sound control GUI
           wl-clipboard # clipboard
           zoxide # better cd
-
-          gemini-cli # temporarily putting here for the sake of not needing nix-shell command
         ];
       };
 

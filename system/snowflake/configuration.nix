@@ -20,7 +20,7 @@
         snowflake_hardware
         disko
         # simple_disko
-        determinate
+        # determinate
         secrets
         persist
         security
@@ -49,7 +49,7 @@
         # --- Virtualization & Containers ---
         # virtualisation
         # docker
-        flatpak
+        # flatpak
 
         # --- VPNs & Networking ---
         hamachi
