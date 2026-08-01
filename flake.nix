@@ -148,7 +148,6 @@
                 inputs.stylix.homeModules.stylix
                 inputs.hyprland.homeManagerModules.default
                 inputs.nixcord.homeModules.nixcord
-                "${inputs.impermanence}/home-manager.nix"
                 inputs.nix-flatpak.homeManagerModules.nix-flatpak
               ];
             }

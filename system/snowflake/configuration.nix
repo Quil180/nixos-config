@@ -119,20 +119,11 @@
 
       age = {
         identityPaths = lib.mkForce [
-          "/persist/system/etc/ssh/ssh_host_ed25519_key"
-          "/persist/system/etc/ssh/ssh_host_rsa_key"
+          "/etc/ssh/ssh_host_ed25519_key"
+          "/etc/ssh/ssh_host_rsa_key"
         ];
         secrets = {
-          snowflake = {
-            file = ../../secrets/snowflake.age;
-            owner = username;
-          };
-          luks.file = ../../secrets/luks.age;
           quil_password.file = ../../secrets/quil_password.age;
-          github_token = {
-            file = ../../secrets/github_token.age;
-            owner = username;
-          };
           git_identity = {
             file = ../../secrets/git_identity.age;
             owner = username;

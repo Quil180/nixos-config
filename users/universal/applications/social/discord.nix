@@ -127,7 +127,7 @@
         experiments.enable = true;
         fakeNitro.enable = true;
         favoriteEmojiFirst.enable = true;
-        favoriteGifSearch.enable = true;
+        # favoriteGifSearch.enable = true;
         fixImagesQuality.enable = true;
         fixSpotifyEmbeds.enable = true;
         fixYoutubeEmbeds.enable = true;

@@ -34,7 +34,7 @@ in
       updh = "home-manager switch --flake ${dotfiles} -b backup";
       updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
       upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
-      updb = "source ~/.zshrc";
+      updb = "source ~/.config/zsh/.zshrc";
       upda = "updf && upds && updh && updb";
       # clean nix store
       clean = "nix-store --gc";
