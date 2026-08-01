@@ -97,7 +97,7 @@ fresh_install() {
     # Step 1: Partition and format disks with disko
     log_info "Step 1/4: Partitioning disks with disko..."
     sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- \
-        --mode disko "$disko_config"
+        --mode disko --flake "${SCRIPT_DIR}#${system_choice}"
     log_success "Disk partitioning complete!"
 
     # --- INJECT STORAGE BYPASS HERE ---
