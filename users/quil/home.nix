@@ -14,7 +14,7 @@
     }:
     {
       imports = with topConfig.flake.homeModules; [
-        persist
+        # persist
         hyprland
         bash
         chromium
