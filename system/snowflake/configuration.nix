@@ -22,7 +22,7 @@
         # simple_disko
         # determinate
         secrets
-        persist
+        # persist
         security
         # proxmox_vm
         # server_base
