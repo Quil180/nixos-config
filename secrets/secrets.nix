@@ -23,4 +23,5 @@ in
 {
   "quil_password.age".publicKeys = allKeys; # Common user password
   "git_identity.age".publicKeys = allKeys;
+  "snowflake.age".publicKeys = allKeys;
 }

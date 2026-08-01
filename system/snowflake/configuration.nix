@@ -128,6 +128,11 @@
             file = ../../secrets/git_identity.age;
             owner = username;
           };
+          snowflake = {
+            file = ../../secrets/snowflake.age;
+            owner = "${username}";
+            mode = "600";
+          };
         };
       };
 
