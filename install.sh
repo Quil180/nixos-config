@@ -31,10 +31,10 @@ trap 'log_error "Script failed at line $LINENO. Exit code: $?"' ERR
 DEFAULT_SYSTEM="snowflake"
 DEFAULT_USER="quil"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# NOTE: this must be writable by the *unprivileged* user before /mnt is even
-# mounted (disko hasn't run yet during network_setup/flake_sanity_check), so
-# it lives on the live ISO's tmpfs, not under /mnt.
-CHECKPOINT_FILE="/tmp/.nixos_install_checkpoint"
+# NOTE: must survive the storage-bypass step, which bind-mounts /mnt/tmp onto
+# /tmp (root-owned) partway through the run — so this can't live under /tmp
+# or /mnt. $HOME is untouched by that bind-mount.
+CHECKPOINT_FILE="${HOME}/.nixos_install_checkpoint"
 
 # ---------------------------------------------------------------------------
 # Checkpointing helpers
