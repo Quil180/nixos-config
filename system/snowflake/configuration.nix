@@ -47,7 +47,7 @@
         # monitoring
 
         # --- Virtualization & Containers ---
-        # virtualisation
+        virtualisation
         # docker
         # flatpak
 
