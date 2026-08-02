@@ -148,10 +148,14 @@ flake_sanity_check() {
     fi
 
     log_info "Validating flake evaluates cleanly for '${system_choice}'..."
-    if ! nix --experimental-features "nix-command flakes" eval \
-        "${SCRIPT_DIR}#nixosConfigurations.${system_choice}.config.system.build.toplevel.drvPath" \
-        > /dev/null 2>&1; then
+    local eval_output
+    if ! eval_output=$(nix --experimental-features "nix-command flakes" eval \
+        "${SCRIPT_DIR}#nixosConfigurations.${system_choice}.config.system.build.toplevel.drvPath" 2>&1); then
         log_error "Flake failed to evaluate for '${system_choice}'. Fix errors before wiping disks."
+        echo ""
+        echo "----- nix eval output -----"
+        echo "$eval_output"
+        echo "----------------------------"
         exit 1
     fi
     log_success "Flake evaluates cleanly."
