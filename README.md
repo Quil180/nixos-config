@@ -1,75 +1,125 @@
-# NixOS Configuration (Flake-based)
+# ❄️ Quil180's NixOS Configuration
 
-## Introduction
+> A highly modular, flake-based NixOS configuration leveraging a **dendritic pattern** for scalable, reproducible system and user management across a fleet of machines.
 
-This repository contains a modular, flake-based NixOS configuration designed for a primary workstation (laptop) and multiple specialized server nodes. It leverages modern Nix ecosystem tools for reproducible, declarative, and secure system management.
+This repository manages my primary workstation (`snowflake`) and a homelab fleet of Proxmox VMs. It utilizes modern Nix ecosystem tools to ensure a fully declarative, secure, and ephemeral environment.
 
-## Table of Contents
+---
 
-- [Systems](#systems)
-- [Key Technologies](#key-technologies)
-- [Installation](#installation)
-- [Maintenance](#maintenance)
-- [Repository Structure](#repository-structure)
-- [To-Do](#to-do)
+## 🖥️ Systems
 
-## Systems
+The flake defines multiple NixOS configurations tailored to their specific hardware and roles:
 
-This flake defines multiple NixOS configurations tailored for different hardware and roles:
+| Hostname | Role | Key Features |
+| :--- | :--- | :--- |
+| **`snowflake`** | Primary Workstation | Asus Zephyrus G14 (GA402RK) laptop, Hyprland (Wayland), AMD GPU optimizations, `nixos-hardware` integration, and ephemeral root via **Impermanence**. |
+| **`baguette`** | Server Node | Headless Proxmox VM. Secure SSH, Node Exporter monitoring, and service-specific secrets. |
+| **`biscotti`** | Server Node | Headless Proxmox VM. |
+| **`croissant`** | Server Node | Headless Proxmox VM. |
+| **`crust`** | Server Node | Headless Proxmox VM. |
+| **`macaron`** | Server Node | Headless Proxmox VM. |
+| **`muffin`** | Server Node | Headless Proxmox VM. |
+| **`pancake`** | Server Node | Headless Proxmox VM. |
+| **`scone`** | Server Node | Headless Proxmox VM. |
 
-- **`snowflake`**: Primary workstation (Asus Zephyrus G14 GA402RK). 
-  - Features: Hyprland (Wayland), G14-specific kernel/hardware optimizations, AMD GPU support, and Impermanence (ephemeral root).
-- **Servers**: Multiple specialized Proxmox VMs (`baguette`, `biscotti`, `croissant`, `crust`, `macaron`, `muffin`, `pancake`, `scone`).
-  - Common features: Headless operation, secure SSH, node-exporter for monitoring, and service-specific secrets.
+---
 
-## Key Technologies
+## 🛠️ Key Technologies & Stack
 
-- **[Nix Flakes](https://nixos.wiki/wiki/Flakes)**: For reproducible builds and precise dependency management.
-- **[Home Manager](https://github.com/nix-community/home-manager)**: Manages user-specific environments and dotfiles.
-- **[Agenix](https://github.com/ryantm/agenix)**: Age-encrypted secrets managed via Nix (e.g., passwords, API tokens).
-- **[Disko](https://github.com/nix-community/disko)**: Declarative disk partitioning and formatting.
-- **[Stylix](https://github.com/danth/stylix)**: System-wide uniform theming (colors, fonts, wallpapers).
-- **[Hyprland](https://hyprland.org/)**: A dynamic tiling Wayland compositor that doesn't sacrifice on appearance.
-- **[Impermanence](https://github.com/nix-community/impermanence)**: For a clean, ephemeral root filesystem that resets on every boot.
+This configuration relies on a robust, modern Nix ecosystem:
 
-## Installation
+### Core Framework
+- **[Nix Flakes](https://nixos.wiki/wiki/Flakes)** & **[Flake Parts](https://github.com/hercules-ci/flake-parts)**: Precise dependency management and structured flake outputs.
+- **[Import-Tree](https://github.com/vic/import-tree)**: Enables the "dendritic pattern" for highly modular, automated NixOS and Home Manager module loading.
+- **[Disko](https://github.com/nix-community/disko)**: Declarative, reproducible disk partitioning and formatting.
+- **[Impermanence](https://github.com/nix-community/impermanence)**: Maintains a clean, ephemeral root filesystem that resets on every boot, persisting only explicitly declared state.
 
-The included `install.sh` script provides a comprehensive installation menu. It handles disk partitioning (via Disko), system installation, and initial home-manager setup.
+### User Environment & Theming
+- **[Home Manager](https://github.com/nix-community/home-manager)**: Declarative dotfiles, shell configurations, and user environments.
+- **[Stylix](https://github.com/danth/stylix)**: System-wide uniform theming (colorschemes, fonts, and wallpapers).
+- **[Hyprland](https://github.com/hyprwm/Hyprland)**: Dynamic tiling Wayland compositor, configured with plugins like `split-monitor-workspaces` and `rose-pine-hyprcursor`.
+- **[Quickshell](https://git.outfoxxed.me/outfoxxed/quickshell)** & **[NixCord](https://github.com/kaylorben/nixcord)**: Custom desktop tools and UI elements.
+- **[Nix Flatpak](https://github.com/gmodena/nix-flatpak)**: Declarative Flatpak application management.
 
-To start the installation from a NixOS ISO:
+### Security & Development
+- **[Agenix](https://github.com/ryantm/agenix)**: Age-encrypted secrets managed via Nix (passwords, API tokens, SSH keys).
+- **[Rust Overlay](https://github.com/oxalica/rust-overlay)**: Development toolchains.
+- **[Jovian NixOS](https://github.com/Jovian-Experiments/Jovian-NixOS)** & **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**: Specialized hardware/gaming tweaks and local AI/LLM integrations.
 
-```bash
-curl -LJ0 https://raw.githubusercontent.com/Quil180/nixos-config/refs/heads/install.sh > install.sh
-chmod +x install.sh
-./install.sh
+---
+
+## 📂 Repository Structure
+
+```text
+.
+├── flake.nix              # Flake entry point (managed via flake-parts & import-tree)
+├── flake.lock             # Pinned dependency lockfile
+├── install.sh             # Interactive installation and maintenance script
+├── secrets/               # Agenix encrypted secrets and `secrets.nix` definitions
+├── system/                # NixOS system configurations
+│   ├── snowflake/         # Primary workstation (G14 laptop)
+│   ├── servers/           # Server node configurations (Proxmox VMs)
+│   └── universal/         # Shared system-wide modules (hardware, services)
+├── users/                 # Home Manager user configurations
+│   ├── quil/              # Primary user profile
+│   └── universal/         # Shared user-level modules (applications, ricing)
+├── shells/verilog/        # Specialized development shells
+└── wallpapers/            # Git submodule for system-wide wallpapers
 ```
 
-Select **Option 1 (Fresh Install)** and follow the prompts to choose your system and user.
+---
 
-## Maintenance
+## 🚀 Installation & Maintenance
 
-The `install.sh` script also serves as a management utility for post-installation tasks:
+This repository includes a robust, interactive CLI script (`install.sh`) designed to handle fresh installations from a live ISO, post-boot setups, and daily maintenance. 
 
-- **Rebuild System**: `./install.sh system` (runs `nixos-rebuild switch`)
-- **Rebuild Home**: `./install.sh home` (runs `home-manager switch`)
-- **Update Flake**: `./install.sh update` (runs `nix flake update`)
+The script features resumable checkpoints, flake validation, network checks, and safeguards against disk-wiping accidents.
 
-## Repository Structure
+### Running the Manager
+```bash
+./install.sh
+```
+This will launch an interactive menu, or you can pass commands directly:
 
-- `flake.nix`: Entry point for the entire configuration.
-- `install.sh`: Installation and maintenance script.
-- `secrets/`: Age-encrypted secrets and `secrets.nix` definitions.
-- `system/`: NixOS system configurations.
-  - `snowflake/`: Specific configuration for the G14 laptop.
-  - `servers/`: Specific configurations for server nodes.
-  - `universal/`: Shared system-wide modules (GUI, services, hardware).
-- `users/`: Home-manager user configurations.
-  - `quil/`: Primary user profile.
-  - `universal/`: Shared user-level modules (applications, ricing).
-- `wallpapers/`: A collection of system-wide wallpapers managed by Stylix.
+| Command | Alias | Description |
+| :--- | :--- | :--- |
+| `install` | `fresh` | Performs a fresh install from a Live ISO. Handles networking, validates the flake, wipes/partitions disks via Disko, bypasses RAM limits via overlay, installs NixOS, and bootstraps Home Manager. |
+| `post` | `setup` | Post-installation setup. Initializes submodules and runs Home Manager after the first boot. |
+| `system` | `rebuild` | Rebuilds and switches the NixOS system configuration (`sudo nixos-rebuild switch`). |
+| `home` | | Rebuilds and switches Home Manager configurations. |
+| `update` | | Updates all flake inputs and regenerates `flake.lock`. |
+| `reset` | | Clears the installation checkpoint file (useful to restart a failed `install` sequence). |
 
-## To-Do
+---
 
-- [ ] Refine Impermanence setup for server nodes.
-- [ ] Refine Impermanence setup for Home-Manager.
-- [ ] Automate backup strategy for persistent data.
+## 🔐 Secrets Management (Agenix)
+
+Secrets are encrypted using **Agenix** and stored in the `secrets/` directory. 
+
+> ⚠️ **Note for Fresh Installs:** 
+> Because `agenix` relies on the host's SSH keys to decrypt secrets, a freshly installed machine will have a brand new host key. The `install.sh` script will pause and remind you to extract the new public key and run `agenix rekey` from your development machine (or after first boot) before secrets will decrypt successfully.
+
+### Rekeying Secrets
+After changing a secret or adding a new host:
+```bash
+agenix -e secrets/<secret_name>.age
+# or
+agenix rekey
+```
+
+---
+
+## 🔄 Updating the System
+
+To pull the latest changes and update system/user packages:
+
+1. **Update Flake Inputs:**
+   ```bash
+   ./install.sh update
+   # or: nix flake update --flake ~/.dotfiles
+   ```
+2. **Rebuild System & Home:**
+   ```bash
+   ./install.sh system
+   ./install.sh home
+   ```
