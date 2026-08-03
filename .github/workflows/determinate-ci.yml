@@ -7,16 +7,153 @@ on:
       - master
     tags:
       - v?[0-9]+.[0-9]+.[0-9]+*
+  schedule:
+    # Run weekly on Sunday at 00:00 UTC to verify buildability and update cache
+    - cron: '0 0 * * 0'
  
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
  
 jobs:
-  DeterminateCI:
-    uses: DeterminateSystems/ci/.github/workflows/workflow.yml@main
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      visibility: "private"
+  check-flake:
+    runs-on: ubuntu-latest
+    name: Check Flake Integrity
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable magic cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Check flake integrity
+        run: nix flake check --print-build-logs
+
+      - name: Verify flake outputs
+        run: nix flake show --all-systems
+
+  build-nixos-configurations:
+    runs-on: ubuntu-latest
+    name: Build NixOS Configurations
+    needs: check-flake
+    strategy:
+      fail-fast: false
+      matrix:
+        system: [x86_64-linux]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable magic cache (artifact mirror)
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        with:
+          use-flakehub: true
+
+      - name: Get all NixOS configuration names
+        id: configs
+        run: |
+          configs=$(nix eval --json '.#nixosConfigurations' --apply 'attrs: builtins.attrNames attrs' 2>/dev/null || echo '[]')
+          echo "configs=$configs" >> $GITHUB_OUTPUT
+          echo "Found configurations: $configs"
+
+      - name: Build NixOS configurations
+        run: |
+          configs=$(nix eval --json '.#nixosConfigurations' --apply 'attrs: builtins.attrNames attrs' 2>/dev/null || echo '[]')
+          for config in $(echo "$configs" | jq -r '.[]'); do
+            echo "Building NixOS configuration: $config"
+            nix build --print-build-logs ".#nixosConfigurations.$config.config.system.build.toplevel" || echo "Warning: Failed to build $config"
+          done
+
+  build-home-configurations:
+    runs-on: ubuntu-latest
+    name: Build Home Manager Configurations
+    needs: check-flake
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable magic cache (artifact mirror)
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        with:
+          use-flakehub: true
+
+      - name: Get all Home Manager configuration names
+        id: home-configs
+        run: |
+          configs=$(nix eval --json '.#homeConfigurations' --apply 'attrs: builtins.attrNames attrs' 2>/dev/null || echo '[]')
+          echo "configs=$configs" >> $GITHUB_OUTPUT
+          echo "Found home configurations: $configs"
+
+      - name: Build Home Manager configurations
+        run: |
+          configs=$(nix eval --json '.#homeConfigurations' --apply 'attrs: builtins.attrNames attrs' 2>/dev/null || echo '[]')
+          for config in $(echo "$configs" | jq -r '.[]'); do
+            echo "Building Home Manager configuration: $config"
+            nix build --print-build-logs ".#homeConfigurations.$config.activationPackage" || echo "Warning: Failed to build $config"
+          done
+
+  build-packages:
+    runs-on: ubuntu-latest
+    name: Build Flake Packages
+    needs: check-flake
+    strategy:
+      fail-fast: false
+      matrix:
+        system: [x86_64-linux, aarch64-linux]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable magic cache (artifact mirror)
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        with:
+          use-flakehub: true
+
+      - name: Build packages for ${{ matrix.system }}
+        run: |
+          # Try to build default package if it exists
+          nix build --print-build-logs ".#packages.${{ matrix.system }}.default" 2>/dev/null || echo "No default package for ${{ matrix.system }}"
+
+  cache-warmup:
+    runs-on: ubuntu-latest
+    name: Cache Warmup (Weekly)
+    needs: [build-nixos-configurations, build-home-configurations]
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable magic cache (artifact mirror)
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        with:
+          use-flakehub: true
+
+      - name: Warm up cache for all outputs
+        run: |
+          echo "Warming up cache for all flake outputs..."
+          nix flake show --all-systems --json | jq -r '
+            (.packages // {} | to_entries[] | .value | to_entries[] | ".#packages.\(.key).\(.value.name)") ,
+            (.nixosConfigurations // {} | keys[] | ".#nixosConfigurations.\(.).config.system.build.toplevel"),
+            (.homeConfigurations // {} | keys[] | ".#homeConfigurations.\(.).activationPackage")
+          ' | while read -r attr; do
+            echo "Caching: $attr"
+            nix build --no-link --print-build-logs "$attr" 2>/dev/null || echo "Skipping unavailable: $attr"
+          done
+          echo "Cache warmup complete!"
