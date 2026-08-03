@@ -140,21 +140,24 @@
       users = {
         defaultUserShell = pkgs.zsh;
         mutableUsers = true;
-        users.${username} = {
-          isNormalUser = true;
-          password = "1234";
-          # hashedPasswordFile = config.age.secrets.quil_password.path;
-          extraGroups = [
-            "networkmanager"
-            "wheel"
-            "storage"
-            "video"
-            "kvm"
-            "docker"
-          ];
-          openssh.authorizedKeys.keys = [
-            (builtins.readFile ../keys/id_snowflake.pub)
-          ];
+        users = {
+          root.initialPassword = "1234";
+          ${username} = {
+            isNormalUser = true;
+            password = "1234";
+            # hashedPasswordFile = config.age.secrets.quil_password.path;
+            extraGroups = [
+              "networkmanager"
+              "wheel"
+              "storage"
+              "video"
+              "kvm"
+              "docker"
+            ];
+            openssh.authorizedKeys.keys = [
+              (builtins.readFile ../keys/id_snowflake.pub)
+            ];
+          };
         };
       };
 
