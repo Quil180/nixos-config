@@ -66,7 +66,7 @@
         # --- AI Services ---
         # hermes
         # ollama
-        # llamacpp
+        llamacpp
         # openwebui
       ];
 
