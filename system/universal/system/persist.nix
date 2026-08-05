@@ -33,7 +33,6 @@
           "/var/lib/ollama"
           "/var/lib/private"
           "/var/lib/llama-cpp"
-          # "/var/lib/private"
           {
             directory = "/var/lib/colord";
             user = "colord";

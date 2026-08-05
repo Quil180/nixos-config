@@ -47,18 +47,18 @@
         # monitoring
 
         # --- Virtualization & Containers ---
-        virtualisation
+        # virtualisation
         # docker
         # flatpak
 
         # --- VPNs & Networking ---
-        hamachi
+        # hamachi
         # tailscale
         # zerotier
 
         # --- Applications & Gaming ---
         games
-        winboat
+        # winboat
         # kiwix
         # teamviewer
         # vncviewer
@@ -104,6 +104,7 @@
         sops
         ranger
         wget
+        usbutils
         zsh
         inputs.agenix.packages.${system}.default
       ];
@@ -123,29 +124,20 @@
           "/etc/ssh/ssh_host_rsa_key"
         ];
         secrets = {
+          root_password.file = ../../secrets/root_password.age;
           quil_password.file = ../../secrets/quil_password.age;
-          git_identity = {
-            file = ../../secrets/git_identity.age;
-            owner = username;
-          };
-          snowflake = {
-            file = ../../secrets/snowflake.age;
-            owner = "${username}";
-            mode = "600";
-          };
         };
       };
 
       # default user settings regardless of host/user
       users = {
         defaultUserShell = pkgs.zsh;
-        mutableUsers = true;
         users = {
-          root.initialPassword = "1234";
+          root.hashedPasswordFile = config.age.secrets.root_password.path;
           ${username} = {
             isNormalUser = true;
-            password = "1234";
-            # hashedPasswordFile = config.age.secrets.quil_password.path;
+            # password = "1234";
+            hashedPasswordFile = config.age.secrets.quil_password.path;
             extraGroups = [
               "networkmanager"
               "wheel"
@@ -160,6 +152,8 @@
           };
         };
       };
+      # Fixing race condition with agenix + persistance
+      systemd.sysusers.enable = false;
 
       system = {
         stateVersion = "26.05"; # KEEP THIS THE SAME

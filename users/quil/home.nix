@@ -10,6 +10,7 @@
       pkgs,
       username,
       inputs,
+      config,
       ...
     }:
     {
@@ -44,6 +45,21 @@
         ];
       };
 
+      age = {
+        identityPaths = [
+          "/home/${username}/.ssh/id_ed25519"
+        ];
+        secrets = {
+          git_identity = {
+            file = ../../secrets/git_identity.age;
+          };
+          snowflake = {
+            file = ../../secrets/snowflake.age;
+            mode = "600";
+          };
+        };
+      };
+
       home = {
         username = "${username}";
         homeDirectory = "/home/${username}";
@@ -54,7 +70,7 @@
           BROWSER = "firefox";
         };
         packages = with pkgs; [
-          age # secrets management
+          inputs.agenix.packages.${stdenv.hostPlatform.system}.default # secrets management
           brightnessctl # brightness control
           foot # terminal emulator
           mpv # terminal video player
@@ -62,6 +78,8 @@
           pavucontrol # sound control GUI
           wl-clipboard # clipboard
           zoxide # better cd
+
+          pi-coding-agent # pi coding agent for coding or something
         ];
       };
 
@@ -70,10 +88,11 @@
         enableDefaultConfig = false;
         settings = {
           "*" = {
-            identityFile = "/run/agenix/snowflake";
+            identityFile = config.age.secrets.snowflake.path;
           };
         };
       };
+
       programs.home-manager.enable = true;
     };
 }

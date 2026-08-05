@@ -23,7 +23,7 @@
                 hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP --all")
                 hl.exec_cmd("hyprctl setcursor rose-pine-hyprcursor 24")
                 hl.exec_cmd("quickshell -p ~/.config/quickshell/bar.qml")
-                hl.exec_cmd("rog-control-center")
+                hl.exec_cmd("asusctl battery limit 80")
                 hl.exec_cmd("[workspace 1 silent] discord --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland")
                 hl.exec_cmd("[workspace 2 silent] firefox --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland")
               end'')

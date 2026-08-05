@@ -18,43 +18,42 @@
         # ROCm build targeted specifically for the G14's RX 6800S GPU
         package = pkgs.llama-cpp-rocm;
         settings = {
-          hf-repo = "unsloth/Qwen3.6-35B-A3B-MTP-GGUF:Q4_K_M";
+          hf-repo = "unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_M";
 
           # Qwen sampling recommendations
           temp = 0.6;
           top-p = 0.95;
-          top-k = 0; # 20 recommended but gpu doesnt support
-          min-p = 0.0;
+          top-k = 20; # 20 recommended but gpu doesnt support
+          min-p = 0.05;
+          presence-penalty = 0.0;
+          repeat-penalty = 1.0;
 
           # Speculative Decoding (MTP)
           spec-type = "draft-mtp";
-          spec-draft-n-max = 2;
+          spec-draft-n-max = 3;
 
           # Server settings
-          port = 8081;
-          timeout = 600;
+          port = 8080;
+          timeout = 300;
 
           # --- 1. Context Window & KV Cache Optimizations ---
-          ctx-size = 32768; # 8192 or 32768
-          image-min-tokens = 1024; # Required for image recognition
+          ctx-size = 192640; # 8192 or 32768 or 192640
           cache-type-k = "q8_0"; # Quantizes KV cache to save VRAM
           cache-type-v = "q8_0"; # Essential to keep large contexts off your 8GB VRAM limit
 
           # --- 2. GPU Offloading & Speed ---
-          n-gpu-layers = -1; # Forces maximum possible layers to the RX 6800S
+          fit = "on";
           parallel = 1;
           batch-size = 2048; # Speeds up prompt processing (prefill)
           ubatch-size = 2048; # Increases parallel processing efficiency
-          threads = 8; # Matches your G14's physical cores (prevents HT overhead)
+          threads = 6; # Matches your G14's physical cores (prevents HT overhead)
 
           # --- 3. Advanced Memory & Attention Optimizations ---
           flash-attn = "on"; # Huge VRAM savings and speedup for attention
-          load-mode = "none";
+          load-mode = "mlock";
           reasoning-preserve = true;
-          fit = "on";
-
-          # Security warning
-          api-key = "1234";
+          metrics = true;
+          no-mmproj = true;
         };
       };
 

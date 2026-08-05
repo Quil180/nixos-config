@@ -149,6 +149,7 @@
                 inputs.hyprland.homeManagerModules.default
                 inputs.nixcord.homeModules.nixcord
                 inputs.nix-flatpak.homeManagerModules.nix-flatpak
+                inputs.agenix.homeManagerModules.default
               ];
             }
           ) config.configurations.home;

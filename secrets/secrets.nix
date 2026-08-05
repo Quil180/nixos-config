@@ -22,6 +22,7 @@ let
 in
 {
   "quil_password.age".publicKeys = allKeys; # Common user password
+  "root_password.age".publicKeys = allKeys;
   "git_identity.age".publicKeys = allKeys;
   "snowflake.age".publicKeys = allKeys;
 }
