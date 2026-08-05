@@ -29,6 +29,7 @@
         kicad
         latex
         office
+        pi
         cpp
         verilog
         # antigravity
@@ -79,8 +80,6 @@
           pavucontrol # sound control GUI
           wl-clipboard # clipboard
           zoxide # better cd
-
-          pi-coding-agent # pi coding agent for coding or something
         ];
       };
 
