@@ -13,7 +13,9 @@
         init.defaultBranch = "main";
       };
       includes = [
-        { path = config.age.secrets.git_identity.path; }
+        {
+          path = "${config.home.homeDirectory}/.local/state/git_identity";
+        }
       ];
       lfs.enable = true;
     };

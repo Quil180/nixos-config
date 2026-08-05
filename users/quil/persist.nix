@@ -38,6 +38,7 @@
     ];
     files = [
       ".bash_history"
+      ".local/state/git_identity"
     ];
     allowOther = true;
   };

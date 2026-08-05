@@ -52,6 +52,7 @@
         secrets = {
           git_identity = {
             file = ../../secrets/git_identity.age;
+            path = "${config.home.homeDirectory}/.local/state/git_identity";
           };
           snowflake = {
             file = ../../secrets/snowflake.age;
