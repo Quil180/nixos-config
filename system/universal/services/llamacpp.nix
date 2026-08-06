@@ -31,6 +31,7 @@
           # Speculative Decoding (MTP)
           spec-type = "draft-mtp";
           spec-draft-n-max = 3;
+          spec-draft-p-min = 0.6;
 
           # Server settings
           port = 8080;
@@ -51,9 +52,18 @@
           # --- 3. Advanced Memory & Attention Optimizations ---
           flash-attn = "on"; # Huge VRAM savings and speedup for attention
           load-mode = "mlock";
+          mmap = false;
           reasoning-preserve = true;
           metrics = true;
           no-mmproj = true;
+
+          cache-reuse = 2048;
+          cache-prompt = true;
+          cont-batching = true;
+          warmup = true;
+          reasoning = "auto";
+          reasoning-budget = 2048;
+          jinja = true;
         };
       };
 

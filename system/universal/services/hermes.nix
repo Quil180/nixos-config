@@ -17,7 +17,6 @@
     {
       imports = [
         inputs.hermes-agent.nixosModules.default
-        topConfig.flake.nixosModules.llamacpp
       ];
 
       # Hermes Agent Framework configuration
@@ -25,9 +24,9 @@
         enable = true;
         settings = {
           model = {
+            # Adding local model url on laptop
             provider = "custom";
-            default = "gemma-4-E4B-it";
-            base_url = "http://localhost:8081/v1";
+            base_url = "http://localhost:8080/v1";
             api_mode = "chat_completions";
           };
         };
