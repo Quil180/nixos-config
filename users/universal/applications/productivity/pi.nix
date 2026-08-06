@@ -19,11 +19,13 @@
         ".pi/agent/settings.json".text = builtins.toJSON {
           lastChangelogVersion = "0.83.0";
           theme = "dark";
-          defaultProvider = "openrouter";
-          defaultModel = "openrouter/free";
-          defaultThinkingLevel = "medium";
           packages = [
-            "git:github.com/huggingface/pi-llama"
+            "git:github.com/huggingface/pi-llama" # llamacpp integration
+            "npm:@narumitw/pi-lsp" # lsp support
+            "npm:pi-web-access" # crawling websites
+            "npm:@narumitw/pi-goal" # goals for continuous
+            "npm:pi-extension-toolkit" # pi extension toolkit helper
+            "npm:pi-hashline-edit-pro" # better edit/read
           ];
         };
 
