@@ -3,7 +3,7 @@
   flake.homeModules.latex = 
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    texliveSmall
+    texliveFull
     zathura # for pdf viewing
   ];
 }

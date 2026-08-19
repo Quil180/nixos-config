@@ -26,6 +26,7 @@
             "npm:@narumitw/pi-goal" # goals for continuous
             "npm:pi-extension-toolkit" # pi extension toolkit helper
             "npm:pi-hashline-edit-pro" # better edit/read
+            "${dotfilesDir}/users/universal/applications/productivity/pi/pi-nix-helper" # nix flake helper (local)
           ];
         };
 

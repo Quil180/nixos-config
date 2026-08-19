@@ -49,7 +49,6 @@
         # --- Virtualization & Containers ---
         # virtualisation
         # docker
-        # flatpak
 
         # --- VPNs & Networking ---
         # hamachi
@@ -64,9 +63,9 @@
         # vncviewer
 
         # --- AI Services ---
-        hermes
+        # hermes
         # ollama
-        llamacpp
+        # llamacpp
         # openwebui
       ];
 

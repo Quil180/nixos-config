@@ -35,7 +35,7 @@
         # antigravity
         stylix
         discord
-        # flatpak
+        flatpak
       ];
 
       nixpkgs.config = {

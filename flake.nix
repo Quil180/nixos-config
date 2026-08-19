@@ -127,7 +127,6 @@
                 inputs.disko.nixosModules.disko
                 inputs.impermanence.nixosModules.impermanence
                 inputs.stylix.nixosModules.stylix
-                inputs.nix-flatpak.nixosModules.nix-flatpak
                 inputs.jovian.nixosModules.default
               ];
             }
