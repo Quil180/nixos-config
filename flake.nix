@@ -63,6 +63,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
+    creamlinux-installer = {
+      type = "github";
+      owner = "Novattz";
+      repo = "creamlinux-installer";
+      flake = false;
+    };
   };
 
   outputs =

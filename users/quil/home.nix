@@ -36,6 +36,8 @@
         stylix
         discord
         flatpak
+
+        creamlinux
       ];
 
       nixpkgs.config = {
