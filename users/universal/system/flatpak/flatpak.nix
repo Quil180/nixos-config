@@ -40,6 +40,7 @@
           "io.github.benjamimgois.goverlay"
           "org.freedesktop.Platform.VulkanLayer.MangoHud//25.08" # req for goverlay
           "org.freedesktop.Platform.VulkanLayer.vkBasalt//25.08" # req for goverlay
+          "app.fluxer.Fluxer"
         ];
       };
 
