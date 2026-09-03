@@ -20,20 +20,19 @@
           lastChangelogVersion = "0.83.0";
           theme = "dark";
           packages = [
-            "git:github.com/huggingface/pi-llama" # llamacpp integration
+            # "git:github.com/huggingface/pi-llama" # llamacpp integration
             "npm:@narumitw/pi-lsp" # lsp support
             "npm:pi-web-access" # crawling websites
             "npm:@narumitw/pi-goal" # goals for continuous
             "npm:pi-extension-toolkit" # pi extension toolkit helper
             "npm:pi-hashline-edit-pro" # better edit/read
-            "${dotfilesDir}/users/universal/applications/productivity/pi/pi-nix-helper" # nix flake helper (local)
           ];
         };
 
         # Trust configuration - which directories the agent can access
-        ".pi/agent/trust.json".text = builtins.toJSON {
-          "${dotfilesDir}" = true;
-        };
+        # ".pi/agent/trust.json".text = builtins.toJSON {
+        #   "${dotfilesDir}" = true;
+        # };
 
         # Git repository extensions (empty by default, no API keys needed)
         ".pi/agent/auth.json".text = "{}";
