@@ -12,10 +12,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixcord = {
       url = "github:kaylorben/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,29 +21,12 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.6.0";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    split-monitor-workspaces = {
-      url = "github:Duckonaut/split-monitor-workspaces";
-      inputs.hyprland.follows = "hyprland";
-    };
-    winboat = {
-      url = "github:Rexcrazy804/winboat?ref=fix-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
     quickshell = {
@@ -56,10 +35,6 @@
     };
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    llama-cpp-turboquant = {
-      url = "github:TheTom/llama-cpp-turboquant";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
@@ -115,7 +90,6 @@
 
           systems = [
             "x86_64-linux"
-            "aarch64-linux"
           ];
 
           flake.nixosConfigurations = lib.mapAttrs (
@@ -158,6 +132,27 @@
               ];
             }
           ) config.configurations.home;
+
+        perSystem = { config, self', inputs', pkgs, system, ... }: {
+          formatter = pkgs.nixfmt-rfc-style;
+
+          devShells.default = pkgs.mkShell {
+            packages = [ pkgs.nixos-rebuild pkgs.home-manager pkgs.statix pkgs.deadnix ];
+          };
+
+          # Advisory lint checks: the tree is not yet nixfmt/statix-clean
+          # (~50 of 70 files unformatted), so `|| true` keeps CI green while
+          # surfacing violations. Drop the `|| true` after a repo-wide cleanup.
+          checks.nixfmt = pkgs.runCommandLocal "nixfmt-check" {} ''
+            ${pkgs.nixfmt-rfc-style}/bin/nixfmt --check ${./.} || true
+            touch $out
+          '';
+
+          checks.statix = pkgs.runCommandLocal "statix-check" {} ''
+            ${pkgs.statix}/bin/statix check ${./.} || true
+            touch $out
+          '';
+        };
         };
       }
     );

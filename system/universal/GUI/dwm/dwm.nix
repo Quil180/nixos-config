@@ -19,7 +19,7 @@ in {
       enable = true;
     };
     displayManager.sessionCommands = ''
-      ${pkgs.feh}/bin/feh --bg-scale /home/quil/Documents/GitRepos/nixos-config/wallpaper.png &
+      ${pkgs.feh}/bin/feh --bg-scale ~/.dotfiles/wallpaper.png &
       ${pkgs.networkmanagerapplet}/bin/nm-applet &
       ${pkgs.dunst}/bin/dunst &
       ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &

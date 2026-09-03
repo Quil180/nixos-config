@@ -38,7 +38,13 @@
         wlr-randr # to change display primacy
         xdg-utils # xwayland support
         hyprpolkitagent # polkit
+        cliphist             # clipboard history
+        hyprlock             # screen locker
       ];
+
+      programs.hyprlock = {
+        enable = true;
+      };
 
       # enabling hyprland and xwayland
       wayland.windowManager.hyprland = {
@@ -117,12 +123,6 @@
               ];
             }
 
-            {
-              _args = [
-                "GDK_SCALE"
-                "2"
-              ];
-            }
             {
               _args = [
                 "ELECTRON_OZONE_PLATFORM_HINT"

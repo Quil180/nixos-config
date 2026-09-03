@@ -21,7 +21,6 @@
         disko
         # simple_disko
         # determinate
-        secrets
         # persist
         security
         # proxmox_vm
@@ -135,7 +134,6 @@
           root.hashedPasswordFile = config.age.secrets.root_password.path;
           ${username} = {
             isNormalUser = true;
-            # password = "1234";
             hashedPasswordFile = config.age.secrets.quil_password.path;
             extraGroups = [
               "networkmanager"
@@ -151,23 +149,8 @@
           };
         };
       };
-      # Fixing race condition with agenix + persistance
-      systemd.sysusers.enable = false;
-
       system = {
         stateVersion = "26.05"; # KEEP THIS THE SAME
-        # auto updates
-        autoUpgrade = {
-          enable = false;
-          flake = inputs.self.outPath;
-          flags = [
-            "--update-input"
-            "nixpkgs"
-            "-L"
-          ];
-          dates = "02:00";
-          randomizedDelaySec = "45min";
-        };
       };
 
       # enabling programs to be managed by nixos
@@ -216,25 +199,14 @@
         fwupd.enable = true;
       };
 
-      systemd.services.nvidia-powerd.enable = lib.mkForce false;
-      systemd.user.services.blueman-applet.enable = lib.mkForce false;
-
       nixpkgs.config = {
         allowUnfree = true;
-        allowUnfreePredicate = _: true;
-        permittedInsecurePackages = [
-          "electron-40.10.5"
-        ];
       };
       nix = {
         gc = {
           automatic = true;
           dates = "daily";
           options = "--delete-older-than 1w";
-        };
-        optimise = {
-          automatic = true;
-          dates = "daily";
         };
         settings = {
           auto-optimise-store = true;

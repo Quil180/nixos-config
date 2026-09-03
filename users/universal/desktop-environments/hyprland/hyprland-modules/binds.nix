@@ -44,7 +44,7 @@
       -- Screenshot Keybinds
       hl.bind(mod .. " + ALT + P", hl.dsp.exec_cmd("grimblast copy area && notify-send 'Zone Copied'"))
       hl.bind(mod .. " + P", hl.dsp.exec_cmd("grimblast copy output && notify-send 'Current Screen Copied'"))
-      hl.bind(mod .. " + SHIFT + P", hl.dsp.exec_cmd("grimblast screen output && notify-send 'All Screens Copied'"))
+      hl.bind(mod .. " + CTRL + P", hl.dsp.exec_cmd("grimblast screen output && notify-send 'All Screens Copied'"))
 
       -- Volume Control Binds
       hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"))
@@ -56,11 +56,13 @@
       hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 20%-"))
 
       -- Selecting Monitor Focus / Workspace navigation
-      hl.bind(mod .. " + M", hl.dsp.submap("moniter_select"))
+      hl.bind(mod .. " + ALT + M", hl.dsp.submap("moniter_select"))
       hl.bind(mod .. " + SHIFT + Up", hl.dsp.focus({ workspace = "r+1" }))
       hl.bind(mod .. " + SHIFT + Down", hl.dsp.focus({ workspace = "r-1" }))
-      hl.bind(mod .. " + ALT + Up", hl.dsp.window.move({ workspace = "emptym" }))
-      hl.bind(mod .. " + ALT + Down", hl.dsp.window.move({ workspace = "empty", silent = true }))
+      hl.bind(mod .. " + ALT + Up", hl.dsp.window.swap({ direction = "up" }))
+      hl.bind(mod .. " + ALT + Down", hl.dsp.window.swap({ direction = "down" }))
+      hl.bind(mod .. " + CTRL + ALT + Up", hl.dsp.window.move({ workspace = "emptym" }))
+      hl.bind(mod .. " + CTRL + ALT + Down", hl.dsp.window.move({ workspace = "empty", silent = true }))
 
       -- Workspace Alt-Tab
       hl.bind(mod .. " + TAB", hl.dsp.focus({ workspace = "previous_per_monitor" }))
@@ -87,8 +89,7 @@
       -- Moving Windows with Arrow Keys
       hl.bind(mod .. " + SHIFT + Left", hl.dsp.window.swap({ direction = "left" }))
       hl.bind(mod .. " + SHIFT + Right", hl.dsp.window.swap({ direction = "right" }))
-      hl.bind(mod .. " + SHIFT + Up", hl.dsp.window.swap({ direction = "up" }))
-      hl.bind(mod .. " + SHIFT + Down", hl.dsp.window.swap({ direction = "down" }))
+      -- (up/down moved to ALT to avoid conflict with workspace focus)
 
       -- Resizing Windows with Arrow Keys
       hl.bind(mod .. " + CTRL + Left", hl.dsp.window.resize({ x = -60, y = 0, relative = true }))

@@ -19,7 +19,6 @@
               function()
                 hl.exec_cmd("nm-applet --indicator")
                 hl.exec_cmd("wl-paste --watch cliphist store")
-                hl.exec_cmd("xwaylandvideobridge")
                 hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP --all")
                 hl.exec_cmd("hyprctl setcursor rose-pine-hyprcursor 24")
                 hl.exec_cmd("quickshell -p ~/.config/quickshell/bar.qml")

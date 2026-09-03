@@ -42,10 +42,6 @@
 
       nixpkgs.config = {
         allowUnfree = true;
-        allowUnfreePredicate = _: true;
-        permittedInsecurePackages = [
-          "electron-39.8.10"
-        ];
       };
 
       age = {
@@ -74,7 +70,7 @@
           BROWSER = "firefox";
         };
         packages = with pkgs; [
-          inputs.agenix.packages.${stdenv.hostPlatform.system}.default # secrets management
+          inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default # secrets management
           brightnessctl # brightness control
           foot # terminal emulator
           mpv # terminal video player

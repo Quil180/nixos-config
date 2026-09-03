@@ -22,20 +22,9 @@
         upower.enable = true;
 
         tlp.enable = false;
-        # ensuring that tlp is off.
-        auto-cpufreq = {
-          enable = true;
-          settings = {
-            battery = {
-              governor = "powersave";
-              turbo = "never";
-            };
-            charger = {
-              governor = "performance";
-              turbo = "never";
-            };
-          };
-        };
+        # auto-cpufreq removed: with amd_pstate=active the pstate driver owns the
+        # governor, so auto-cpufreq's switching is a no-op. asusd + the home
+        # power-monitor script (asusctl profile set) handle power profiles.
 
         # Pipewire for laptop microphone
         pipewire.extraConfig.pipewire."99-echo-cancel" = {
@@ -70,7 +59,10 @@
           "amd_pstate=active" # Active mode for best performance scaling
           "amdgpu.sg_display=0" # Fix for display issues on resume
           "amdgpu.dcdebugmask=0x10" # Fix for DCN timeouts
-          "resume_offset=533760"
+          "resume_offset=533760" # HIBERNATE: first physical extent of /swap/swapfile (40G, disko.nix subvol=swap).
+          #   Stale after swapfile recreation → resume hangs/fresh boot. Verify:
+          #   `filefrag -v /swap/swapfile` (btrfs needs root) and recompute from the
+          #   swapped-bytes ↔ physical-block mapping before re-provisioning.
           "snd_hda_intel.power_save=1" # Audio power saving
           # Following are to try and optimize suspend
           "pcie_aspm=force"
