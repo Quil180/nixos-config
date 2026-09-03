@@ -1,0 +1,54 @@
+name: CI
+
+# Build-verify the NixOS (snowflake) and Home-Manager (quil) configurations
+# on every change that can affect the build, plus on demand / on a schedule.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'flake.nix'
+      - 'flake.lock'
+      - '**/*.nix'
+      - '**/*.lua'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'flake.nix'
+      - 'flake.lock'
+      - '**/*.nix'
+      - '**/*.lua'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+# Runs in parallel: each job gets its own runner + Nix store.
+jobs:
+  nixos-snowflake:
+    name: NixOS (snowflake)
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Wallpapers is a public submodule; fetch it so the tree is complete.
+          submodules: recursive
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Build NixOS system (snowflake)
+        run: nix build .#nixosConfigurations.snowflake.config.system.build.toplevel --no-link --print-build-logs
+
+  home-quil:
+    name: Home-Manager (quil)
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Build Home-Manager generation (quil)
+        run: nix build .#homeConfigurations.quil.activationPackage --no-link --print-build-logs
