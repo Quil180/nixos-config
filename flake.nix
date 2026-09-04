@@ -48,6 +48,17 @@
 
   outputs =
     inputs@{ flake-parts, nixpkgs, ... }:
+    let
+      # The repository itself, bundled into the installer ISO / install app.
+      # .git (295M) and the `result` symlink are excluded; secrets are kept.
+      # Note: as a git flake, the wallpapers submodule content is NOT
+      # included (it is restored post-login via 'git submodule update').
+      flakeSource = builtins.path {
+        name = "nixos-config-source";
+        path = ./.;
+        filter = p: t: baseNameOf p != ".git" && baseNameOf p != "result";
+      };
+    in
     flake-parts.lib.mkFlake { inherit inputs; } (
       { config, lib, ... }:
       {
@@ -92,25 +103,39 @@
             "x86_64-linux"
           ];
 
-          flake.nixosConfigurations = lib.mapAttrs (
-            name: host:
-            nixpkgs.lib.nixosSystem {
-              system = "x86_64-linux";
-              specialArgs = {
-                inherit inputs;
-                username = "quil";
+          flake.nixosConfigurations =
+            (lib.mapAttrs (
+              name: host:
+              nixpkgs.lib.nixosSystem {
                 system = "x86_64-linux";
+                specialArgs = {
+                  inherit inputs;
+                  username = "quil";
+                  system = "x86_64-linux";
+                };
+                modules = [
+                  host.module
+                  inputs.agenix.nixosModules.default
+                  inputs.disko.nixosModules.disko
+                  inputs.impermanence.nixosModules.impermanence
+                  inputs.stylix.nixosModules.stylix
+                  inputs.jovian.nixosModules.default
+                ];
+              }
+            ) config.configurations.nixos)
+            // {
+              # Installer ISO: `nix build .#nixosConfigurations.installer.config.system.build.isoImage`
+              installer = nixpkgs.lib.nixosSystem {
+                system = "x86_64-linux";
+                specialArgs = {
+                  inherit inputs flakeSource;
+                };
+                modules = [
+                  "${nixpkgs}/nixos/modules/installer/cd-dvd/iso-image.nix"
+                  ./installer/iso.nix
+                ];
               };
-              modules = [
-                host.module
-                inputs.agenix.nixosModules.default
-                inputs.disko.nixosModules.disko
-                inputs.impermanence.nixosModules.impermanence
-                inputs.stylix.nixosModules.stylix
-                inputs.jovian.nixosModules.default
-              ];
-            }
-          ) config.configurations.nixos;
+            };
 
           flake.homeConfigurations = lib.mapAttrs (
             name: user:
@@ -135,6 +160,15 @@
 
         perSystem = { config, self', inputs', pkgs, system, ... }: {
           formatter = pkgs.nixfmt-rfc-style;
+
+          # disko as a runnable CLI (`nix run .#disko`), for stock-ISO installs.
+          packages.disko = inputs.disko.packages.${system}.disko;
+
+          # `nix run .#install -- --system snowflake --device /dev/nvme0n1` on a stock ISO.
+          apps.install = {
+            type = "app";
+            program = "${flakeSource}/installer/install.sh";
+          };
 
           devShells.default = pkgs.mkShell {
             packages = [ pkgs.nixos-rebuild pkgs.home-manager pkgs.statix pkgs.deadnix ];
