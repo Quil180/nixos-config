@@ -6,7 +6,12 @@
 }:
 {
   flake.homeModules.pi =
-    { pkgs, inputs, dotfilesDir, ... }:
+    {
+      pkgs,
+      inputs,
+      dotfilesDir,
+      ...
+    }:
     {
       home.packages = with pkgs; [
         pi-coding-agent
@@ -19,6 +24,8 @@
         ".pi/agent/settings.json".text = builtins.toJSON {
           lastChangelogVersion = "0.83.0";
           theme = "dark";
+          defaultModel = "deepseek/deepseek-v4-flash-0731";
+          defaultProvider = "openrouter";
           packages = [
             # "git:github.com/huggingface/pi-llama" # llamacpp integration
             "npm:@narumitw/pi-lsp" # lsp support
@@ -26,13 +33,9 @@
             "npm:@narumitw/pi-goal" # goals for continuous
             "npm:pi-extension-toolkit" # pi extension toolkit helper
             "npm:pi-hashline-edit-pro" # better edit/read
+            "npm:@kdejaeger/pi-model-router" # model router
           ];
         };
-
-        # Trust configuration - which directories the agent can access
-        # ".pi/agent/trust.json".text = builtins.toJSON {
-        #   "${dotfilesDir}" = true;
-        # };
 
         # Git repository extensions (empty by default, no API keys needed)
         # auth.json is intentionally NOT managed declaratively here so that pi

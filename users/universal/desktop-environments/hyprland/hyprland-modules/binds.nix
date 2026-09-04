@@ -25,6 +25,7 @@
       hl.bind(mod .. " + SHIFT + P", hl.dsp.window.pseudo())
       hl.bind(mod .. " + J", hl.dsp.layout("togglesplit"))
       hl.bind(mod .. " + SHIFT + L", hl.dsp.exit())
+      hl.bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"))
       hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 
       -- Binds to Launch Apps

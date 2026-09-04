@@ -30,6 +30,13 @@ nix build .#nixosConfigurations.installer.config.system.build.isoImage
 
 The ISO lands at `result/iso/nixos-*-x86_64-linux.iso`.
 
+**Or let CI build & publish it**: on the **Actions → CI** page, press
+“Run workflow” (optionally set a `release_tag`, `release_notes`, and/or
+`draft`). It builds the ISO and, because it's a manual run, uploads it as
+a **GitHub release** (`installer-<date>-<time>` tag) together with a
+`SHA256SUMS` checksum file. You can then download the ISO directly from
+the release page and flash it (§1b).
+
 It contains:
 
 - your whole repository (minus `.git`) at `/root/dotfiles`,
