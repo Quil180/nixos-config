@@ -89,7 +89,8 @@
       hardware.enableAllFirmware = true;
       hardware.enableRedistributableFirmware = true;
 
-      time.timeZone = "America/New_York";
+      # time.timeZone = "America/New_York";
+      time.timeZone = "America/Chicago";
 
       # default packages regardless of user/host
       environment.systemPackages = with pkgs; [
