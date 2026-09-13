@@ -1295,7 +1295,6 @@ Scope {
                 // System Tray & Clock Pill
                 Pill {
                     id: trayClockPill
-                    visible: !root.isSecondary
 
                     // Clock
                     Item {
