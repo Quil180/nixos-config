@@ -106,7 +106,7 @@ in
 
       runcpp() {
         temp=""
-        for arg in "$A"
+        for arg in "$@"
         do
           temp+="$arg "
         done

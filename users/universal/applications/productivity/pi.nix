@@ -34,6 +34,7 @@
             "npm:pi-extension-toolkit" # pi extension toolkit helper
             "npm:pi-hashline-edit-pro" # better edit/read
             "npm:@kdejaeger/pi-model-router" # model router
+            "npm:pi-subagents" # allows for subagents
           ];
         };
 
