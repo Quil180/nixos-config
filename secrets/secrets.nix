@@ -11,7 +11,7 @@ let
     snowflake
   ];
   users = [ user_quil ];
-  allKeys = systems ++ users;
+  allKeys = users;
 
   # For specific servers
   serverKeys = nodeKey: [

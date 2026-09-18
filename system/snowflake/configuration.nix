@@ -119,8 +119,7 @@
 
       age = {
         identityPaths = lib.mkForce [
-          "/etc/ssh/ssh_host_ed25519_key"
-          "/etc/ssh/ssh_host_rsa_key"
+          "/home/${username}/.ssh/id_ed25519"
         ];
         secrets = {
           root_password.file = ../../secrets/root_password.age;
