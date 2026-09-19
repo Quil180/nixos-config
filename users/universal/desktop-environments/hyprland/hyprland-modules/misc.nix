@@ -11,7 +11,6 @@
     enable = true;
     settings = {
       main.include = lib.mkForce [ ];
-      colors = lib.mkForce { };
       colors-dark = with config.lib.stylix.colors; {
         background = base00;
         foreground = base05;
