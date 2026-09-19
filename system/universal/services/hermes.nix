@@ -7,11 +7,7 @@
 {
   flake.nixosModules.hermes =
     {
-      pkgs,
-      config,
-      lib,
       inputs,
-      system,
       ...
     }:
     {
@@ -19,18 +15,16 @@
         inputs.hermes-agent.nixosModules.default
       ];
 
-      # Hermes Agent Framework configuration
+      # Hermes Agent framework. The model/provider is deliberately host-side:
+      # snowflake talks to the local llama.cpp endpoint on :8080, a server
+      # talks to an API provider. Set services.hermes-agent.settings.model in
+      # the host config, not here — `settings` merges by recursiveUpdate, so
+      # two modules setting the same key resolve by import order, silently.
       services.hermes-agent = {
         enable = true;
-        settings = {
-          model = {
-            # Adding local model url on laptop
-            provider = "custom";
-            base_url = "http://localhost:8080/v1";
-            api_mode = "chat_completions";
-          };
-        };
-        # Ensure the CLI is available in the system path
+
+        # Put the CLI on the system PATH and export HERMES_HOME so
+        # interactive shells share state with the gateway service.
         addToSystemPackages = true;
       };
     };
