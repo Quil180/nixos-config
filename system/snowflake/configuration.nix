@@ -46,7 +46,7 @@
         # monitoring
 
         # --- Virtualization & Containers ---
-        # virtualisation
+        virtualisation
         # docker
 
         # --- VPNs & Networking ---
@@ -62,7 +62,7 @@
         # vncviewer
 
         # --- AI Services ---
-        # hermes
+        hermes
         # ollama
         # llamacpp
         # openwebui
@@ -150,7 +150,7 @@
         };
       };
       system = {
-        stateVersion = "26.05"; # KEEP THIS THE SAME
+        stateVersion = "26.11"; # KEEP THIS THE SAME
       };
 
       # enabling programs to be managed by nixos
