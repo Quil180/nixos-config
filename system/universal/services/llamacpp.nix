@@ -34,11 +34,10 @@
           spec-draft-p-min = 0.6;
 
           # Server settings
-          port = 8080;
           timeout = 300;
 
           # --- 1. Context Window & KV Cache Optimizations ---
-          ctx-size = 192640; # 8192 or 32768 or 192640
+          ctx-size = 131072; # 8192 or 32768 or 192640
           cache-type-k = "q8_0"; # Quantizes KV cache to save VRAM
           cache-type-v = "q8_0"; # Essential to keep large contexts off your 8GB VRAM limit
 
