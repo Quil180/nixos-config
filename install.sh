@@ -300,7 +300,7 @@ cd "\$HOME/.dotfiles"
 
 # Run home-manager switch as the user
 sudo -u ${user_choice} nix --experimental-features "nix-command flakes" run home-manager -- \
-    switch --flake "\$HOME/.dotfiles#${user_choice}"
+    switch --flake "\$HOME/.dotfiles#${user_choice}@${system_choice}"
 
 # Set git remote
 cd "\$HOME/.dotfiles"
@@ -334,7 +334,7 @@ EOF
     echo "  4. If submodules didn't init, run:"
     echo "     git -C ~/.dotfiles submodule update --init --recursive"
     echo "  5. If home-manager didn't fully apply, run:"
-    echo "     home-manager switch --flake ~/.dotfiles#${user_choice}"
+    echo "     home-manager switch --flake ~/.dotfiles#${user_choice}@${system_choice}"
     echo ""
 
     checkpoint_reset
@@ -344,7 +344,10 @@ EOF
 post_install() {
     log_info "Running post-installation setup..."
 
+    local system_choice
     local user_choice
+
+    system_choice=$(prompt_with_default "What system is this" "$DEFAULT_SYSTEM")
     user_choice=$(prompt_with_default "What user am I" "$DEFAULT_USER")
 
     network_setup
@@ -359,7 +362,7 @@ post_install() {
     # Run home-manager switch
     log_info "Running home-manager switch..."
     nix --experimental-features "nix-command flakes" run home-manager -- \
-        switch --flake "${HOME}/.dotfiles#${user_choice}"
+        switch --flake "${HOME}/.dotfiles#${user_choice}@${system_choice}"
 
     # Set git remote
     log_info "Setting git remote..."
@@ -385,10 +388,13 @@ rebuild_system() {
 rebuild_home() {
     log_info "Rebuilding home-manager configuration..."
 
+    local system_choice
     local user_choice
+
+    system_choice=$(prompt_with_default "Which system configuration" "$DEFAULT_SYSTEM")
     user_choice=$(prompt_with_default "Which user configuration" "$DEFAULT_USER")
 
-    home-manager switch --flake "${SCRIPT_DIR}#${user_choice}"
+    home-manager switch --flake "${SCRIPT_DIR}#${user_choice}@${system_choice}"
     log_success "Home-manager rebuild complete!"
 }
 

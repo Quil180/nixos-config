@@ -1,7 +1,7 @@
 { topConfig, lib, pkgs, ... }:
 {
   flake.homeModules.bash = 
-{ config, ... }:
+{ config, tags, ... }:
 let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
 in
@@ -55,8 +55,9 @@ in
       nf = "fastfetch";
       g = "git";
       vlsi = "export TERM=ansi; ssh -Y yo485591@vlsi.eecs.ucf.edu";
-
-      # g14 related aliases
+    }
+    // lib.optionalAttrs (builtins.elem "asus" tags) {
+      # g14/ASUS-only: needs supergfxctl (system-side `g14` module).
       gpu = "supergfxctl -g";
       hybrid = "supergfxctl -m Hybrid && wayland-logout";
       integrated = "supergfxctl -m Integrated && wayland-logout";

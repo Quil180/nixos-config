@@ -46,7 +46,7 @@ jobs:
 
       - name: Build Home-Manager generation (quil)
         if: steps.check.outputs.changed == 'true'
-        run: nix build .#homeConfigurations.quil.activationPackage --no-link
+        run: nix build '.#homeConfigurations."quil@snowflake".activationPackage' --no-link
 
       - name: Commit and push flake.lock
         if: steps.check.outputs.changed == 'true'

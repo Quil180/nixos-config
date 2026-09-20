@@ -48,17 +48,6 @@
 
   outputs =
     inputs@{ flake-parts, nixpkgs, ... }:
-    let
-      # The repository itself, bundled into the installer ISO / install app.
-      # .git (295M) and the `result` symlink are excluded; secrets are kept.
-      # Note: as a git flake, the wallpapers submodule content is NOT
-      # included (it is restored post-login via 'git submodule update').
-      flakeSource = builtins.path {
-        name = "nixos-config-source";
-        path = ./.;
-        filter = p: t: baseNameOf p != ".git" && baseNameOf p != "result";
-      };
-    in
     flake-parts.lib.mkFlake { inherit inputs; } (
       { config, lib, ... }:
       {
@@ -76,8 +65,27 @@
             nixos = lib.mkOption {
               type = lib.types.lazyAttrsOf (
                 lib.types.submodule {
-                  options.module = lib.mkOption {
-                    type = lib.types.deferredModule;
+                  options = {
+                    module = lib.mkOption {
+                      type = lib.types.deferredModule;
+                    };
+                    system = lib.mkOption {
+                      type = lib.types.str;
+                      default = "x86_64-linux";
+                      description = "Platform this host builds for.";
+                    };
+                    tags = lib.mkOption {
+                      type = lib.types.listOf lib.types.str;
+                      default = [ ];
+                      description = ''
+                        Host traits, handed to every module of this host as the
+                        `tags` specialArg (system side) and, via the matching
+                        home target, to the home side as well. Shared modules
+                        branch on them, e.g.
+                        lib.mkIf (builtins.elem "laptop" tags) …
+                        Suggested vocabulary: "laptop" "desktop" "asus" "rocm".
+                      '';
+                    };
                   };
                 }
               );
@@ -103,49 +111,49 @@
             "x86_64-linux"
           ];
 
-          flake.nixosConfigurations =
-            (lib.mapAttrs (
-              name: host:
-              nixpkgs.lib.nixosSystem {
-                system = "x86_64-linux";
-                specialArgs = {
-                  inherit inputs;
-                  username = "quil";
-                  system = "x86_64-linux";
-                };
-                modules = [
-                  host.module
-                  inputs.agenix.nixosModules.default
-                  inputs.disko.nixosModules.disko
-                  inputs.impermanence.nixosModules.impermanence
-                  inputs.stylix.nixosModules.stylix
-                  inputs.jovian.nixosModules.default
-                ];
-              }
-            ) config.configurations.nixos)
-            // {
-              # Installer ISO: `nix build .#nixosConfigurations.installer.config.system.build.isoImage`
-              installer = nixpkgs.lib.nixosSystem {
-                system = "x86_64-linux";
-                specialArgs = {
-                  inherit inputs flakeSource;
-                };
-                modules = [
-                  "${nixpkgs}/nixos/modules/installer/cd-dvd/iso-image.nix"
-                  ./installer/iso.nix
-                ];
+          flake.nixosConfigurations = lib.mapAttrs (
+            name: host:
+            nixpkgs.lib.nixosSystem {
+              system = host.system;
+              specialArgs = {
+                inherit inputs;
+                username = "quil";
+                hostname = name;
+                system = host.system;
+                tags = host.tags;
               };
-            };
+              modules = [
+                host.module
+                inputs.agenix.nixosModules.default
+                inputs.disko.nixosModules.disko
+                inputs.impermanence.nixosModules.impermanence
+                inputs.stylix.nixosModules.stylix
+                inputs.jovian.nixosModules.default
+              ];
+            }
+          ) config.configurations.nixos;
 
           flake.homeConfigurations = lib.mapAttrs (
             name: user:
+            let
+              # Home targets are named "<user>@<host>". home-manager's own
+              # flake resolution probes $USER@$(hostname -f|-s) before falling
+              # back to a bare "$USER", so `home-manager switch --flake <dir>`
+              # with no attribute (the `updh` alias) picks the right target per
+              # machine. A bare "<user>" target still works and gets no tags.
+              parts = lib.splitString "@" name;
+              username = builtins.head parts;
+              hostname = if builtins.length parts > 1 then builtins.elemAt parts 1 else null;
+              host = if hostname == null then null else config.configurations.nixos.${hostname} or null;
+              # Platform and traits are declared once, on the host entry.
+              system = if host == null then "x86_64-linux" else host.system;
+            in
             inputs.home-manager.lib.homeManagerConfiguration {
-              pkgs = nixpkgs.legacyPackages."x86_64-linux";
+              pkgs = nixpkgs.legacyPackages.${system};
               extraSpecialArgs = {
-                inherit inputs;
-                username = name;
-                system = "x86_64-linux";
-                dotfilesDir = "/home/quil/.dotfiles";
+                inherit inputs username hostname system;
+                tags = if host == null then [ ] else host.tags;
+                dotfilesDir = "/home/${username}/.dotfiles";
               };
               modules = [
                 user.module
@@ -158,35 +166,31 @@
             }
           ) config.configurations.home;
 
-        perSystem = { config, self', inputs', pkgs, system, ... }: {
-          formatter = pkgs.nixfmt-rfc-style;
+          perSystem =
+            { pkgs, system, ... }:
+            {
+              formatter = pkgs.nixfmt-rfc-style;
 
-          # disko as a runnable CLI (`nix run .#disko`), for stock-ISO installs.
-          packages.disko = inputs.disko.packages.${system}.disko;
+              # disko as a runnable CLI (`nix run .#disko`), for stock-ISO installs.
+              packages.disko = inputs.disko.packages.${system}.disko;
 
-          # `nix run .#install -- --system snowflake --device /dev/nvme0n1` on a stock ISO.
-          apps.install = {
-            type = "app";
-            program = "${flakeSource}/installer/install.sh";
-          };
+              devShells.default = pkgs.mkShell {
+                packages = [ pkgs.nixos-rebuild pkgs.home-manager pkgs.statix pkgs.deadnix ];
+              };
 
-          devShells.default = pkgs.mkShell {
-            packages = [ pkgs.nixos-rebuild pkgs.home-manager pkgs.statix pkgs.deadnix ];
-          };
+              # Advisory lint checks: the tree is not yet nixfmt/statix-clean
+              # (~50 of 70 files unformatted), so `|| true` keeps CI green while
+              # surfacing violations. Drop the `|| true` after a repo-wide cleanup.
+              checks.nixfmt = pkgs.runCommandLocal "nixfmt-check" {} ''
+                ${pkgs.nixfmt-rfc-style}/bin/nixfmt --check ${./.} || true
+                touch $out
+              '';
 
-          # Advisory lint checks: the tree is not yet nixfmt/statix-clean
-          # (~50 of 70 files unformatted), so `|| true` keeps CI green while
-          # surfacing violations. Drop the `|| true` after a repo-wide cleanup.
-          checks.nixfmt = pkgs.runCommandLocal "nixfmt-check" {} ''
-            ${pkgs.nixfmt-rfc-style}/bin/nixfmt --check ${./.} || true
-            touch $out
-          '';
-
-          checks.statix = pkgs.runCommandLocal "statix-check" {} ''
-            ${pkgs.statix}/bin/statix check ${./.} || true
-            touch $out
-          '';
-        };
+              checks.statix = pkgs.runCommandLocal "statix-check" {} ''
+                ${pkgs.statix}/bin/statix check ${./.} || true
+                touch $out
+              '';
+            };
         };
       }
     );

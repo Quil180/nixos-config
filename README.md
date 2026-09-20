@@ -4,8 +4,9 @@ A Nix flake ("Dendritic Pattern") managing NixOS systems and home-manager
 users. The star feature: **a flake-built installer ISO** that installs the
 entire configuration onto a bare machine from one command.
 
-- Systems: `snowflake` (see `system/<host>/`)
-- Users (home-manager): `quil` (see `users/<user>/`)
+- Systems: `snowflake` (laptop) and `moraine` (desktop) — see `system/<host>/`
+- Users (home-manager): one target per host, `quil@snowflake` / `quil@moraine`
+  (see `users/<user>/`)
 - Secrets: agenix (`secrets/*.age`)
 
 ---
@@ -135,7 +136,7 @@ cd ~/.dotfiles && nix flake update
 git submodule update --init --recursive
 
 # In case home-manager activation didn't fully apply:
-home-manager switch --flake ~/.dotfiles#quil
+home-manager switch --flake ~/.dotfiles#quil@snowflake
 ```
 
 The copied checkout has no `.git` (excluded from the ISO bundle) — it's
@@ -178,7 +179,7 @@ nix flake update
 sudo nixos-rebuild switch --flake .#snowflake
 
 # Rebuild home-manager
-home-manager switch --flake .#quil
+home-manager switch --flake .#quil@snowflake
 ```
 
 ---

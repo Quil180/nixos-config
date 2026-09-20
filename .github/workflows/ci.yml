@@ -1,13 +1,11 @@
 name: CI
 
-# Build-verify the NixOS (snowflake) and Home-Manager (quil) configurations
-# on every change that can affect the build, plus on demand / on a schedule.
-# Also builds the installer ISO (#nixosConfigurations.installer).
-# Manual runs (workflow_dispatch) additionally publish that ISO as a
-# GitHub release (see the installer-iso job).
-
-permissions:
-  contents: write  # needed to create the installer ISO release
+# Build-verify every target in the flake: both NixOS hosts (snowflake,
+# moraine) and both home-manager targets (quil@snowflake, quil@moraine).
+#
+# NOTE: the installer ISO job was removed along with the `installer/`
+# directory and the `nixosConfigurations.installer` target. Reinstate a job
+# here if an installer target comes back.
 
 on:
   push:
@@ -26,20 +24,6 @@ on:
       - '**/*.lua'
       - '.github/workflows/**'
   workflow_dispatch:
-    inputs: # used only by the installer-iso job to name/publish the release
-      release_tag:
-        description: "Release tag. Default: installer-<YYYY-MM-DD-HHMM> (UTC)"
-        required: false
-        type: string
-      release_notes:
-        description: "Notes included in the release (markdown)"
-        required: false
-        type: string
-      draft:
-        description: "Create the release as a draft (review before publishing)"
-        required: false
-        type: boolean
-        default: false
 
 # Runs in parallel: each job gets its own runner + Nix store.
 jobs:
@@ -59,8 +43,8 @@ jobs:
       - name: Build NixOS system (snowflake)
         run: nix build .#nixosConfigurations.snowflake.config.system.build.toplevel --no-link --print-build-logs
 
-  home-quil:
-    name: Home-Manager (quil)
+  nixos-moraine:
+    name: NixOS (moraine)
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
@@ -71,13 +55,11 @@ jobs:
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: Build Home-Manager generation (quil)
-        run: nix build .#homeConfigurations.quil.activationPackage --no-link --print-build-logs
+      - name: Build NixOS system (moraine)
+        run: nix build .#nixosConfigurations.moraine.config.system.build.toplevel --no-link --print-build-logs
 
-  installer-iso:
-    # Builds the installer ISO on every run (so PRs/commits catch breakage),
-    # and on manual runs (workflow_dispatch) publishes it as a GitHub release.
-    name: Installer ISO (release on manual run)
+  home-quil-snowflake:
+    name: Home-Manager (quil@snowflake)
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
@@ -88,56 +70,20 @@ jobs:
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Build Home-Manager generation (quil@snowflake)
+        run: nix build '.#homeConfigurations."quil@snowflake".activationPackage' --no-link --print-build-logs
 
-      - name: Build installer ISO
-        run: |
-          nix build .#nixosConfigurations.installer.config.system.build.isoImage \
-            --print-build-logs
-
-      - name: Locate ISO
-        id: iso
-        run: |
-          iso="$(find result -name '*.iso' | head -n1)"
-          test -n "$iso" || { echo "no ISO produced"; exit 1; }
-          echo "path=$iso" >> "$GITHUB_OUTPUT"
-
-      - name: Create GitHub release (manual runs only)
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISO_PATH: ${{ steps.iso.outputs.path }}
-          RELEASE_TAG: ${{ inputs.release_tag }}
-          RELEASE_NOTES: ${{ inputs.release_notes }}
-          DRAFT: ${{ inputs.draft }}
-        run: |
-          set -euo pipefail
-          tag="${RELEASE_TAG:-installer-$(date -u +%Y-%m-%d-%H%M)}"
-          # Tags cannot contain ':' etc.; sanitize for a safe asset filename.
-          safe="$(printf '%s' "$tag" | tr -c 'a-zA-Z0-9._-' '-')"
-          asset="/tmp/nixos-config-installer-${safe}.iso"
-          cp "$ISO_PATH" "$asset"
-
-          # Integrity file alongside the ISO
-          sha256sum "$asset" > /tmp/SHA256SUMS
-
-          {
-            echo "## Installer ISO ($tag)"
-            echo ""
-            echo "Built from \`${{ github.ref_name }}\` · sha256:"
-            echo "\`\`\`"
-            cat /tmp/SHA256SUMS
-            echo "\`\`\`"
-            echo ""
-            if [[ -n "${RELEASE_NOTES:-}" ]]; then
-              echo "$RELEASE_NOTES"
-            fi
-          } > /tmp/release-notes.md
-
-          flags=()
-          if [[ "$DRAFT" == "true" ]]; then
-            flags+=(--draft)
-          fi
-
-          gh release create "$tag" "$asset" /tmp/SHA256SUMS \
-            --title "NixOS installer ISO $tag" \
-            --notes-file /tmp/release-notes.md "${flags[@]}"
+  home-quil-moraine:
+    name: Home-Manager (quil@moraine)
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Build Home-Manager generation (quil@moraine)
+        run: nix build '.#homeConfigurations."quil@moraine".activationPackage' --no-link --print-build-logs

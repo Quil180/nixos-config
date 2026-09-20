@@ -5,7 +5,12 @@
   ...
 }:
 {
-  configurations.home.quil.module =
+  # The shared home profile, imported by every per-host home target
+  # (configurations.home."quil@<host>" — see users/quil/targets.nix).
+  # Anything that must differ per host branches on the `tags` extraSpecialArg,
+  # e.g. lib.mkIf (builtins.elem "laptop" tags) … — the traits themselves are
+  # declared on the host's nixos entry, not here.
+  flake.homeModules.quil =
     {
       pkgs,
       username,

@@ -69,6 +69,7 @@
           systemd-boot.enable = false;
           grub = {
             enable = true;
+            device = "nodev"; # EFI-only: never write a BIOS MBR
             configurationLimit = 5;
             efiSupport = true;
           };
@@ -204,4 +205,7 @@
         };
       };
     };
+
+  # Host traits; read by shared modules as the `tags` specialArg.
+  configurations.nixos.moraine.tags = [ "desktop" ];
 }

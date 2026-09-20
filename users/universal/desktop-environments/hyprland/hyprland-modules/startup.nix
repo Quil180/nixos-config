@@ -1,14 +1,13 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
+{ topConfig, lib, pkgs, ... }:
 {
   flake.homeModules.startup =
-    { pkgs, ... }:
+    { pkgs, tags, ... }:
     let
       dotfiles = "~/.dotfiles";
+      # Battery charge limit needs asusd (system-side `g14` module) — ASUS only.
+      asusBatteryLimit =
+        lib.optionalString (builtins.elem "asus" tags)
+          ''hl.exec_cmd("asusctl battery limit 80")'';
     in
     {
       wayland.windowManager.hyprland.settings.on = [
@@ -22,7 +21,7 @@
                 hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP --all")
                 hl.exec_cmd("hyprctl setcursor rose-pine-hyprcursor 24")
                 hl.exec_cmd("quickshell -p ~/.config/quickshell/bar.qml")
-                hl.exec_cmd("asusctl battery limit 80")
+                ${asusBatteryLimit}
                 hl.exec_cmd("[workspace 1 silent] discord --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland")
                 hl.exec_cmd("[workspace 2 silent] firefox --enable-features=WaylandWindowDecorations --ozone-platform-hint=wayland")
               end'')

@@ -9,6 +9,7 @@
     {
       pkgs,
       inputs,
+      tags,
       ...
     }:
     {
@@ -38,8 +39,8 @@
         wlr-randr # to change display primacy
         xdg-utils # xwayland support
         hyprpolkitagent # polkit
-        cliphist             # clipboard history
-        hyprlock             # screen locker
+        cliphist # clipboard history
+        hyprlock # screen locker
       ];
 
       programs.hyprlock = {
@@ -122,21 +123,22 @@
                 "1"
               ];
             }
-
+          ]
+          # Hybrid-AMD laptops only: pin the render node pair. On a desktop a
+          # hardcoded card1/card2 can select the wrong GPU, so let Hyprland pick.
+          ++ lib.optional (builtins.elem "laptop" tags) {
+            _args = [
+              "AQ_DRM_DEVICES"
+              "/dev/dri/card1:/dev/dri/card2"
+            ];
+          }
+          ++ [
             {
               _args = [
                 "ELECTRON_OZONE_PLATFORM_HINT"
                 "wayland"
               ];
             }
-
-            {
-              _args = [
-                "AQ_DRM_DEVICES"
-                "/dev/dri/card1:/dev/dri/card2"
-              ];
-            }
-
             {
               _args = [
                 "MOZ_ENABLE_WAYLAND"

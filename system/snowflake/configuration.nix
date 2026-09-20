@@ -217,4 +217,7 @@
         };
       };
     };
+
+  # Host traits; read by shared modules as the `tags` specialArg.
+  configurations.nixos.snowflake.tags = [ "laptop" "asus" ];
 }

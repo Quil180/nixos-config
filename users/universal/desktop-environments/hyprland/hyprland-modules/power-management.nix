@@ -1,13 +1,9 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
+{ topConfig, lib, pkgs, ... }:
 {
   flake.homeModules.power-management =
-    { pkgs, ... }:
+    { pkgs, tags, ... }:
     let
+      isLaptop = builtins.elem "laptop" tags;
       power-monitor = pkgs.writeShellScriptBin "power-monitor" ''
         # Function to apply power saving settings
         apply_battery_settings() {
@@ -59,19 +55,22 @@
       '';
     in
     {
-      home.packages = [ power-monitor ];
+      # The script toggles eDP refresh rates and asusctl profiles, and reads
+      # /sys/class/power_supply/AC0 — all laptop-only. Desktops get neither it
+      # nor its hyprland.start hook.
+      home.packages = lib.optional isLaptop power-monitor;
 
-      wayland.windowManager.hyprland.settings.on = [
-        {
-          _args = [
-            "hyprland.start"
-            (lib.generators.mkLuaInline ''
-              function()
-                hl.exec_cmd("${power-monitor}/bin/power-monitor")
-              end'')
-          ];
-        }
-      ];
+      wayland.windowManager.hyprland.settings.on = lib.optional isLaptop {
+        _args = [
+          "hyprland.start"
+          (lib.generators.mkLuaInline ''
+            function()
+              hl.exec_cmd("${power-monitor}/bin/power-monitor")
+            end'')
+        ];
+      };
+
+      # Lock/DPMS timers are useful everywhere — not gated.
       services.hypridle = {
         enable = true;
         settings = {
