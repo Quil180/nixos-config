@@ -1,11 +1,10 @@
 name: CI
 
-# Build-verify every target in the flake: both NixOS hosts (snowflake,
-# moraine) and both home-manager targets (quil@snowflake, quil@moraine).
+# Build-verify every target in the flake: the NixOS hosts (snowflake, moraine,
+# the six Proxmox VMs and the five LXCs) and the home-manager targets.
 #
-# NOTE: the installer ISO job was removed along with the `installer/`
-# directory and the `nixosConfigurations.installer` target. Reinstate a job
-# here if an installer target comes back.
+# NOTE: the installer-ISO job was removed along with the `installer/` directory
+# and the `nixosConfigurations.installer` target.
 
 on:
   push:
@@ -25,12 +24,30 @@ on:
       - '.github/workflows/**'
   workflow_dispatch:
 
-# Runs in parallel: each job gets its own runner + Nix store.
 jobs:
-  nixos-snowflake:
-    name: NixOS (snowflake)
+  nixos:
+    name: NixOS (${{ matrix.host }})
     runs-on: ubuntu-latest
     timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - snowflake
+          - moraine
+          # Proxmox VMs
+          - crust
+          - baguette
+          - scone
+          - croissant
+          - biscotti
+          - biscuit
+          # Proxmox LXCs
+          - crepe
+          - bagel
+          - muffin
+          - toast
+          - macaron
     steps:
       - uses: actions/checkout@v7
         with:
@@ -40,13 +57,19 @@ jobs:
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: Build NixOS system (snowflake)
-        run: nix build .#nixosConfigurations.snowflake.config.system.build.toplevel --no-link --print-build-logs
+      - name: Build NixOS system (${{ matrix.host }})
+        run: nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel --no-link --print-build-logs
 
-  nixos-moraine:
-    name: NixOS (moraine)
+  home:
+    name: Home-Manager (${{ matrix.user }})
     runs-on: ubuntu-latest
     timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        user:
+          - quil@snowflake
+          - quil@moraine
     steps:
       - uses: actions/checkout@v7
         with:
@@ -55,35 +78,5 @@ jobs:
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: Build NixOS system (moraine)
-        run: nix build .#nixosConfigurations.moraine.config.system.build.toplevel --no-link --print-build-logs
-
-  home-quil-snowflake:
-    name: Home-Manager (quil@snowflake)
-    runs-on: ubuntu-latest
-    timeout-minutes: 360
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          submodules: recursive
-      - uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: Build Home-Manager generation (quil@snowflake)
-        run: nix build '.#homeConfigurations."quil@snowflake".activationPackage' --no-link --print-build-logs
-
-  home-quil-moraine:
-    name: Home-Manager (quil@moraine)
-    runs-on: ubuntu-latest
-    timeout-minutes: 360
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          submodules: recursive
-      - uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: Build Home-Manager generation (quil@moraine)
-        run: nix build '.#homeConfigurations."quil@moraine".activationPackage' --no-link --print-build-logs
+      - name: Build Home-Manager generation (${{ matrix.user }})
+        run: nix build '.#homeConfigurations."${{ matrix.user }}".activationPackage' --no-link --print-build-logs

@@ -16,6 +16,7 @@
     }:
     {
       imports = with topConfig.flake.nixosModules; [
+          wireguard_client
         # --- Core System & Hardware ---
         snowflake_hardware
         disko

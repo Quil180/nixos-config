@@ -25,4 +25,30 @@ in
   "root_password.age".publicKeys = allKeys;
   "git_identity.age".publicKeys = allKeys;
   "snowflake.age".publicKeys = allKeys;
+
+  # ExpressVPN. Both the .ovpn (it embeds a client cert+key and tls-auth) and
+  # the username/password live here so nothing lands in the public repo.
+  # TODO(quil): switch these to `serverKeys croissant` once croissant's SSH
+  # host key exists, then rekey:
+  #   nix run github:ryantm/agenix -- -r -i ~/.ssh/id_ed25519
+  # Server-side secrets. All still sealed to the user key, so each host needs
+  # `serverKeys <host>` + a rekey once its SSH host key exists (December):
+  # paperless (biscuit), grafana (muffin), vaultwarden (macaron).
+  # Caddy's Porkbun API credentials for the ACME DNS-01 challenge, plus the
+  # ACME contact address (kept here so the real mailbox is not in the repo).
+  # Values are real as of now — re-encrypt this file if you rotate the API keys.
+  "caddy_porkbun_env.age".publicKeys = allKeys;
+
+  "paperless_admin.age".publicKeys = allKeys;
+  # WireGuard private keys, pre-generated so the clients need no setup. The
+  # public halves are not secret and live in homelab-net.nix.
+  "wg_crust.age".publicKeys = allKeys;
+  "wg_snowflake.age".publicKeys = allKeys;
+  "wg_moraine.age".publicKeys = allKeys;
+
+  "grafana_secret_key.age".publicKeys = allKeys;
+  "vaultwarden_env.age".publicKeys = allKeys;
+
+  "expressvpn_ovpn.age".publicKeys = allKeys;
+  "expressvpn_auth.age".publicKeys = allKeys;
 }
