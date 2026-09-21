@@ -30,7 +30,7 @@
 
           # Speculative Decoding (MTP)
           spec-type = "draft-mtp";
-          spec-draft-n-max = 3;
+          spec-draft-n-max = 5;
           spec-draft-p-min = 0.6;
 
           # Server settings
@@ -43,6 +43,7 @@
 
           # --- 2. GPU Offloading & Speed ---
           fit = "on";
+          fit-target = 256;
           parallel = 1;
           batch-size = 2048; # Speeds up prompt processing (prefill)
           ubatch-size = 2048; # Increases parallel processing efficiency
@@ -51,12 +52,10 @@
           # --- 3. Advanced Memory & Attention Optimizations ---
           flash-attn = "on"; # Huge VRAM savings and speedup for attention
           load-mode = "mlock";
-          mmap = false;
           reasoning-preserve = true;
           metrics = true;
           no-mmproj = true;
 
-          cache-reuse = 2048;
           cache-prompt = true;
           cont-batching = true;
           warmup = true;
