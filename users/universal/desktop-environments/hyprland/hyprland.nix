@@ -129,7 +129,7 @@
           ++ lib.optional (builtins.elem "laptop" tags) {
             _args = [
               "AQ_DRM_DEVICES"
-              "/dev/dri/card1:/dev/dri/card2"
+              "/dev/dri/card2:/dev/dri/card1"
             ];
           }
           ++ [
