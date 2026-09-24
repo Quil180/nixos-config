@@ -114,21 +114,22 @@
           flake.nixosConfigurations = lib.mapAttrs (
             name: host:
             nixpkgs.lib.nixosSystem {
-              system = host.system;
+              inherit (host) system;
               specialArgs = {
                 inherit inputs;
                 username = "quil";
                 hostname = name;
-                system = host.system;
-                tags = host.tags;
+                inherit (host) system;
+                inherit (host) tags;
               };
               modules = [
                 host.module
+                # Only what every host (desktop, VM, LXC) uses. Feature-specific
+                # upstream modules are imported by the module that needs them:
+                # stylix by `workstation`, jovian by `games`, impermanence by
+                # `persist`.
                 inputs.agenix.nixosModules.default
                 inputs.disko.nixosModules.disko
-                inputs.impermanence.nixosModules.impermanence
-                inputs.stylix.nixosModules.stylix
-                inputs.jovian.nixosModules.default
               ];
             }
           ) config.configurations.nixos;
@@ -151,7 +152,12 @@
             inputs.home-manager.lib.homeManagerConfiguration {
               pkgs = nixpkgs.legacyPackages.${system};
               extraSpecialArgs = {
-                inherit inputs username hostname system;
+                inherit
+                  inputs
+                  username
+                  hostname
+                  system
+                  ;
                 tags = if host == null then [ ] else host.tags;
                 dotfilesDir = "/home/${username}/.dotfiles";
               };
@@ -169,25 +175,35 @@
           perSystem =
             { pkgs, system, ... }:
             {
-              formatter = pkgs.nixfmt-rfc-style;
+              formatter = pkgs.nixfmt;
 
               # disko as a runnable CLI (`nix run .#disko`), for stock-ISO installs.
               packages.disko = inputs.disko.packages.${system}.disko;
 
               devShells.default = pkgs.mkShell {
-                packages = [ pkgs.nixos-rebuild pkgs.home-manager pkgs.statix pkgs.deadnix ];
+                packages = [
+                  pkgs.nixos-rebuild
+                  pkgs.home-manager
+                  pkgs.statix
+                  pkgs.deadnix
+                ];
               };
 
-              # Advisory lint checks: the tree is not yet nixfmt/statix-clean
-              # (~50 of 70 files unformatted), so `|| true` keeps CI green while
-              # surfacing violations. Drop the `|| true` after a repo-wide cleanup.
-              checks.nixfmt = pkgs.runCommandLocal "nixfmt-check" {} ''
-                ${pkgs.nixfmt-rfc-style}/bin/nixfmt --check ${./.} || true
+              # Lint checks, enforced: `nix flake check` (and CI) fail on any
+              # unformatted file, statix warning or unused binding. Fix with
+              # `nix fmt`, `statix fix` and `deadnix -e`.
+              checks.nixfmt = pkgs.runCommandLocal "nixfmt-check" { } ''
+                find ${./.} -name '*.nix' -exec ${pkgs.nixfmt}/bin/nixfmt --check {} +
                 touch $out
               '';
 
-              checks.statix = pkgs.runCommandLocal "statix-check" {} ''
-                ${pkgs.statix}/bin/statix check ${./.} || true
+              checks.statix = pkgs.runCommandLocal "statix-check" { } ''
+                ${pkgs.statix}/bin/statix check --config ${./statix.toml} ${./.}
+                touch $out
+              '';
+
+              checks.deadnix = pkgs.runCommandLocal "deadnix-check" { } ''
+                ${pkgs.deadnix}/bin/deadnix --fail ${./.}
                 touch $out
               '';
             };

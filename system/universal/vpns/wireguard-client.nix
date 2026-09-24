@@ -1,7 +1,6 @@
 {
   topConfig,
   lib,
-  pkgs,
   ...
 }:
 {
@@ -12,7 +11,12 @@
     { config, hostname, ... }:
     let
       inherit (config.homelab.net)
-        crustEndpoint crustWgPublicKey wgSubnet lanSubnet wgClients;
+        crustEndpoint
+        crustWgPublicKey
+        wgSubnet
+        lanSubnet
+        wgClients
+        ;
       me = wgClients.${hostname};
 
       # crust does not exist yet, so crustEndpoint is still the RFC 2606
@@ -40,7 +44,10 @@
             endpoint = crustEndpoint;
             # Split tunnel: only the tunnel subnet and the homelab LAN go
             # through crust. Ordinary internet traffic uses the local link.
-            allowedIPs = [ wgSubnet lanSubnet ];
+            allowedIPs = [
+              wgSubnet
+              lanSubnet
+            ];
             # This side is behind NAT, so it has to keep the tunnel open.
             persistentKeepalive = 25;
           }

@@ -1,15 +1,8 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.homeModules.pi =
     {
       pkgs,
       inputs,
-      dotfilesDir,
       ...
     }:
     {

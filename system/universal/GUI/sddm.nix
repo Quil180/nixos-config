@@ -1,10 +1,4 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.nixosModules.sddm = { pkgs, ... }: {
     environment.systemPackages = with pkgs; [
       kdePackages.sddm

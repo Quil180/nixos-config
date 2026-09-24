@@ -1,10 +1,7 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.homeModules.rofi = 
-{...}: {
-  programs.rofi = {
-    enable = true;
+_: {
+  flake.homeModules.rofi = _: {
+    programs.rofi = {
+      enable = true;
+    };
   };
-}
-;
 }

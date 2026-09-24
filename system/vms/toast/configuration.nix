@@ -1,18 +1,15 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.toast.module =
     {
-      lib,
       pkgs,
       ...
     }:
     {
-      imports = with topConfig.flake.nixosModules; [ lxc_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ lxc_base ];
 
       networking.hostName = "toast";
       system.stateVersion = "26.11";
@@ -42,16 +39,26 @@
         extraPackages = with pkgs; [ mesa ];
       };
 
-      services.lanAccess.fromCrust = [ 8096 ];
+      homelab.expose.jellyfin = 8096;
 
       # ---- /mnt/media from Breadbox (TrueNAS).
       fileSystems."/mnt/media" = {
         # TODO(quil): confirm the exact export path on Breadbox.
         device = "breadbox:/mnt/media";
         fsType = "nfs";
-        options = [ "_netdev" "x-systemd.automount" "noauto" "nofail" ];
+        options = [
+          "_netdev"
+          "x-systemd.automount"
+          "noauto"
+          "nofail"
+        ];
       };
     };
 
-  configurations.nixos.toast.tags = [ "lxc" "server" "media" "gpu" ];
+  configurations.nixos.toast.tags = [
+    "lxc"
+    "server"
+    "media"
+    "gpu"
+  ];
 }

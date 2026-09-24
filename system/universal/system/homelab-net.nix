@@ -1,5 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
-{
+_: {
   # ---- THE single source of truth for the homelab network -----------------
   # Everything that needs crust's address, the internal domain or a subnet
   # reads these options instead of hardcoding them. Change a value HERE and
@@ -8,6 +7,10 @@
   flake.nixosModules.homelab_net =
     { lib, ... }:
     {
+      # Stable key: lets several modules (lan_access, wireguard_client, …)
+      # import this without declaring the options twice.
+      key = "dotfiles#nixosModules.homelab_net";
+
       options.homelab.net = {
         domain = lib.mkOption {
           type = lib.types.str;
@@ -85,13 +88,24 @@
             can never drift apart. Public keys are not secret; the private
             halves are agenix secrets named by `secretFile`.
           '';
-          type = lib.types.attrsOf (lib.types.submodule {
-            options = {
-              address = lib.mkOption { type = lib.types.str; description = "Tunnel address (no prefix)."; };
-              publicKey = lib.mkOption { type = lib.types.str; description = "Client public key."; };
-              secretFile = lib.mkOption { type = lib.types.path; description = "Encrypted private key."; };
-            };
-          });
+          type = lib.types.attrsOf (
+            lib.types.submodule {
+              options = {
+                address = lib.mkOption {
+                  type = lib.types.str;
+                  description = "Tunnel address (no prefix).";
+                };
+                publicKey = lib.mkOption {
+                  type = lib.types.str;
+                  description = "Client public key.";
+                };
+                secretFile = lib.mkOption {
+                  type = lib.types.path;
+                  description = "Encrypted private key.";
+                };
+              };
+            }
+          );
         };
 
         wgSubnet = lib.mkOption {

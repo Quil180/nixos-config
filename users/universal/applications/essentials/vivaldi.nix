@@ -1,11 +1,9 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.homeModules.vivaldi = 
-{pkgs, ...}:
-{
-  home.packages = with pkgs; [
-    vivaldi
-  ];
-}
-;
+_: {
+  flake.homeModules.vivaldi =
+    { pkgs, ... }:
+    {
+      home.packages = with pkgs; [
+        vivaldi
+      ];
+    };
 }

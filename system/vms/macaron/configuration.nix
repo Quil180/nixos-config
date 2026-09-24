@@ -1,14 +1,10 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.macaron.module =
     {
-      lib,
-      pkgs,
       config,
       ...
     }:
@@ -16,7 +12,7 @@
       inherit (config.homelab.net) domain;
     in
     {
-      imports = with topConfig.flake.nixosModules; [ lxc_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ lxc_base ];
 
       networking.hostName = "macaron";
       system.stateVersion = "26.11";
@@ -48,8 +44,12 @@
       };
 
       # UI goes through crust's Caddy over HTTPS — never exposed directly.
-      services.lanAccess.fromCrust = [ 8222 ];
+      homelab.expose.vault = 8222;
     };
 
-  configurations.nixos.macaron.tags = [ "lxc" "server" "vault" ];
+  configurations.nixos.macaron.tags = [
+    "lxc"
+    "server"
+    "vault"
+  ];
 }

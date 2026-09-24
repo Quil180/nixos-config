@@ -1,7 +1,8 @@
 name: CI
 
-# Build-verify every target in the flake: the NixOS hosts (snowflake, moraine,
-# the six Proxmox VMs and the five LXCs) and the home-manager targets.
+# Build-verify every target in the flake: every nixosConfiguration and every
+# homeConfiguration. The matrices are read from the flake itself (the
+# `targets` job), so a new host or home target is built with no edit here.
 #
 # NOTE: the installer-ISO job was removed along with the `installer/` directory
 # and the `nixosConfigurations.installer` target.
@@ -25,29 +26,48 @@ on:
   workflow_dispatch:
 
 jobs:
+  targets:
+    name: Enumerate targets
+    runs-on: ubuntu-latest
+    outputs:
+      nixos: ${{ steps.list.outputs.nixos }}
+      home: ${{ steps.list.outputs.home }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - id: list
+        run: |
+          echo "nixos=$(nix eval --json .#nixosConfigurations --apply builtins.attrNames)" >> "$GITHUB_OUTPUT"
+          echo "home=$(nix eval --json .#homeConfigurations --apply builtins.attrNames)" >> "$GITHUB_OUTPUT"
+
+  checks:
+    name: Lint (nixfmt, statix, deadnix)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Build lint checks
+        run: nix build .#checks.x86_64-linux.nixfmt .#checks.x86_64-linux.statix .#checks.x86_64-linux.deadnix --no-link --print-build-logs
+
   nixos:
     name: NixOS (${{ matrix.host }})
+    needs: targets
     runs-on: ubuntu-latest
     timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
-        host:
-          - snowflake
-          - moraine
-          # Proxmox VMs
-          - crust
-          - baguette
-          - scone
-          - croissant
-          - biscotti
-          - biscuit
-          # Proxmox LXCs
-          - crepe
-          - bagel
-          - muffin
-          - toast
-          - macaron
+        host: ${{ fromJSON(needs.targets.outputs.nixos) }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -62,14 +82,13 @@ jobs:
 
   home:
     name: Home-Manager (${{ matrix.user }})
+    needs: targets
     runs-on: ubuntu-latest
     timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
-        user:
-          - quil@snowflake
-          - quil@moraine
+        user: ${{ fromJSON(needs.targets.outputs.home) }}
     steps:
       - uses: actions/checkout@v7
         with:

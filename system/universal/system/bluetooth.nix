@@ -1,23 +1,20 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.nixosModules.bluetooth = 
-{...}: {
-  hardware = {
-    bluetooth = {
-      enable = true;
-      powerOnBoot = false;
-      settings = {
-        General = {
-          Enable = "Source,Sink,Media,Socket";
-          Experimental = true;
+_: {
+  flake.nixosModules.bluetooth = _: {
+    hardware = {
+      bluetooth = {
+        enable = true;
+        powerOnBoot = false;
+        settings = {
+          General = {
+            Enable = "Source,Sink,Media,Socket";
+            Experimental = true;
+          };
         };
       };
     };
-  };
 
-  services.blueman = {
-    enable = true;
+    services.blueman = {
+      enable = true;
+    };
   };
-}
-;
 }

@@ -1,10 +1,4 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.nixosModules.llamacpp =
     {
       pkgs,
@@ -13,6 +7,9 @@
       ...
     }:
     {
+      # Stops llama-cpp while cardwire has the dGPU blocked (laptops only).
+      imports = [ ./_gpu-coupling.nix ];
+
       services.llama-cpp = {
         enable = true;
         # ROCm build targeted specifically for the G14's RX 6800S GPU

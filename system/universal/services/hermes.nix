@@ -1,10 +1,4 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.nixosModules.hermes =
     {
       inputs,

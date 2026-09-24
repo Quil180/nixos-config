@@ -1,14 +1,12 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.nixosModules.hamachi = 
-{ pkgs, ... }:
-{
-  environment.systemPackages = with pkgs; [
-    bind.dnsutils
-  ];
+_: {
+  flake.nixosModules.hamachi =
+    { pkgs, ... }:
+    {
+      environment.systemPackages = with pkgs; [
+        bind.dnsutils
+      ];
 
-  programs.haguichi.enable = true;
-  networking.firewall.trustedInterfaces = [ "ham0" ];
-}
-;
+      programs.haguichi.enable = true;
+      networking.firewall.trustedInterfaces = [ "ham0" ];
+    };
 }

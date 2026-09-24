@@ -1,15 +1,13 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.homeModules.antigravity = 
-{ pkgs, ... }:
-{
-  home.packages = with pkgs; [
-    # antigravity
-    google-chrome
-    # If you encounter issues with extensions or binaries, 
-    # you can try the FHS version instead:
-    antigravity-ide-fhs
-  ];
-}
-;
+_: {
+  flake.homeModules.antigravity =
+    { pkgs, ... }:
+    {
+      home.packages = with pkgs; [
+        # antigravity
+        google-chrome
+        # If you encounter issues with extensions or binaries,
+        # you can try the FHS version instead:
+        antigravity-ide-fhs
+      ];
+    };
 }

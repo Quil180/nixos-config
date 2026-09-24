@@ -1,9 +1,5 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.nixosModules.teamviewer = 
-{...}:
-{
-	services.teamviewer.enable = true;
-}
-;
+_: {
+  flake.nixosModules.teamviewer = _: {
+    services.teamviewer.enable = true;
+  };
 }

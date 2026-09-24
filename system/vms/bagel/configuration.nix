@@ -1,19 +1,15 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.bagel.module =
     {
-      lib,
-      pkgs,
       config,
       ...
     }:
     {
-      imports = with topConfig.flake.nixosModules; [ lxc_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ lxc_base ];
 
       networking.hostName = "bagel";
       system.stateVersion = "26.11";
@@ -53,9 +49,14 @@
       services.lanAccess = {
         fromLan = [ 53 ];
         fromLanUdp = [ 53 ];
-        fromCrust = [ 3000 ];
       };
+      homelab.expose.dns2 = 3000;
     };
 
-  configurations.nixos.bagel.tags = [ "lxc" "server" "dns" "secondary" ];
+  configurations.nixos.bagel.tags = [
+    "lxc"
+    "server"
+    "dns"
+    "secondary"
+  ];
 }

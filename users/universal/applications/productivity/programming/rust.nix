@@ -1,10 +1,7 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.homeModules.rust = 
-{ pkgs, ... }: {
-  home.packages = with pkgs; [
-    rustup
-  ];
-}
-;
+_: {
+  flake.homeModules.rust = { pkgs, ... }: {
+    home.packages = with pkgs; [
+      rustup
+    ];
+  };
 }

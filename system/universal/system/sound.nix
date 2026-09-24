@@ -1,26 +1,23 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.nixosModules.sound = 
-{pkgs, ...}: {
-  environment.systemPackages = with pkgs; [
-    pulseaudioFull
-    easyeffects
-  ];
+_: {
+  flake.nixosModules.sound = { pkgs, ... }: {
+    environment.systemPackages = with pkgs; [
+      pulseaudioFull
+      easyeffects
+    ];
 
-  # for good sound quality
-  security.rtkit.enable = true;
+    # for good sound quality
+    security.rtkit.enable = true;
 
-  services.pipewire = {
-    audio.enable = true;
-    enable = true;
-    alsa = {
+    services.pipewire = {
+      audio.enable = true;
       enable = true;
-      support32Bit = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      wireplumber.enable = true;
+      jack.enable = true;
+      pulse.enable = true;
     };
-    wireplumber.enable = true;
-    jack.enable = true;
-    pulse.enable = true;
   };
-}
-;
 }

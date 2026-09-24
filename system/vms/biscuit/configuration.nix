@@ -1,19 +1,15 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.biscuit.module =
     {
-      lib,
-      pkgs,
       config,
       ...
     }:
     {
-      imports = with topConfig.flake.nixosModules; [ vm_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ vm_base ];
 
       networking.hostName = "biscuit";
       system.stateVersion = "26.11";
@@ -48,16 +44,25 @@
         secrets.paperless_admin.file = ../../../secrets/paperless_admin.age;
       };
 
-      services.lanAccess.fromCrust = [ 28981 ];
+      homelab.expose.paperless = 28981;
 
       # ---- /mnt/documents from Breadbox (TrueNAS).
       fileSystems."/mnt/documents" = {
         # TODO(quil): confirm the exact export path on Breadbox.
         device = "breadbox:/mnt/documents";
         fsType = "nfs";
-        options = [ "_netdev" "x-systemd.automount" "noauto" "nofail" ];
+        options = [
+          "_netdev"
+          "x-systemd.automount"
+          "noauto"
+          "nofail"
+        ];
       };
     };
 
-  configurations.nixos.biscuit.tags = [ "vm" "server" "documents" ];
+  configurations.nixos.biscuit.tags = [
+    "vm"
+    "server"
+    "documents"
+  ];
 }

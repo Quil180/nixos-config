@@ -1,11 +1,5 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
-  flake.homeModules.binds = { ... }: {
+_: {
+  flake.homeModules.binds = _: {
     wayland.windowManager.hyprland.extraConfig = ''
       -- Variables
       local mod = "SUPER"

@@ -1,37 +1,26 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.muffin.module =
     {
       lib,
-      pkgs,
       config,
       ...
     }:
     let
       inherit (config.homelab.net) domain;
 
-      # Every host runs node_exporter:9100 via the shared `monitoring` module.
-      nodeTargets = [
-        "crust:9100"
-        "baguette:9100"
-        "scone:9100"
-        "croissant:9100"
-        "biscotti:9100"
-        "biscuit:9100"
-        "crepe:9100"
-        "bagel:9100"
-        "toast:9100"
-        "macaron:9100"
-        "muffin:9100"
-      ];
+      # Every server runs node_exporter:9100 via server_base -> `monitoring`,
+      # so the target list is every host tagged "server" — a new VM/LXC is
+      # scraped with no edit here.
+      nodeTargets = lib.mapAttrsToList (name: _: "${name}:9100") (
+        lib.filterAttrs (_: host: builtins.elem "server" host.tags) topConfig.configurations.nixos
+      );
     in
     {
-      imports = with topConfig.flake.nixosModules; [ lxc_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ lxc_base ];
 
       networking.hostName = "muffin";
       system.stateVersion = "26.11";
@@ -107,23 +96,30 @@
           # is generated, not looked up, and it encrypts datasource credentials
           # in grafana.db — so rotating it later needs a re-encrypt:
           #   grafana-cli admin data-migration encrypt-datasource-passwords
-          security.secret_key = "$__file{/run/agenix/grafana_secret_key}";
+          security.secret_key = "$__file{${config.age.secrets.grafana_secret_key.path}}";
         };
       };
 
       age = {
         identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-        secrets.grafana_secret_key.file = ../../../secrets/grafana_secret_key.age;
+        # Grafana reads this itself (the $__file provider above), not via a
+        # root-run systemd directive, so it must own it.
+        secrets.grafana_secret_key = {
+          file = ../../../secrets/grafana_secret_key.age;
+          owner = "grafana";
+        };
       };
 
       # Loki is pushed to by *every* host's Alloy, so it is LAN-wide; Grafana
       # is a UI, so it goes through crust's Caddy. Prometheus stays local (only
       # Grafana reads it).
-      services.lanAccess = {
-        fromLan = [ 3100 ];
-        fromCrust = [ 3000 ];
-      };
+      services.lanAccess.fromLan = [ 3100 ];
+      homelab.expose.grafana = 3000;
     };
 
-  configurations.nixos.muffin.tags = [ "lxc" "server" "observability" ];
+  configurations.nixos.muffin.tags = [
+    "lxc"
+    "server"
+    "observability"
+  ];
 }

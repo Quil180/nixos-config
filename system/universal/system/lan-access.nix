@@ -1,4 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
+{ topConfig, ... }:
 {
 
   # Exposes service ports to exactly the right sources.
@@ -28,8 +28,26 @@
         '';
     in
     {
+      # Stable key so server_base, monitoring, … can each import this safely.
+      key = "dotfiles#nixosModules.lan_access";
+
       # Network facts come from flake.nixosModules.homelab_net — edit them THERE.
       imports = [ topConfig.flake.nixosModules.homelab_net ];
+
+      options.homelab.expose = lib.mkOption {
+        type = lib.types.attrsOf lib.types.port;
+        default = { };
+        example = {
+          sonarr = 8989;
+        };
+        description = ''
+          Service UIs this host serves through crust, as subdomain -> local
+          port. crust's Caddy derives `https://<name>.<domain>` ->
+          `<this host>:<port>` from it, and the port is opened to crust
+          alone (it is added to services.lanAccess.fromCrust). Declaring a
+          UI here is the whole job: no edit on crust is needed.
+        '';
+      };
 
       options.services.lanAccess = {
         fromCrust = lib.mkOption {
@@ -58,6 +76,8 @@
           description = "UDP ports reachable from WireGuard clients.";
         };
       };
+
+      config.services.lanAccess.fromCrust = lib.attrValues config.homelab.expose;
 
       config.networking.firewall.extraCommands = ''
         # services.lanAccess.* — IPv4 only, by design (public IPv6 prefix on this

@@ -1,4 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
+{ lib, ... }:
 {
   flake.homeModules.monitors = { tags, ... }: {
     wayland.windowManager.hyprland.settings.monitor =

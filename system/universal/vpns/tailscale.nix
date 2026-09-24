@@ -1,5 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
-{
+_: {
   flake.nixosModules.tailscale =
     { lib, ... }:
     {

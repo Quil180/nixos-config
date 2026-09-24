@@ -1,7 +1,5 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
@@ -20,16 +18,13 @@
       # via NSS when the rule is inserted, and the firewall script runs under
       # `sh -e` — an unknown name aborts the entire firewall script, leaving a
       # half-applied ruleset. That is why prowlarr gets a static account below.
-      killswitchUsers = [ "qbittorrent" "sonarr" "radarr" "prowlarr" "bazarr" ];
-
-      # crust's LAN address — the ONLY source allowed to reach the service UIs
-      # below. TODO(quil): PROVISIONAL placeholder for a home LAN
-      # (192.168.5.0/24) and WILL CHANGE. Set it to crust's real, *pinned*
-      # address, and pin crust with a DHCP reservation on Pretzel (pfSense)
-      # rather than a static NixOS address, so its interface name never has to
-      # be guessed. If this value is wrong Caddy gets 502s; if crust's lease
-      # moves, the rules silently stop matching anything.
-      crustAddress = "192.168.5.5";
+      killswitchUsers = [
+        "qbittorrent"
+        "sonarr"
+        "radarr"
+        "prowlarr"
+        "bazarr"
+      ];
 
       killswitchRules = lib.concatMapStrings (u: ''
         ip46tables -A vpn-killswitch -m owner --uid-owner ${u} -o lo -j ACCEPT
@@ -39,7 +34,7 @@
       '') killswitchUsers;
     in
     {
-      imports = with topConfig.flake.nixosModules; [ vm_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ vm_base ];
 
       networking.hostName = "croissant";
       system.stateVersion = "26.11";
@@ -171,22 +166,38 @@
       # counterpart, so the ports stay closed on IPv6.
       #
       # Stock servarr/qBittorrent listen ports. Change one in an app's UI and
-      # you must change it here too, or Caddy will 502.
+      # you must change it here too, or Caddy will 502. crust's vhosts and the
+      # crust-only firewall rules are both derived from this attrset.
       #
-      # The rules themselves come from the shared lan_access module below —
+      # The rules themselves are written by the shared lan_access module —
       # extraCommands can only be assigned once per module *file*, but separate
       # modules merge (it is types.lines), so the killswitch block above and
       # these rules coexist.
-      services.lanAccess.fromCrust = [ 8080 8989 7878 9696 6767 ];
+      homelab.expose = {
+        qbit = 8080;
+        sonarr = 8989;
+        radarr = 7878;
+        prowlarr = 9696;
+        bazarr = 6767;
+      };
 
       # ---- /mnt/media from Breadbox (TrueNAS).
       fileSystems."/mnt/media" = {
         # TODO(quil): confirm the exact export path on Breadbox.
         device = "breadbox:/mnt/media";
         fsType = "nfs";
-        options = [ "_netdev" "x-systemd.automount" "noauto" "nofail" ];
+        options = [
+          "_netdev"
+          "x-systemd.automount"
+          "noauto"
+          "nofail"
+        ];
       };
     };
 
-  configurations.nixos.croissant.tags = [ "vm" "server" "media-acquisition" ];
+  configurations.nixos.croissant.tags = [
+    "vm"
+    "server"
+    "media-acquisition"
+  ];
 }

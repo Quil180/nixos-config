@@ -1,7 +1,5 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {

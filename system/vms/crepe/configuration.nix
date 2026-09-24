@@ -1,19 +1,15 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.crepe.module =
     {
-      lib,
-      pkgs,
       config,
       ...
     }:
     {
-      imports = with topConfig.flake.nixosModules; [ lxc_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ lxc_base ];
 
       networking.hostName = "crepe";
       system.stateVersion = "26.11";
@@ -52,9 +48,14 @@
       services.lanAccess = {
         fromLan = [ 53 ];
         fromLanUdp = [ 53 ];
-        fromCrust = [ 3000 ];
       };
+      homelab.expose.dns = 3000;
     };
 
-  configurations.nixos.crepe.tags = [ "lxc" "server" "dns" "primary" ];
+  configurations.nixos.crepe.tags = [
+    "lxc"
+    "server"
+    "dns"
+    "primary"
+  ];
 }

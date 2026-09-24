@@ -1,18 +1,14 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.baguette.module =
     {
-      lib,
-      pkgs,
       ...
     }:
     {
-      imports = with topConfig.flake.nixosModules; [ vm_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ vm_base ];
 
       networking.hostName = "baguette";
       system.stateVersion = "26.11";
@@ -33,10 +29,20 @@
       # to reach it from a machine that is NOT on the VPN, this is the rule to
       # change — but then it is public, so weigh that carefully.
       services.lanAccess = {
-        fromWireguard = [ 21115 21116 21117 21118 21119 ];
+        fromWireguard = [
+          21115
+          21116
+          21117
+          21118
+          21119
+        ];
         fromWireguardUdp = [ 21116 ];
       };
     };
 
-  configurations.nixos.baguette.tags = [ "vm" "server" "remote-access" ];
+  configurations.nixos.baguette.tags = [
+    "vm"
+    "server"
+    "remote-access"
+  ];
 }

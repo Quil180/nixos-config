@@ -1,10 +1,4 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.nixosModules.g14 =
     { pkgs, ... }:
     {
@@ -65,20 +59,8 @@
           #   swapped-bytes ↔ physical-block mapping before re-provisioning.
           "snd_hda_intel.power_save=1" # Audio power saving
         ];
-        kernelPackages = pkgs.linuxPackages_latest;
+        # Bootloader and kernelPackages come from the `workstation` module.
         resumeDevice = "/dev/mapper/root_vg-root";
-        loader = {
-          systemd-boot.enable = false;
-          efi = {
-            canTouchEfiVariables = true;
-          };
-          grub = {
-            enable = true;
-            configurationLimit = 5;
-            device = "nodev";
-            efiSupport = true;
-          };
-        };
       };
 
       # Ensuring that Hibernate and Suspend

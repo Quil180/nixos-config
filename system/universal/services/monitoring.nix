@@ -1,4 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
+{ topConfig, ... }:
 {
   flake.nixosModules.monitoring =
     { pkgs, config, ... }:
@@ -36,6 +36,8 @@
       '';
     in
     {
+      imports = [ topConfig.flake.nixosModules.lan_access ];
+
       services.prometheus.exporters.node = {
         enable = true;
         enabledCollectors = [ "systemd" ];
@@ -46,6 +48,10 @@
         enable = true;
         configPath = alloyConfig;
       };
+
+      # muffin's Prometheus scrapes every host. IPv4 LAN only (see lan_access)
+      # — muffin has no pinned address to scope this to yet.
+      services.lanAccess.fromLan = [ 9100 ];
 
       # Reading /var/log/journal needs the systemd-journal group.
       systemd.services.alloy.serviceConfig.SupplementaryGroups = [ "systemd-journal" ];

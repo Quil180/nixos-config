@@ -1,54 +1,51 @@
 let
-  # Host keys: Used by the system to decrypt secrets at boot.
-  # Replace these with the actual host keys once the systems are installed.
-  # You can find the host key on the target machine in /etc/ssh/ssh_host_ed25519_key.pub
-  snowflake = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINGnAyGD5Ah3rhIxOJi39w5Ac0duyOM2nyWNHQocsokA root@snowflake";
-  # User keys: Used by you to encrypt/edit secrets.
+  # User keys: used by you to encrypt/edit secrets (and, on the personal
+  # machines, to decrypt them — see age.identityPaths in `workstation`).
   user_quil = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5X4Lyn55CjuIkzMwUqtcmak68QGzL0obzLME7ICvvp quil@snowflake";
-
-  # Grouping keys
-  systems = [
-    snowflake
-  ];
   users = [ user_quil ];
-  allKeys = users;
 
-  # For specific servers
-  serverKeys = nodeKey: [
-    nodeKey
-    user_quil
-  ];
+  # Server host keys: each server decrypts its own secrets with
+  # /etc/ssh/ssh_host_ed25519_key (the serverKeys model — the user's private
+  # key never lands on a server). `null` = the host is not installed yet, so
+  # its secrets are sealed to the user key only and WILL NOT decrypt there.
+  #
+  # Once a host exists: paste `cat /etc/ssh/ssh_host_ed25519_key.pub` from it
+  # below, then rekey from the secrets/ directory:
+  #   nix run github:ryantm/agenix -- -r -i ~/.ssh/id_ed25519
+  hosts = {
+    crust = null; # caddy_porkbun_env, wg_crust
+    croissant = null; # expressvpn_ovpn, expressvpn_auth
+    biscuit = null; # paperless_admin
+    muffin = null; # grafana_secret_key
+    macaron = null; # vaultwarden_env
+  };
 
+  # The user key plus the host's key, once it has one.
+  serverKeys = host: users ++ (if hosts.${host} == null then [ ] else [ hosts.${host} ]);
 in
 {
-  "quil_password.age".publicKeys = allKeys; # Common user password
-  "root_password.age".publicKeys = allKeys;
-  "git_identity.age".publicKeys = allKeys;
-  "snowflake.age".publicKeys = allKeys;
+  "quil_password.age".publicKeys = users; # Common user password
+  "root_password.age".publicKeys = users;
+  "git_identity.age".publicKeys = users;
+  "snowflake.age".publicKeys = users;
 
-  # ExpressVPN. Both the .ovpn (it embeds a client cert+key and tls-auth) and
-  # the username/password live here so nothing lands in the public repo.
-  # TODO(quil): switch these to `serverKeys croissant` once croissant's SSH
-  # host key exists, then rekey:
-  #   nix run github:ryantm/agenix -- -r -i ~/.ssh/id_ed25519
-  # Server-side secrets. All still sealed to the user key, so each host needs
-  # `serverKeys <host>` + a rekey once its SSH host key exists (December):
-  # paperless (biscuit), grafana (muffin), vaultwarden (macaron).
+  # WireGuard client keys, pre-generated so the clients need no setup. The
+  # public halves are not secret and live in homelab-net.nix.
+  "wg_snowflake.age".publicKeys = users;
+  "wg_moraine.age".publicKeys = users;
+
   # Caddy's Porkbun API credentials for the ACME DNS-01 challenge, plus the
   # ACME contact address (kept here so the real mailbox is not in the repo).
   # Values are real as of now — re-encrypt this file if you rotate the API keys.
-  "caddy_porkbun_env.age".publicKeys = allKeys;
+  "caddy_porkbun_env.age".publicKeys = serverKeys "crust";
+  "wg_crust.age".publicKeys = serverKeys "crust";
 
-  "paperless_admin.age".publicKeys = allKeys;
-  # WireGuard private keys, pre-generated so the clients need no setup. The
-  # public halves are not secret and live in homelab-net.nix.
-  "wg_crust.age".publicKeys = allKeys;
-  "wg_snowflake.age".publicKeys = allKeys;
-  "wg_moraine.age".publicKeys = allKeys;
+  # ExpressVPN. Both the .ovpn (it embeds a client cert+key and tls-auth) and
+  # the username/password live here so nothing lands in the public repo.
+  "expressvpn_ovpn.age".publicKeys = serverKeys "croissant";
+  "expressvpn_auth.age".publicKeys = serverKeys "croissant";
 
-  "grafana_secret_key.age".publicKeys = allKeys;
-  "vaultwarden_env.age".publicKeys = allKeys;
-
-  "expressvpn_ovpn.age".publicKeys = allKeys;
-  "expressvpn_auth.age".publicKeys = allKeys;
+  "paperless_admin.age".publicKeys = serverKeys "biscuit";
+  "grafana_secret_key.age".publicKeys = serverKeys "muffin";
+  "vaultwarden_env.age".publicKeys = serverKeys "macaron";
 }

@@ -1,15 +1,12 @@
-{ topConfig, lib, pkgs, ... }:
-{
-  flake.nixosModules.ly = 
-{pkgs, ...}: {
-  services = {
-    # setting ly as default login screen
-    displayManager.ly = {
-      enable = true;
+_: {
+  flake.nixosModules.ly = _: {
+    services = {
+      # setting ly as default login screen
+      displayManager.ly = {
+        enable = true;
+      };
+      # for any applications that require native X11
+      xserver.enable = true;
     };
-    # for any applications that require native X11
-    xserver.enable = true;
   };
-}
-;
 }

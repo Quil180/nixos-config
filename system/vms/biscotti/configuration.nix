@@ -1,14 +1,10 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.biscotti.module =
     {
-      lib,
-      pkgs,
       ...
     }:
     {
@@ -25,12 +21,14 @@
       nix.settings = {
         max-jobs = 4;
         cores = 0; # let each build use all cores
-        trusted-users = [ "root" "quil" ];
+        trusted-users = [
+          "root"
+          "quil"
+        ];
       };
 
-      # The builder accepts remote connections over SSH. quil's key is already
-      # authorised by the shared `security` module (AllowUsers = quil).
-      services.openssh.openFirewall = false;
+      # The builder accepts remote connections over SSH: the user, key and
+      # the LAN/WireGuard-scoped port 22 all come from server_base.
 
       # Optional: serve the built results as a binary cache.
       # services.nix-serve = {
@@ -49,5 +47,9 @@
       #   nix.distributedBuilds = true;
     };
 
-  configurations.nixos.biscotti.tags = [ "vm" "server" "builder" ];
+  configurations.nixos.biscotti.tags = [
+    "vm"
+    "server"
+    "builder"
+  ];
 }

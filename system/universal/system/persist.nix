@@ -1,13 +1,9 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.nixosModules.persist =
-    { lib, ... }:
+    { inputs, ... }:
     {
+      imports = [ inputs.impermanence.nixosModules.impermanence ];
+
       programs.fuse.userAllowOther = true;
 
       # system files we want to keep

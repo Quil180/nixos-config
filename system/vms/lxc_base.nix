@@ -1,4 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
+{ topConfig, ... }:
 {
   # Shared base for the NixOS LXCs: crepe, bagel, muffin, toast, macaron.
   #
@@ -12,8 +12,7 @@
     { lib, ... }:
     {
       imports = [
-        topConfig.flake.nixosModules.security
-        topConfig.flake.nixosModules.monitoring
+        topConfig.flake.nixosModules.server_base # login, ssh, hardening, monitoring, firewall
       ];
 
       boot.isContainer = true;

@@ -1,14 +1,10 @@
 {
   topConfig,
-  lib,
-  pkgs,
   ...
 }:
 {
   configurations.nixos.scone.module =
     {
-      lib,
-      pkgs,
       config,
       ...
     }:
@@ -16,7 +12,7 @@
       inherit (config.homelab.net) domain;
     in
     {
-      imports = with topConfig.flake.nixosModules; [ vm_base lan_access ];
+      imports = with topConfig.flake.nixosModules; [ vm_base ];
 
       networking.hostName = "scone";
       system.stateVersion = "26.11";
@@ -58,23 +54,41 @@
           # (tokens belong in an agenix secret + environmentFiles).
           {
             "Core" = [
-              { "Gitea" = { icon = "gitea.png"; href = "https://gitea.${domain}"; description = "git"; }; }
+              {
+                "Gitea" = {
+                  icon = "gitea.png";
+                  href = "https://gitea.${domain}";
+                  description = "git";
+                };
+              }
             ];
           }
         ];
       };
 
       # Both UIs are reached through crust's Caddy over the internal domain.
-      services.lanAccess.fromCrust = [ 3000 8082 ];
+      homelab.expose = {
+        gitea = 3000;
+        home = 8082;
+      };
 
       # ---- /mnt/git_lfs from Breadbox (TrueNAS).
       fileSystems."/mnt/git_lfs" = {
         # TODO(quil): confirm the exact export path on Breadbox.
         device = "breadbox:/mnt/git_lfs";
         fsType = "nfs";
-        options = [ "_netdev" "x-systemd.automount" "noauto" "nofail" ];
+        options = [
+          "_netdev"
+          "x-systemd.automount"
+          "noauto"
+          "nofail"
+        ];
       };
     };
 
-  configurations.nixos.scone.tags = [ "vm" "server" "git" ];
+  configurations.nixos.scone.tags = [
+    "vm"
+    "server"
+    "git"
+  ];
 }

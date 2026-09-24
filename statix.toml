@@ -1,0 +1,7 @@
+# statix config, read by `statix check`/`statix fix` and by the flake's statix check.
+#
+# repeated_keys is off on purpose: modules here group settings by feature
+# (e.g. croissant's VPN / killswitch / *arr blocks each set `services.…` and
+# `systemd.…` beside their own comment), which is clearer than one merged
+# `services = { … }` per file.
+disabled = [ "repeated_keys" ]

@@ -1,14 +1,13 @@
-{ topConfig, lib, pkgs, ... }:
+{ topConfig, ... }:
 {
   # Shared base for the Proxmox VMs: crust, baguette, scone, croissant,
   # biscotti, biscuit. Per-host specifics stay in system/vms/<host>/.
   flake.nixosModules.vm_base =
-    { lib, ... }:
+    { ... }:
     {
       imports = [
         topConfig.flake.nixosModules.proxmox_vm # qemu-guest profile + simple_disko + virtio
-        topConfig.flake.nixosModules.security
-        topConfig.flake.nixosModules.monitoring # node exporter + journal shipping to Loki
+        topConfig.flake.nixosModules.server_base # login, ssh, hardening, monitoring, firewall
       ];
 
       # server_notes note 1: memory ballooning needs the guest agent inside.

@@ -1,13 +1,10 @@
-{ topConfig, lib, pkgs, ... }:
+{ lib, ... }:
 {
   flake.homeModules.startup =
-    { pkgs, tags, ... }:
+    { tags, ... }:
     let
-      dotfiles = "~/.dotfiles";
       # Battery charge limit needs asusd (system-side `g14` module) — ASUS only.
-      asusBatteryLimit =
-        lib.optionalString (builtins.elem "asus" tags)
-          ''hl.exec_cmd("asusctl battery limit 80")'';
+      asusBatteryLimit = lib.optionalString (builtins.elem "asus" tags) ''hl.exec_cmd("asusctl battery limit 80")'';
     in
     {
       wayland.windowManager.hyprland.settings.on = [

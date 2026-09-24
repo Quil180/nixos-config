@@ -1,13 +1,9 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.nixosModules.games =
-    { pkgs, ... }:
+    { pkgs, inputs, ... }:
     {
+      imports = [ inputs.jovian.nixosModules.default ];
+
       environment.systemPackages = with pkgs; [
         # lutris
         mangohud

@@ -1,4 +1,4 @@
-{ topConfig, lib, pkgs, ... }:
+{ lib, ... }:
 {
   flake.homeModules.power-management =
     { pkgs, tags, ... }:

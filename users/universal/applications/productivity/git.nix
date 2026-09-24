@@ -1,10 +1,4 @@
-{
-  topConfig,
-  lib,
-  pkgs,
-  ...
-}:
-{
+_: {
   flake.homeModules.git = { config, ... }: {
     # git config
     programs.git = {
