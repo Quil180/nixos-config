@@ -110,6 +110,10 @@ _: {
     };
 
     fileSystems."/persist".neededForBoot = true;
+
+    # root_vg only appears after the LUKS passphrase is entered; without this the
+    # initrd gives up on /dev/root_vg/root after 90s and drops to emergency mode.
+    boot.initrd.systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
   }
 
   ;
