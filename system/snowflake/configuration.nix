@@ -30,6 +30,8 @@
         # --- Hardware Support ---
         amd
         g14
+        cardwire
+        llamacpp_gpu_coupling
 
         # --- Desktop Environments & Window Managers ---
         hyprland
@@ -65,7 +67,7 @@
         # --- AI Services ---
         hermes
         # ollama
-        llamacpp
+        # llamacpp
         # openwebui
       ];
 

@@ -64,8 +64,6 @@
           #   `filefrag -v /swap/swapfile` (btrfs needs root) and recompute from the
           #   swapped-bytes ↔ physical-block mapping before re-provisioning.
           "snd_hda_intel.power_save=1" # Audio power saving
-          # Following are to try and optimize suspend
-          "pcie_aspm=force"
         ];
         kernelPackages = pkgs.linuxPackages_latest;
         resumeDevice = "/dev/mapper/root_vg-root";

@@ -42,7 +42,7 @@
         # ly
         # monitoring
         # docker
-        # virtualisation  # VFIO hooks + supergfxctl hardcode snowflake PCI 0000:03:00.0/.1
+        # virtualisation  # virt-manager/QEMU stack (libvirt guest host) — snowflake only
         # hamachi
         tailscale
         # zerotier

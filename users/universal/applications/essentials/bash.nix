@@ -57,12 +57,15 @@ in
       vlsi = "export TERM=ansi; ssh -Y yo485591@vlsi.eecs.ucf.edu";
     }
     // lib.optionalAttrs (builtins.elem "asus" tags) {
-      # g14/ASUS-only: needs supergfxctl (system-side `g14` module).
-      gpu = "supergfxctl -g";
-      hybrid = "supergfxctl -m Hybrid && wayland-logout";
-      integrated = "supergfxctl -m Integrated && wayland-logout";
-      vfio = "supergfxctl -m Vfio";
-      dedicated = "supergfxctl -m AsusMuxDgpu && sudo reboot now";
+      # g14/ASUS-only: GPU mode switching is cardwire's job (system-side
+      # `cardwire` module). It blocks device nodes instead of unbinding PCI, so
+      # no logout is needed; MUX stays asusctl's (kernel: 0 = dGPU-only,
+      # 1 = optimus/hybrid) and wants a reboot.
+      gpu = "cardwire get";
+      hybrid = "cardwire set hybrid";
+      integrated = "cardwire set integrated";
+      smart = "cardwire set smart";
+      dedicated = "asusctl armoury set gpu_mux_mode 0 && sudo reboot now";
     };
     initContent = ''
       if [ -f "$HOME/.cache/terminal/sequences" ]; then
