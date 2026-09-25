@@ -123,7 +123,11 @@
     │      └── 🖼️ Immich (App + Postgres + Redis) — NO machine learning:
     │             `services.immich.machine-learning.enable = false;`
     │             (no face/object/smart search; ML was most of the RAM)
-    │             Postgres on the local disk, never on NFS; nightly pg_dump.
+    │             Postgres on the local disk, never on NFS; nightly pg_dump
+    │             (Immich's built-in DB backup → /mnt/photos/backups, 14 kept).
+    │             Served at https://photos.yousef.wiki.
+    │             TrueNAS: set the /mnt/photos share's Mapall User to the
+    │             dataset owner so the VM's immich uid can write.
     │
     ├── 📦 VM 5: Debian [Game Servers] (Waffle) — 🚧 DMZ_GAMES (VLAN 20)
     │      6 vCPU | 12 GB RAM | 256 GB DISK
