@@ -2,73 +2,116 @@
 │
 ├── 📡 Router/Firewall Appliance (Pretzel) — dedicated mini PC (~$100, N100-class, 2 NICs)
 │      OS: pfSense
-│      🛡️ Handles NAT, DHCP, Firewall — independent of Proxmox uptime
+│      🛡️ Handles NAT, DHCP, Firewall, VLANs — independent of Proxmox uptime
+│      Networks (see "DMZ VLANs" section at the bottom):
+│        LAN        untagged   192.168.5.0/24   everything trusted
+│        DMZ_GAMES  VLAN 20    192.168.20.0/24  Waffle (internet-exposed)
+│        DMZ_DL     VLAN 30    192.168.30.0/24  Croissant (torrenting)
 │
 ├── 🗄️ Dell Server (Breadbox) — Dedicated NAS
 │   │  OS: TrueNAS Community Edition (migrated off EOL Core)
 │   │  Specs: i7-4770 | 32 GB RAM | 128 GB SSD (OS)
-│   │  Memory Note: ~20 GB ARC reservation, ~12 GB free for OS + VMs
+│   │  Pool: TODO — write down layout (mirror/RAIDZ, disk count + size)
+│   │  Memory Note: ARC is a dynamic cap, not a reservation — it shrinks
+│   │    under pressure. TrueNAS middleware itself uses ~2–3 GB, so real
+│   │    headroom for VMs is ~5 GB after Bagel + Pasta.
 │   │
 │   ├── 📁 /mnt/media (Mounted by Toast & Croissant)
+│   │      Downloads live INSIDE this share (/mnt/media/torrents) so the
+│   │      *arr stack can hardlink/atomic-move instead of copying.
+│   │      NFSv4 only; export restricted to LAN + Croissant's DMZ_DL IP.
 │   ├── 📁 /mnt/photos (Mounted by Pancake)
 │   ├── 📁 /mnt/git_lfs (Mounted by Scone)
 │   ├── 📁 /mnt/documents (Mounted by Biscuit)
 │   ├── 📁 /mnt/backups
 │   ├── 📁 /mnt/pbs-store ← moved here from Bakery
 │   │
-│   ├── 📦 VM 1: NixOS [Secondary DNS] (Bagel)
-│   │   │  1 vCPU | 512 MB RAM | 8 GB DISK
-│   │   │  Agents: Node Exporter, Promtail
-│   │   └── 🛡️ AdGuard Home (Secondary) — services.adguardhome module
+│   │  📸 Periodic ZFS snapshots on EVERY dataset above (hourly/daily/
+│   │     weekly). PBS does not cover NAS datasets — snapshots + off-box
+│   │     copies (see Pasta) are the only protection for photos/documents.
+│   │
+│   ├── 📦 VM 1: NixOS [Secondary DNS + Backup VPN Router] (Bagel)
+│   │   │  1 vCPU | 1 GB RAM | 8 GB DISK ← bumped from 512 MB for NetBird
+│   │   │  Agents: Node Exporter, Grafana Alloy
+│   │   ├── 🛡️ AdGuard Home (Secondary) — services.adguardhome module
+│   │   └── 🐦 NetBird — SECOND routing peer for the LAN (HA with Crust)
+│   │          Lives on Breadbox, so it keeps a way in when Bakery (and
+│   │          therefore Crust) is down. See "NetBird: Bagel as backup
+│   │          routing peer" at the bottom.
 │   │
 │   └── 📦 VM 2: Proxmox Backup Server (Pasta) ← MOVED from Bakery
 │       2 vCPU | 4 GB RAM | 64 GB DISK
 │       └── 📦 Datastore lives locally on Breadbox — no more same-host
 │                backup loop with the thing it's backing up
-│       ⚠️ Remaining ~8 GB free on Breadbox for OS + Bagel + Pasta headroom
+│       🌍 OFF-BOX COPY (still TODO): Breadbox holds live data AND
+│          backups, so one pool loss takes both. Send off-site:
+│            - PBS datastore → S3 datastore (PBS 4.x) or sync job to a
+│              remote PBS
+│            - /mnt/photos + /mnt/documents → TrueNAS Cloud Sync or
+│              restic to B2/S3
 │
 └── 🖥️ Main Host — Proxmox VE (Bakery)
     │  Specs: Threadripper 1950X | 64 GB RAM | 1 TB NVMe + 1 TB NVMe (ZFS Mirror)
-    │  + Discrete GPU (passthrough target for Jellyfin)
-    │  Host Reservation: 6 GB RAM
-    │  Agents: Node Exporter, Promtail (on Proxmox host directly)
+    │  + Discrete GPU (bind-mounted into Toast for Jellyfin)
+    │  Host Reservation: 6 GB RAM + 4 GB ZFS ARC (capped, see note 7)
+    │  Guest total: 43.5 GB → 53.5 / 64 GB committed, ~10 GB headroom
+    │  Agents: Node Exporter, Grafana Alloy (on Proxmox host directly)
+    │  vmbr0: VLAN aware ON (see "DMZ VLANs" at the bottom)
     │
     │  ⚠️ ARCHITECTURE NOTES — DO NOT FORGET:
     │  ┌─────────────────────────────────────────────────────────────────┐
     │  │ 1. Enable Memory Ballooning on every VM (Hardware → Memory →     │
-    │  │    check "Ballooning Device"). Requires qemu-guest-agent inside  │
-    │  │    each VM — NixOS: `services.qemuGuestAgent.enable = true;`     │
-    │  │    Debian: `apt install qemu-guest-agent`.                       │
-    │  │ 2. Enable KSM on the Proxmox HOST (host-wide, not per-VM):       │
-    │  │      `echo 1 > /sys/kernel/mm/ksm/run`, persist via ksmtuned.    │
-    │  │ 3. Auth model: WireGuard gates access, each service handles its  │
+    │  │    check "Ballooning Device"). Needs the virtio_balloon driver  │
+    │  │    in the guest (in-kernel on NixOS/Debian). Still install      │
+    │  │    qemu-guest-agent for clean shutdowns + consistent backups —  │
+    │  │    NixOS: `services.qemuGuestAgent.enable = true;`              │
+    │  │    Debian: `apt install qemu-guest-agent`. Proxmox only         │
+    │  │    reclaims ballooned RAM once the host is above ~80% usage.    │
+    │  │    LXCs don't balloon — their limit is a cgroup cap.            │
+    │  │ 2. KSM: Proxmox already runs ksmtuned by default — nothing to   │
+    │  │    enable. Check it with `systemctl status ksmtuned`.           │
+    │  │ 3. Auth model: NetBird gates access, each service handles its    │
     │  │    own login/2FA natively. No forward-auth layer needed.        │
-    │  │ 4. GPU passthrough: enable IOMMU in BIOS + GRUB                  │
-    │  │    (`intel_iommu=on` or `amd_iommu=on`), bind GPU to vfio-pci    │
-    │  │    if passing to a VM. Toast is an LXC, so instead bind-mount    │
-    │  │    /dev/dri (and /dev/nvidia* if Nvidia) into the container and  │
-    │  │    set cgroup device permissions (unprivileged LXC needs the    │
-    │  │    idmap/device allow lines in the .conf) — no vfio needed.     │
+    │  │    Who reaches what is set by NetBird access policies — see     │
+    │  │    "NetBird Access Rules" at the bottom.                         │
+    │  │ 4. GPU for Toast: Toast is an LXC, so NO IOMMU/vfio needed —    │
+    │  │    bind-mount /dev/dri (and /dev/nvidia* if Nvidia) into the     │
+    │  │    container and add the cgroup device allow lines in the .conf │
+    │  │    (unprivileged LXC also needs the idmap lines). If Nvidia:    │
+    │  │    the driver inside the NixOS container MUST be the exact same │
+    │  │    version as the Proxmox host's kernel driver — pin both.      │
     │  │ 5. PBS now lives on Breadbox, not Bakery — a Bakery boot-drive   │
     │  │    failure no longer takes out your restore path. Residual risk │
     │  │    is now Breadbox itself: it holds live data AND backups. See  │
-    │  │    off-box copy note under Pasta below.                         │
+    │  │    the off-box copy note under Pasta above.                     │
     │  │ 6. Recheck Grafana RAM panels after ~1 week uptime for real trim │
-    │  │    candidates — you now have a few GB more headroom from moving │
-    │  │    Pasta off Bakery; Biscotti below already uses some of it.    │
+    │  │    candidates — Biscotti is gone and Pancake shrank without     │
+    │  │    Immich ML, so there is ~10 GB of slack now.                  │
+    │  │ 7. Cap the host's ZFS ARC so it can't eat guest RAM:            │
+    │  │      /etc/modprobe.d/zfs.conf:                                  │
+    │  │        options zfs zfs_arc_max=4294967296                        │
+    │  │      then `update-initramfs -u -k all` and reboot.              │
     │  └─────────────────────────────────────────────────────────────────┘
     │
     ├── 📦 VM 1: NixOS [Edge Gateway] (Crust)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
     │      ├── 🚦 Caddy (SSL Signing) — DNS-01 challenge required
-    │      │      (no public HTTP-01 possible on a WireGuard-only network;
+    │      │      (no public HTTP-01 possible on a VPN-only network;
     │      │       configure Caddy's DNS provider plugin for your
     │      │       registrar's API to get trusted internal certs)
-    │      └── 🦅 wg-easy (VPN into Network)
+    │      │      Use ONE wildcard cert (*.yousef.wiki) — per-host certs
+    │      │      publish every service name in Certificate Transparency.
+    │      │      Also fronts panel.yousef.wiki → Brioche and
+    │      │      wings.yousef.wiki → Waffle:8080 (manual vhosts — both are
+    │      │      Debian, so homelab.expose can't generate them).
+    │      └── 🐦 NetBird (VPN into Network) — PRIMARY routing peer for LAN
+    │             Control plane: NetBird Cloud (nothing published here).
+    │             Dashboard: route LAN via Crust (masquerade ON), DNS
+    │             nameserver group for the internal domain → AdGuard.
     │
     ├── 📦 VM 2: NixOS [Remote Access] (Baguette)
     │      2 vCPU | 2 GB RAM | 24 GB DISK
-    │      └── 🖥️ RustDesk Server (HBBS/HBBR)
+    │      └── 🖥️ RustDesk Server (HBBS/HBBR) — NetBird peers only
     │
     ├── 📦 VM 3: NixOS [Core Services] (Scone)
     │      4 vCPU | 4 GB RAM | 64 GB DISK
@@ -76,36 +119,45 @@
     │      └── 🔗 /mnt/git_lfs (NAS)
     │
     ├── 📦 VM 4: NixOS [Heavy Apps] (Pancake)
-    │      6 vCPU | 12 GB RAM | 256 GB DISK
-    │      └── 🖼️ Immich (App + Postgres + Redis)
+    │      4 vCPU | 6 GB RAM | 256 GB DISK ← down from 6 vCPU / 12 GB
+    │      └── 🖼️ Immich (App + Postgres + Redis) — NO machine learning:
+    │             `services.immich.machine-learning.enable = false;`
+    │             (no face/object/smart search; ML was most of the RAM)
+    │             Postgres on the local disk, never on NFS; nightly pg_dump.
     │
-    ├── 📦 VM 5: Debian [Game Servers] (Waffle)
+    ├── 📦 VM 5: Debian [Game Servers] (Waffle) — 🚧 DMZ_GAMES (VLAN 20)
     │      6 vCPU | 12 GB RAM | 256 GB DISK
     │      └── 🦖 Pterodactyl Wings (Docker isolated)
+    │             Controlled by the Panel on Brioche (LXC 5).
+    │             Wings config.yml: api port 8080, ssl OFF (Caddy on Crust
+    │             terminates TLS), remote: https://panel.yousef.wiki
+    │             Ports: game ports → port-forwarded from WAN on Pretzel
+    │                    8080 (API/websocket) → from Crust only
+    │                    2022 (SFTP) → from admins over NetBird only
+    │                    9100 (node exporter) → from Muffin only
     │
-    ├── 📦 VM 6: NixOS [Acquisition] (Croissant)
+    ├── 📦 VM 6: NixOS [Acquisition] (Croissant) — 🚧 DMZ_DL (VLAN 30)
     │      4 vCPU | 4 GB RAM | 32 GB DISK
-    │      └── 🧲 *Arr Stack + qBittorrent/Gluetun
+    │      └── 🧲 *Arr Stack + qBittorrent over ExpressVPN (OpenVPN,
+    │             native, per-user iptables killswitch — no Docker/Gluetun)
+    │             Downloads to /mnt/media/torrents (same share as the
+    │             library, for hardlinks).
     │
-    ├── 📦 VM 7: NixOS [Build Farm] (Biscotti)
-    │      8 vCPU | 8 GB RAM | 40 GB DISK ← bumped from 4 GB
-    │      └── 🛠️ Nix Remote Builder
-    │             Set `nix.settings.max-jobs` to match real parallel
-    │             capacity (not just vCPU count) — 8GB/8 vCPU still means
-    │             ~1GB/thread; cap max-jobs lower if builds are C++-heavy
-    │             rather than relying on RAM alone to prevent OOM kills.
-    │
-    ├── 📦 VM 8: NixOS [Documents] (Biscuit)
+    ├── 📦 VM 7: NixOS [Documents] (Biscuit)
     │      2 vCPU | 3 GB RAM | 40 GB DISK
     │      ├── 📄 Paperless-ngx (App + Postgres + Redis) — services.paperless
     │      │                    module handles OCR/consume pipeline natively
+    │      │      PAPERLESS_CONSUMER_POLLING=60 — inotify doesn't fire on
+    │      │      NFS, so the consume dir is never noticed without it.
+    │      │      Postgres on the local disk, never on NFS.
     │      └── 🔗 /mnt/documents (NAS) — mounted as the consume/media dir
     │
     ├── 🪆 LXC 1: NixOS [Observability] (Muffin)
-    │      2 vCPU | 2 GB RAM | 20 GB DISK
-    │      ├── 📈 Prometheus
-    │      ├── 🪵 Loki
+    │      2 vCPU | 3 GB RAM | 20 GB DISK ← bumped from 2 GB
+    │      ├── 📈 Prometheus — 30d / 5 GB cap, 30s scrape
+    │      ├── 🪵 Loki — 14d retention
     │      └── 📊 Grafana
+    │      See "Retention" at the bottom for sizing + config.
     │
     ├── 🪆 LXC 2: NixOS [Media] (Toast)
     │      4 vCPU | 4 GB RAM | 24 GB DISK
@@ -118,7 +170,208 @@
     │      1 vCPU | 512 MB RAM | 8 GB DISK
     │      └── 🛡️ AdGuard Home (Primary) — services.adguardhome module
     │
-    └── 🪆 LXC 4: NixOS [Vault] (Macaron)
-           1 vCPU | 1 GB RAM | 8 GB DISK
-           └── 🗝️ Vaultwarden (Passwords & 2FA/TOTP Vault) — services.vaultwarden
-                                module, SQLite backend is plenty for this scale
+    ├── 🪆 LXC 4: NixOS [Vault] (Macaron)
+    │      1 vCPU | 1 GB RAM | 8 GB DISK
+    │      └── 🗝️ Vaultwarden (Passwords & 2FA/TOTP Vault) — services.vaultwarden
+    │                           module, SQLite backend is plenty for this scale
+    │
+    └── 🪆 LXC 5: Debian 13 [Game Panel] (Brioche) — LAN, NOT the DMZ
+           2 vCPU | 2 GB RAM | 16 GB DISK
+           └── 🦖 Pterodactyl Panel (nginx + PHP-FPM + MariaDB + Redis,
+                  plus the pteroq queue worker and the scheduler cron)
+                  Debian rather than NixOS: nixpkgs has no Panel module.
+                  Kept on the LAN so the admin panel isn't in the
+                  internet-exposed VLAN with Wings.
+                  Served at https://panel.yousef.wiki through Caddy.
+                  Panel → Nodes → Waffle:
+                    FQDN wings.yousef.wiki | Communicate over SSL: yes
+                    Behind proxy: yes | Daemon port 443 | SFTP port 2022
+
+
+════════════════════════════════════════════════════════════════════════
+🚧 DMZ VLANs
+════════════════════════════════════════════════════════════════════════
+Why: Waffle takes connections from the internet and Croissant talks to
+torrent swarms. Neither should be able to open connections into the LAN
+(NAS, Vaultwarden, Proxmox). The LAN can still reach into them.
+
+  VLAN  Name       Subnet            Gateway        Members
+  20    DMZ_GAMES  192.168.20.0/24   192.168.20.1   Waffle
+  30    DMZ_DL     192.168.30.0/24   192.168.30.1   Croissant
+
+Switch: the cable from Pretzel's LAN NIC to Bakery must carry tagged
+frames. A managed switch (trunk port for VLAN 20+30 on both ends) is the
+proper way; most dumb switches pass tags through but don't guarantee it.
+
+── Step 1: pfSense (Pretzel) ────────────────────────────────────────────
+  1. Interfaces → Assignments → VLANs → Add
+       Parent: LAN NIC | VLAN Tag: 20 | Description: DMZ_GAMES
+     Repeat with tag 30, DMZ_DL.
+  2. Interfaces → Assignments → add both VLANs as new interfaces (OPT1,
+     OPT2). Open each: Enable, rename to DMZ_GAMES / DMZ_DL,
+     IPv4 Static 192.168.20.1/24 (or .30.1/24), IPv6 None.
+  3. Services → DHCP Server → DMZ_GAMES / DMZ_DL: enable, range
+     .100–.199. Add static mappings so Waffle / Croissant keep one IP
+     (the NFS export and firewall rules below depend on it).
+     DNS server: the interface address (pfSense forwards to AdGuard,
+     which rewrites *.yousef.wiki → Crust).
+  4. Firewall → Aliases → add PRIVATE_NETS:
+       10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+  5. Firewall → Rules → DMZ_GAMES (top to bottom, first match wins):
+       Pass   DMZ_GAMES net → DMZ_GAMES address  TCP/UDP 53    DNS
+       Pass   DMZ_GAMES net → Crust 192.168.5.5   TCP 443       Wings → Panel
+       Pass   DMZ_GAMES net → Muffin              TCP 3100      Loki push
+       Block  DMZ_GAMES net → This Firewall       any           no GUI/SSH
+       Block  DMZ_GAMES net → PRIVATE_NETS        any           no LAN
+       Pass   DMZ_GAMES net → any                 any           internet
+  6. Firewall → Rules → DMZ_DL:
+       Pass   DMZ_DL net → DMZ_DL address        TCP/UDP 53    DNS
+       Pass   DMZ_DL net → Breadbox               TCP 2049      NFSv4
+       Pass   DMZ_DL net → Muffin                 TCP 3100      Loki push
+       (opt.) DMZ_DL net → Toast                  TCP 8096      *arr → Jellyfin
+                                                                library refresh
+       Block  DMZ_DL net → This Firewall          any
+       Block  DMZ_DL net → PRIVATE_NETS           any
+       Pass   DMZ_DL net → any                    any           ExpressVPN out
+  7. LAN rules: leave "Default allow LAN to any". Crust (Caddy), Muffin
+     (scrapes) and NetBird traffic from Crust/Bagel all start from the LAN.
+  8. Firewall → NAT → Port Forward: WAN → Waffle's IP, ONLY the game
+     ports. Never forward 8080 or 2022.
+
+── Step 2: Proxmox (Bakery) ─────────────────────────────────────────────
+  1. Node → System → Network → vmbr0 → Edit → tick "VLAN aware" → Apply
+     Configuration. (Other guests stay untagged = LAN.)
+  2. Waffle → Hardware → Network Device → VLAN Tag: 20
+     Croissant → Hardware → Network Device → VLAN Tag: 30
+  3. Reboot both guests (or renew DHCP) and check they got a .20.x/.30.x
+     address.
+
+── Step 3: things that break unless you fix them ────────────────────────
+  - TrueNAS: /mnt/media NFS export → Networks/Hosts: add Croissant's
+    DMZ_DL IP. Use NFSv4 so only TCP 2049 is needed.
+  - Muffin: ✅ done in the repo — lanAccess.fromDmz opens TCP 3100 to
+    homelab.net.dmzSubnets, so DMZ Loki pushes aren't dropped.
+  - Croissant: its lan_access rules for Caddy/Prometheus match LAN
+    sources — still fine, because Crust and Muffin stay on the LAN.
+  - Waffle (Debian, ufw): allow 8080 from Crust, 2022 from Crust + Bagel
+    (NetBird is masqueraded), 9100 from Muffin, game ports from any.
+
+
+════════════════════════════════════════════════════════════════════════
+🐦 NetBird: Bagel as backup routing peer
+════════════════════════════════════════════════════════════════════════
+Why: Crust lives on Bakery. If Bakery is down, so is every way in. Bagel
+lives on Breadbox, so with it as a second routing peer you can still
+reach Pretzel, Breadbox, and Proxmox's :8006 to fix Bakery.
+What it does NOT give you: *.yousef.wiki still points at Crust's Caddy,
+so the web services are down with Bakery either way. Bagel keeps the
+management path alive; it does not keep the services alive.
+
+  1. Dashboard → Setup Keys → Create: name "bagel", one-off, auto-assign
+     group `routers`. Store it like Crust's:
+       cd secrets && nix run github:ryantm/agenix -- -e netbird_bagel_setup_key.age
+     and add "netbird_bagel_setup_key.age".publicKeys = serverKeys "bagel";
+  2. Bagel config: ✅ done in the repo — Crust and Bagel both import the
+     shared `netbird_router` module (system/universal/vpns/netbird-router.nix).
+     Bagel is a VM on Breadbox (vm_base, disk /dev/vda — confirm with lsblk).
+     Give Bagel a DHCP reservation on Pretzel for 192.168.5.6
+     (homelab.net.bagelAddress) — step 4 depends on it.
+  3. Dashboard → Networks → homelab → Routing Peers → Add Bagel next to
+     Crust. Masquerade ON for both. Where the metric/priority field
+     is shown, give Crust the lower number so it's preferred.
+  4. Firewalls: ✅ done in the repo — lan_access trusts masqueraded VPN
+     traffic from every address in homelab.net.vpnRouterAddresses
+     (Crust + Bagel). If Bagel's IP changes, change bagelAddress there.
+  5. Test: stop netbird on Crust (`systemctl stop netbird-wt0`), and from
+     a laptop on mobile data check that `https://<Breadbox IP>` and
+     `https://<Bakery IP>:8006` still load. Start it again.
+
+
+════════════════════════════════════════════════════════════════════════
+🔐 NetBird Access Rules — set up once the servers are up
+════════════════════════════════════════════════════════════════════════
+Model: default-deny. Clients get nothing except what a policy grants.
+Caddy is ONE IP (Crust) for every web UI, so NetBird can only say "may
+reach the web services" — per-app access is each app's own login
+(note 3). Management UIs are NOT behind Caddy; they're reached by IP, so
+NetBird policies are what protect them.
+
+── Groups (Dashboard → Peers → assign groups) ───────────────────────────
+  admins    snowflake, moraine, your phone
+  family    family members' devices (Jellyfin/Immich/Paperless users)
+  routers   crust, bagel (auto-assigned by their setup keys)
+
+── Network "homelab" (Dashboard → Networks) ─────────────────────────────
+  Routing peers: crust (primary), bagel (backup) — masquerade ON
+  Resources (each one gets its own resource group of the same name):
+    res-web     192.168.5.5/32                    Crust / Caddy
+    res-dns     Crepe IP/32, Bagel IP/32          AdGuard
+    res-mgmt    192.168.5.1/32  Pretzel (pfSense GUI)
+                <Bakery IP>/32  Proxmox :8006
+                <Breadbox IP>/32 TrueNAS
+                <Pasta IP>/32   PBS :8007
+    res-lan     192.168.5.0/24                    everything, for SSH etc.
+    res-dmz     192.168.20.0/24, 192.168.30.0/24  Waffle SFTP, Croissant
+    res-rdesk   <Baguette IP>/32                  RustDesk
+
+── Policies (Dashboard → Access Control) ────────────────────────────────
+  0. DELETE the built-in "Default" policy (All ↔ All). Until it's gone,
+     every peer can reach every other peer and every resource.
+
+  #  Name            Source           Destination   Protocol / Ports
+  1  dns             admins, family   res-dns       TCP+UDP 53
+  2  web             admins, family   res-web       TCP 80, 443
+  3  admin-lan       admins           res-lan       ALL
+  4  admin-mgmt      admins           res-mgmt      ALL  (covered by #3
+                                                    today; kept separate
+                                                    so #3 can be narrowed
+                                                    without losing mgmt)
+  5  admin-dmz       admins           res-dmz       TCP 22, 2022
+  6  remote-desktop  admins, family   res-rdesk     TCP 21115–21119,
+                                                    UDP 21116
+  7  admin-p2p       admins           admins        ALL  (device ↔ device,
+                                                    e.g. RustDesk direct)
+
+  Nothing has `routers` as a destination: routing peers need no inbound
+  policy to forward, and nobody should be SSHing into them over NetBird
+  (use the LAN or the Proxmox/TrueNAS console).
+
+── DNS (Dashboard → DNS → Nameservers) ──────────────────────────────────
+  Group "homelab": Crepe IP + Bagel IP, port 53, match domain
+  yousef.wiki, distribute to admins + family. Policy #1 is what lets the
+  queries through.
+
+── Other settings ───────────────────────────────────────────────────────
+  - Settings → Authentication: keep peer login expiration ON for user
+    devices. Setup-key peers (crust, bagel) don't expire — leave them.
+  - Posture checks (optional): require minimum NetBird version on
+    admins, so an outdated laptop can't reach res-mgmt.
+  - After setup, check from a `family` device that https://<Bakery
+    IP>:8006 times out and https://jellyfin.yousef.wiki loads.
+
+
+════════════════════════════════════════════════════════════════════════
+📊 Retention (Muffin, 20 GB disk)
+════════════════════════════════════════════════════════════════════════
+Sizing: ~15 hosts × ~1.5k node_exporter series ≈ 25k series. At a 30s
+scrape and ~1.5 bytes/sample that's ~110 MB/day → ~3.3 GB for 30 days.
+Journald from ~15 hosts is ~200 MB/day in Loki after compression →
+~3 GB for 14 days. Both plus the OS fit in 20 GB with room to spare.
+
+  ✅ Both are set in system/vms/muffin/configuration.nix.
+
+  Prometheus:
+    services.prometheus.retentionTime = "30d";
+    services.prometheus.extraFlags = [ "--storage.tsdb.retention.size=5GB" ];
+    globalConfig.scrape_interval = "30s";
+    → keeps 30 days, but deletes the oldest data early if it passes 5 GB.
+
+  Loki:
+    limits_config.retention_period = "14d";
+    limits_config.ingestion_rate_mb = 4;       ← stop one chatty host from
+    limits_config.ingestion_burst_size_mb = 8;   filling the disk
+    compactor.retention_enabled = true;        (already set)
+    → 14 days of logs is enough to debug anything recent. Raise it only if
+      `du -sh /var/lib/loki` stays well under 6 GB after two weeks.
+
+  Grafana: nothing to retain — dashboards live in grafana.db (tiny).

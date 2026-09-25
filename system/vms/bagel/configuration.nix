@@ -5,20 +5,40 @@
 {
   configurations.nixos.bagel.module =
     {
+      lib,
       config,
       ...
     }:
     {
-      imports = with topConfig.flake.nixosModules; [ lxc_base ];
+      # A VM on Breadbox (TrueNAS), not Bakery: it is the DNS and the way in
+      # that survive Bakery going down.
+      imports = with topConfig.flake.nixosModules; [
+        vm_base
+        netbird_router
+      ];
 
       networking.hostName = "bagel";
       system.stateVersion = "26.11";
+
+      # TrueNAS attaches VM disks as VirtIO block devices (vda), not the
+      # virtio-scsi sda simple_disko assumes for Proxmox.
+      # TODO(quil): confirm with `lsblk` from the installer.
+      disko.devices.disk.main.device = lib.mkForce "/dev/vda";
+
+      # ---- NetBird: the BACKUP routing peer for the LAN (crust is primary).
+      #      Keeps a way in to Pretzel, Breadbox and Proxmox's UI when Bakery
+      #      is down. It can't keep the web services up — *.domain still
+      #      points at crust's Caddy. Pin its LAN address with a DHCP
+      #      reservation matching homelab.net.bagelAddress: every host's
+      #      firewall trusts masqueraded VPN traffic from that address.
+      homelab.netbirdRouter.setupKey = ../../../secrets/netbird_bagel_setup_key.age;
+      age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
       # ---- AdGuard Home (SECONDARY DNS). Lives on Breadbox.
       # NOTE: AdGuard has no built-in config sync between instances. If you want
       # crepe and bagel to stay in step, that needs adguardhome-sync (not in
       # nixpkgs — would be an OCI container or a systemd timer pulling the
-      # primary's config over the wg network).
+      # primary's config over the LAN).
       services.adguardhome = {
         enable = true;
         host = "0.0.0.0";
@@ -54,9 +74,10 @@
     };
 
   configurations.nixos.bagel.tags = [
-    "lxc"
+    "vm"
     "server"
     "dns"
+    "vpn-router"
     "secondary"
   ];
 }

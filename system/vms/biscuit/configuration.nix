@@ -32,6 +32,8 @@
           PAPERLESS_OCR_LANGUAGE = "eng";
           PAPERLESS_TIME_ZONE = "America/Chicago";
           PAPERLESS_FILENAME_FORMAT = "{created_year}/{correspondent}/{title}";
+          # The consume dir is on NFS, where inotify never fires, so poll it.
+          PAPERLESS_CONSUMER_POLLING = 60;
         };
       };
 

@@ -13,7 +13,8 @@ let
   # below, then rekey from the secrets/ directory:
   #   nix run github:ryantm/agenix -- -r -i ~/.ssh/id_ed25519
   hosts = {
-    crust = null; # caddy_porkbun_env, wg_crust
+    crust = null; # caddy_porkbun_env, netbird_crust_setup_key
+    bagel = null; # netbird_bagel_setup_key
     croissant = null; # expressvpn_ovpn, expressvpn_auth
     biscuit = null; # paperless_admin
     muffin = null; # grafana_secret_key
@@ -29,16 +30,19 @@ in
   "git_identity.age".publicKeys = users;
   "snowflake.age".publicKeys = users;
 
-  # WireGuard client keys, pre-generated so the clients need no setup. The
-  # public halves are not secret and live in homelab-net.nix.
-  "wg_snowflake.age".publicKeys = users;
-  "wg_moraine.age".publicKeys = users;
-
   # Caddy's Porkbun API credentials for the ACME DNS-01 challenge, plus the
   # ACME contact address (kept here so the real mailbox is not in the repo).
   # Values are real as of now — re-encrypt this file if you rotate the API keys.
   "caddy_porkbun_env.age".publicKeys = serverKeys "crust";
-  "wg_crust.age".publicKeys = serverKeys "crust";
+  # NetBird setup key for crust's unattended enrolment: create a reusable key
+  # in the NetBird dashboard, then from this directory:
+  #   nix run github:ryantm/agenix -- -e netbird_crust_setup_key.age
+  # crust skips auto-login until this file exists.
+  "netbird_crust_setup_key.age".publicKeys = serverKeys "crust";
+  # Same for bagel, the backup routing peer: a one-off key with the `routers`
+  # auto-group (server_notes "NetBird: Bagel as backup routing peer").
+  #   nix run github:ryantm/agenix -- -e netbird_bagel_setup_key.age
+  "netbird_bagel_setup_key.age".publicKeys = serverKeys "bagel";
 
   # ExpressVPN. Both the .ovpn (it embeds a client cert+key and tls-auth) and
   # the username/password live here so nothing lands in the public repo.

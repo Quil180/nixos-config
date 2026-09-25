@@ -13,19 +13,35 @@
   # reverse-proxies to the service UIs, so the UIs are reachable from crust
   # alone. DNS and log ingestion are LAN-wide because they are consumed by
   # every host, not by a browser.
+  #
+  # VPN traffic (NetBird) enters through a routing peer — crust, or bagel as
+  # the backup. It reaches a router itself on the NetBird interface, and every
+  # other host masqueraded to a router's LAN address — so "from the VPN"
+  # means one of those.
   flake.nixosModules.lan_access =
     { config, lib, ... }:
     let
       net = config.homelab.net;
       cfg = config.services.lanAccess;
 
+      # `match` is an iptables source selector: `-s <addr>` or `-i <iface>`.
       rule =
-        proto: ports: src:
+        proto: ports: match:
         lib.optionalString (ports != [ ]) ''
           iptables -A nixos-fw -p ${proto} -m multiport --dports ${
             lib.concatMapStringsSep "," toString ports
-          } -s ${src} -j nixos-fw-accept
+          } ${match} -j nixos-fw-accept
         '';
+
+      # Every way VPN traffic arrives (see the note at the top).
+      vpnRules =
+        proto: ports:
+        lib.concatMapStrings (match: rule proto ports match) (
+          [ "-i ${net.netbirdInterface}" ] ++ map (a: "-s ${a}") net.vpnRouterAddresses
+        );
+
+      dmzRules =
+        proto: ports: lib.concatMapStrings (subnet: rule proto ports "-s ${subnet}") net.dmzSubnets;
     in
     {
       # Stable key so server_base, monitoring, … can each import this safely.
@@ -65,15 +81,23 @@
           default = [ ];
           description = "UDP ports reachable from the whole LAN.";
         };
-        fromWireguard = lib.mkOption {
+        fromDmz = lib.mkOption {
           type = lib.types.listOf lib.types.port;
           default = [ ];
-          description = "TCP ports reachable from WireGuard clients — the only way in from outside.";
+          description = ''
+            TCP ports reachable from the DMZ VLANs, in addition to the LAN.
+            pfSense must also allow the flow (server_notes "DMZ VLANs").
+          '';
         };
-        fromWireguardUdp = lib.mkOption {
+        fromVpn = lib.mkOption {
           type = lib.types.listOf lib.types.port;
           default = [ ];
-          description = "UDP ports reachable from WireGuard clients.";
+          description = "TCP ports reachable from NetBird peers — the only way in from outside.";
+        };
+        fromVpnUdp = lib.mkOption {
+          type = lib.types.listOf lib.types.port;
+          default = [ ];
+          description = "UDP ports reachable from NetBird peers.";
         };
       };
 
@@ -82,11 +106,12 @@
       config.networking.firewall.extraCommands = ''
         # services.lanAccess.* — IPv4 only, by design (public IPv6 prefix on this
         # LAN). See flake.nixosModules.lan_access.
-        ${rule "tcp" cfg.fromCrust net.crustAddress}
-        ${rule "tcp" cfg.fromLan net.lanSubnet}
-        ${rule "udp" cfg.fromLanUdp net.lanSubnet}
-        ${rule "tcp" cfg.fromWireguard net.wgSubnet}
-        ${rule "udp" cfg.fromWireguardUdp net.wgSubnet}
+        ${rule "tcp" cfg.fromCrust "-s ${net.crustAddress}"}
+        ${rule "tcp" cfg.fromLan "-s ${net.lanSubnet}"}
+        ${rule "udp" cfg.fromLanUdp "-s ${net.lanSubnet}"}
+        ${dmzRules "tcp" cfg.fromDmz}
+        ${vpnRules "tcp" cfg.fromVpn}
+        ${vpnRules "udp" cfg.fromVpnUdp}
       '';
     };
 }

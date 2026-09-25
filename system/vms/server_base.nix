@@ -33,13 +33,13 @@
       services.openssh = {
         enable = true;
         # Not openFirewall: that opens 22 on IPv6 too, i.e. to the internet
-        # over the public prefix. IPv4 LAN + WireGuard only, like everything
+        # over the public prefix. IPv4 LAN + NetBird only, like everything
         # else here.
         openFirewall = false;
       };
       services.lanAccess = {
         fromLan = [ 22 ];
-        fromWireguard = [ 22 ];
+        fromVpn = [ 22 ];
       };
     };
 }

@@ -1,6 +1,6 @@
 { topConfig, ... }:
 {
-  # Shared base for the NixOS LXCs: crepe, bagel, muffin, toast, macaron.
+  # Shared base for the NixOS LXCs: crepe, muffin, toast, macaron.
   #
   # A Proxmox LXC shares the host kernel: NO disko, NO bootloader, NO kernel
   # modules. `boot.isContainer = true` is what tells NixOS that — without it

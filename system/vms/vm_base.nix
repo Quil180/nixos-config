@@ -1,7 +1,8 @@
 { topConfig, ... }:
 {
-  # Shared base for the Proxmox VMs: crust, baguette, scone, croissant,
-  # biscotti, biscuit. Per-host specifics stay in system/vms/<host>/.
+  # Shared base for the NixOS VMs: crust, baguette, scone, croissant, biscuit
+  # on Proxmox, and bagel on Breadbox (TrueNAS — also KVM/virtio, so the same
+  # profile fits). Per-host specifics stay in system/vms/<host>/.
   flake.nixosModules.vm_base =
     { ... }:
     {

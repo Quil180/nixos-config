@@ -32,59 +32,34 @@
             inherit host sub port;
           }) topConfig.flake.nixosConfigurations.${host}.config.homelab.expose
         ) servers
-      );
+      )
+      ++ [
+        # Debian hosts outside this flake, so they have no homelab.expose.
+        # Pterodactyl (server_notes: Brioche LXC 5, Waffle VM 5).
+        {
+          host = "brioche"; # Panel: nginx
+          sub = "panel";
+          port = 80;
+        }
+        {
+          host = "waffle"; # Wings API + console websocket, ssl off in config.yml
+          sub = "wings";
+          port = 8080;
+        }
+      ];
       subs = map (e: e.sub) exposed;
     in
     {
-      imports = with topConfig.flake.nixosModules; [ vm_base ];
+      imports = with topConfig.flake.nixosModules; [
+        vm_base
+        netbird_router # primary routing peer; bagel is the backup
+      ];
 
       networking.hostName = "crust";
       system.stateVersion = "26.11";
 
-      # ---- WireGuard: the only way into the network. Peers are declarative;
-      #      each service behind it does its own auth (server_notes note 3).
-      networking.wireguard.interfaces.wg0 = {
-        ips = [ "10.10.0.1/24" ];
-        listenPort = 51820;
-        # Pre-generated and sealed, so the clients could be configured
-        # before this host exists. The public half is in homelab-net.nix.
-        privateKeyFile = config.age.secrets.wg_crust.path;
-
-        # Derived from the mesh, so a client's tunnel address and the peer
-        # entry that admits it can never disagree.
-        peers = lib.mapAttrsToList (_name: c: {
-          inherit (c) publicKey;
-          allowedIPs = [ "${c.address}/32" ];
-        }) config.homelab.net.wgClients;
-      };
-
-      # WireGuard peers arrive from an address the LAN cannot route back to,
-      # so strict reverse-path filtering would drop them.
-      networking.firewall.checkReversePath = "loose";
-
-      # ---- Internal DNS for tunnel clients. The LAN's AdGuard rewrite only
-      #      helps LAN clients; a VPN client has no way to resolve the
-      #      internal domain otherwise, and without a hostname Caddy cannot
-      #      pick a vhost. Answers the internal zone locally, forwards the
-      #      rest upstream. Reachable on wg0 only.
-      services.dnsmasq = {
-        enable = true;
-        settings = {
-          port = 53;
-          address = [ "/${domain}/${crustAddress}" ];
-          server = [
-            lanGateway
-            "1.1.1.1"
-          ];
-          no-resolv = true;
-          interface = "wg0";
-          # bind-dynamic, not bind-interfaces: the latter binds wg0's address
-          # at startup and fails outright if the interface does not exist yet,
-          # which makes dnsmasq's start order against WireGuard matter.
-          # bind-dynamic tolerates the interface appearing later.
-          "bind-dynamic" = true;
-        };
-      };
+      # ---- NetBird: the primary routing peer (netbird_router has the rest).
+      homelab.netbirdRouter.setupKey = ../../../secrets/netbird_crust_setup_key.age;
 
       # ---- Pinned LAN address -----------------------------------------------
       # Declared from the single source of truth, so changing crust's address
@@ -117,22 +92,16 @@
         # IPv6 stays on SLAAC from the router's advertisements (kernel default).
       };
 
-      # The WireGuard port is the one thing that must be reachable from the
-      # internet; everything else rides the tunnel.
-      networking.firewall.allowedUDPPorts = [ 51820 ];
-
       # Caddy is the single authenticated front door for the internal domain.
-      # Reachable from WireGuard clients (the intended path) and from the LAN,
+      # Reachable from NetBird peers (the intended path) and from the LAN,
       # so LAN-side consumers — the homepage dashboard's widgets, your own
       # browser — can use https://<service>.<domain> too. Neither rule includes
       # the world, and IPv6 stays closed, so nothing is published.
       services.lanAccess = {
-        fromWireguard = [
+        fromVpn = [
           80
           443
-          53
         ];
-        fromWireguardUdp = [ 53 ];
         fromLan = [
           80
           443
@@ -141,7 +110,7 @@
 
       # ---- Caddy: TLS for every service on the internal domain.
       #      DNS-01 is mandatory — there is no public HTTP-01 path on a
-      #      WireGuard-only network (server_notes), so the porkbun plugin is
+      #      VPN-only network (server_notes), so the porkbun plugin is
       #      compiled in and the API credentials come from agenix.
       services.caddy = {
         enable = true;
@@ -167,24 +136,30 @@
         # ACME_EMAIL. Nothing credential-ish lives in this file.
         environmentFile = config.age.secrets.caddy_porkbun_env.path;
 
-        # Derived from every server's homelab.expose (see `exposed` above).
-        virtualHosts = lib.listToAttrs (
-          map (
-            e:
-            lib.nameValuePair "${e.sub}.${domain}" {
-              extraConfig = "reverse_proxy ${e.host}:${toString e.port}";
+        # ONE wildcard site, so only *.${domain} is issued. A cert per
+        # subdomain would publish every service name in Certificate
+        # Transparency logs. Each service is a host matcher inside it, derived
+        # from every server's homelab.expose (see `exposed` above); an unknown
+        # subdomain is dropped rather than served something.
+        virtualHosts."*.${domain}".extraConfig = ''
+          ${lib.concatMapStrings (e: ''
+            @${e.sub} host ${e.sub}.${domain}
+            handle @${e.sub} {
+              reverse_proxy ${e.host}:${toString e.port}
             }
-          ) exposed
-        );
+          '') exposed}
+          handle {
+            abort
+          }
+        '';
       };
 
       age = {
         identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
         secrets.caddy_porkbun_env.file = ../../../secrets/caddy_porkbun_env.age;
-        secrets.wg_crust.file = ../../../secrets/wg_crust.age;
       };
 
-      # Nothing is exposed publicly — only wg clients reach Caddy.
+      # Nothing is exposed publicly — only NetBird peers and the LAN reach Caddy.
       services.caddy.openFirewall = false;
 
       # Two hosts claiming the same subdomain would silently shadow one

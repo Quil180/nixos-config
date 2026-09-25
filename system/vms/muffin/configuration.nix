@@ -29,7 +29,11 @@
       services.prometheus = {
         enable = true;
         port = 9090;
+        # server_notes "Retention": ~25k series at 30s is ~110 MB/day, so 30
+        # days is ~3.3 GB. The size cap deletes the oldest blocks early if
+        # that estimate turns out low, before the 20 GB disk fills.
         retentionTime = "30d";
+        extraFlags = [ "--storage.tsdb.retention.size=5GB" ];
         globalConfig.scrape_interval = "30s";
         scrapeConfigs = [
           {
@@ -70,7 +74,13 @@
               };
             }
           ];
-          limits_config.retention_period = "30d";
+          limits_config = {
+            # ~200 MB/day of compressed journal from every host → ~3 GB.
+            retention_period = "14d";
+            # Keeps one chatty host from filling the disk.
+            ingestion_rate_mb = 4;
+            ingestion_burst_size_mb = 8;
+          };
           compactor = {
             working_directory = "/var/lib/loki/compactor";
             retention_enabled = true;
@@ -110,10 +120,14 @@
         };
       };
 
-      # Loki is pushed to by *every* host's Alloy, so it is LAN-wide; Grafana
-      # is a UI, so it goes through crust's Caddy. Prometheus stays local (only
-      # Grafana reads it).
-      services.lanAccess.fromLan = [ 3100 ];
+      # Loki is pushed to by *every* host's Alloy, so it is LAN-wide — and
+      # DMZ-wide, since waffle and croissant ship logs too (pfSense allows the
+      # same flow). Grafana is a UI, so it goes through crust's Caddy.
+      # Prometheus stays local (only Grafana reads it).
+      services.lanAccess = {
+        fromLan = [ 3100 ];
+        fromDmz = [ 3100 ];
+      };
       homelab.expose.grafana = 3000;
     };
 

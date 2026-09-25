@@ -102,6 +102,9 @@
           # traffic can never leave via the LAN/default route.
           Interface = "tun0";
           InterfaceName = "tun0";
+          # Inside the same share as the library, so Sonarr/Radarr can
+          # hardlink/atomic-move finished downloads instead of copying them.
+          Session.DefaultSavePath = "/mnt/media/torrents";
         };
       };
 
@@ -157,7 +160,7 @@
       # ---- Service UIs: reachable ONLY from crust ---------------------------
       # crust's Caddy terminates TLS and reverse-proxies to these ports, so the
       # *arr / qBittorrent UIs are never exposed directly — the only way in is
-      # through the WireGuard VPN and then Caddy.
+      # through NetBird and then Caddy.
       #
       # Explicit IPv4 rules rather than allowedTCPPorts, because that option
       # opens a port for BOTH address families — and this LAN advertises a
@@ -182,6 +185,9 @@
       };
 
       # ---- /mnt/media from Breadbox (TrueNAS).
+      #      croissant sits in DMZ_DL (VLAN 30, tagged on its Proxmox NIC), so
+      #      the export must allow its DMZ address and pfSense must pass NFSv4
+      #      (TCP 2049) to Breadbox — server_notes "DMZ VLANs".
       fileSystems."/mnt/media" = {
         # TODO(quil): confirm the exact export path on Breadbox.
         device = "breadbox:/mnt/media";

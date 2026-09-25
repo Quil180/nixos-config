@@ -8,7 +8,7 @@
         workstation # shared personal-machine base (boot, users, nix, services)
         moraine_hardware
         moraine_disko
-        wireguard_client
+        netbird_client
 
         # --- Hardware Support ---
         amd
@@ -23,9 +23,6 @@
 
         # --- Applications & Gaming ---
         games
-
-        # --- VPNs & Networking ---
-        tailscale
 
         # --- Wired but disabled (mirrors snowflake/configuration.nix) ---
         # cinnamon

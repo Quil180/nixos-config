@@ -24,19 +24,19 @@
         #   client's configured relay, or clients fall back to the public relay.
       };
 
-      # RustDesk is reachable from WireGuard clients only, matching the
-      # "WireGuard gates access" model in server_notes note 3. If you ever want
+      # RustDesk is reachable from NetBird peers only, matching the
+      # "NetBird gates access" model in server_notes note 3. If you ever want
       # to reach it from a machine that is NOT on the VPN, this is the rule to
       # change — but then it is public, so weigh that carefully.
       services.lanAccess = {
-        fromWireguard = [
+        fromVpn = [
           21115
           21116
           21117
           21118
           21119
         ];
-        fromWireguardUdp = [ 21116 ];
+        fromVpnUdp = [ 21116 ];
       };
     };
 

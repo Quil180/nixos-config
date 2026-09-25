@@ -5,9 +5,9 @@ _: {
   # every consumer follows: firewall rules, Caddy's vhosts, crust's own
   # address. Nothing else should contain these literals.
   flake.nixosModules.homelab_net =
-    { lib, ... }:
+    { lib, config, ... }:
     {
-      # Stable key: lets several modules (lan_access, wireguard_client, …)
+      # Stable key: lets several modules (lan_access, …)
       # import this without declaring the options twice.
       key = "dotfiles#nixosModules.homelab_net";
 
@@ -49,69 +49,54 @@ _: {
           description = "The LAN gateway / DNS (Pretzel, pfSense).";
         };
 
-        crustEndpoint = lib.mkOption {
+        bagelAddress = lib.mkOption {
           type = lib.types.str;
-          default = "change-me.invalid:51820";
+          default = "192.168.5.6";
           description = ''
-            Where WireGuard clients dial crust: `<host or IP>:<port>`.
+            bagel's LAN address. bagel is the backup NetBird routing peer (it
+            lives on Breadbox, so it survives Bakery going down), and VPN
+            traffic routed through it arrives masqueraded from this address.
 
-            TODO(quil): PROVISIONAL. crust does not exist until December, so
-            neither its public IP nor a DDNS name is knowable yet. `.invalid`
-            is reserved by RFC 2606 and can never resolve, so a client that
-            has not been updated fails loudly instead of silently dialling
-            nothing. Set this once, and both personal hosts follow.
+            TODO(quil): PROVISIONAL — give bagel a DHCP reservation on Pretzel
+            that matches this value.
           '';
         };
 
-        crustWgPublicKey = lib.mkOption {
-          type = lib.types.str;
-          default = "gCheAbKaTBpf9mTayOSGuj+WvmhPLnRT9Ysan9Xe6QI=";
-          description = "crust's WireGuard public key (the private half is in secrets/wg_crust.age).";
-        };
-
-        wgClients = lib.mkOption {
-          default = {
-            snowflake = {
-              address = "10.10.0.2";
-              publicKey = "YE7tosefR5t0ojrqBX+C6fl4020ViECXfbH0KrRvi24=";
-              secretFile = ../../../secrets/wg_snowflake.age;
-            };
-            moraine = {
-              address = "10.10.0.3";
-              publicKey = "gBVIBT0F9Y9UKE/A+fe8UHq7rqzJxtWbLJXTC6i3QC8=";
-              secretFile = ../../../secrets/wg_moraine.age;
-            };
-          };
+        vpnRouterAddresses = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [
+            config.homelab.net.crustAddress
+            config.homelab.net.bagelAddress
+          ];
+          defaultText = lib.literalExpression "[ crustAddress bagelAddress ]";
           description = ''
-            The WireGuard mesh: one entry per client. Both sides read from
-            here, so a client's tunnel address and crust's peer entry for it
-            can never drift apart. Public keys are not secret; the private
-            halves are agenix secrets named by `secretFile`.
+            LAN addresses of the NetBird routing peers. Both masquerade, so a
+            VPN peer's traffic reaches every other host from one of these.
           '';
-          type = lib.types.attrsOf (
-            lib.types.submodule {
-              options = {
-                address = lib.mkOption {
-                  type = lib.types.str;
-                  description = "Tunnel address (no prefix).";
-                };
-                publicKey = lib.mkOption {
-                  type = lib.types.str;
-                  description = "Client public key.";
-                };
-                secretFile = lib.mkOption {
-                  type = lib.types.path;
-                  description = "Encrypted private key.";
-                };
-              };
-            }
-          );
         };
 
-        wgSubnet = lib.mkOption {
+        dmzSubnets = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [
+            "192.168.20.0/24" # DMZ_GAMES, VLAN 20: waffle
+            "192.168.30.0/24" # DMZ_DL, VLAN 30: croissant
+          ];
+          description = ''
+            The DMZ VLANs on Pretzel. Hosts there can't open connections into
+            the LAN except where pfSense allows it (server_notes "DMZ VLANs"),
+            so anything they must reach is opened with lanAccess.fromDmz.
+          '';
+        };
+
+        netbirdInterface = lib.mkOption {
           type = lib.types.str;
-          default = "10.10.0.0/24";
-          description = "The WireGuard client subnet — the only path in from outside.";
+          default = "wt0";
+          description = ''
+            The NetBird interface on the routing peers (crust, bagel), the
+            only way in from outside. Tunnel addresses are handed out by
+            NetBird Cloud and are not stable, so the routers' firewalls trust
+            this interface rather than a subnet.
+          '';
         };
       };
     };

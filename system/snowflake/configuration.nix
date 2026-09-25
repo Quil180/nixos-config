@@ -8,7 +8,7 @@
         workstation # shared personal-machine base (boot, users, nix, services)
         snowflake_hardware
         disko
-        wireguard_client
+        netbird_client
         # simple_disko
         # determinate
         # persist
