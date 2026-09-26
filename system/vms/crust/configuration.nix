@@ -25,28 +25,29 @@
       servers = lib.filterAttrs (
         _: host: builtins.elem "server" host.tags
       ) topConfig.configurations.nixos;
-      exposed = lib.concatLists (
-        lib.mapAttrsToList (
-          host: _:
-          lib.mapAttrsToList (sub: port: {
-            inherit host sub port;
-          }) topConfig.flake.nixosConfigurations.${host}.config.homelab.expose
-        ) servers
-      )
-      ++ [
-        # Debian hosts outside this flake, so they have no homelab.expose.
-        # Pterodactyl (server_notes: Brioche LXC 5, Waffle VM 5).
-        {
-          host = "brioche"; # Panel: nginx
-          sub = "panel";
-          port = 80;
-        }
-        {
-          host = "waffle"; # Wings API + console websocket, ssl off in config.yml
-          sub = "wings";
-          port = 8080;
-        }
-      ];
+      exposed =
+        lib.concatLists (
+          lib.mapAttrsToList (
+            host: _:
+            lib.mapAttrsToList (sub: port: {
+              inherit host sub port;
+            }) topConfig.flake.nixosConfigurations.${host}.config.homelab.expose
+          ) servers
+        )
+        ++ [
+          # Debian hosts outside this flake, so they have no homelab.expose.
+          # Pterodactyl (server_notes: Brioche LXC 5, Waffle VM 5).
+          {
+            host = "brioche"; # Panel: nginx
+            sub = "panel";
+            port = 80;
+          }
+          {
+            host = "waffle"; # Wings API + console websocket, ssl off in config.yml
+            sub = "wings";
+            port = 8080;
+          }
+        ];
       subs = map (e: e.sub) exposed;
     in
     {
