@@ -13,7 +13,8 @@ _: {
 
       -- Basic Keybinds
       hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd(term))
-      hl.bind(mod .. " + Q", hl.dsp.window.kill())
+      hl.bind(mod .. " + Q", hl.dsp.window.close())
+      hl.bind(mod .. " + SHIFT + Q", hl.dsp.window.kill()) -- force-kill frozen apps
       hl.bind(mod .. " + F", hl.dsp.window.float({ action = "toggle" }))
       hl.bind(mod .. " + R", hl.dsp.exec_cmd("rofi -show drun"))
       hl.bind(mod .. " + SHIFT + P", hl.dsp.window.pseudo())
