@@ -10,9 +10,6 @@ _: {
       programs.nixcord = {
         enable = true;
         discord = {
-          package = pkgs.lib.makeOverridable (
-            args: pkgs.discord.override (builtins.removeAttrs args [ "withKrisp" ])
-          ) { };
           vencord.enable = true;
         };
         quickCss = ''
