@@ -40,6 +40,7 @@
         hyprpolkitagent # polkit
         cliphist # clipboard history
         wl-clipboard # clipboard utilities (wl-copy, wl-paste)
+        wtype # virtual keypress simulation for Wayland
         hyprlock # screen locker
       ];
 

@@ -9,6 +9,7 @@ _: {
             pkgs.wl-clipboard
             pkgs.rofi
             pkgs.python3
+            pkgs.wtype
           ]
         }:$PATH"
 
@@ -52,6 +53,8 @@ _: {
 
         if [ -n "$item" ]; then
           printf '%s\n' "$item" | cliphist decode | wl-copy
+          sleep 0.1
+          wtype -M ctrl -k v -m ctrl
         fi
       '';
     in
