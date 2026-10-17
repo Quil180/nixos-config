@@ -1,10 +1,6 @@
-{ lib, ... }:
-{
+_: {
   flake.homeModules.bash =
-    { config, tags, ... }:
-    let
-      dotfiles = "${config.home.homeDirectory}/.dotfiles";
-    in
+    { config, ... }:
     {
       # shell config
       programs.zsh = {
@@ -28,14 +24,6 @@
         };
 
         shellAliases = {
-          # replacing cd with zoxide
-          cd = "z";
-          # update aliases
-          updh = "home-manager switch --flake ${dotfiles} -b backup";
-          updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
-          upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
-          updb = "source ~/.config/zsh/.zshrc";
-          upda = "updf && upds && updh && updb";
           # clean nix store
           clean = "nix-store --gc";
           optimize = "nix-store --optimise";
@@ -44,25 +32,8 @@
           hibernate = "sudo systemctl hibernate";
           suspend = "sudo systemctl suspend";
 
-          # NixOS configuration manager
-          polaris = "${dotfiles}/install.sh";
-
           # general useful aliases
-          vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
           nf = "fastfetch";
-          g = "git";
-          vlsi = "export TERM=ansi; ssh -Y yo485591@vlsi.eecs.ucf.edu";
-        }
-        // lib.optionalAttrs (builtins.elem "asus" tags) {
-          # g14/ASUS-only: GPU mode switching is cardwire's job (system-side
-          # `cardwire` module). It blocks device nodes instead of unbinding PCI, so
-          # no logout is needed; MUX stays asusctl's (kernel: 0 = dGPU-only,
-          # 1 = optimus/hybrid) and wants a reboot.
-          gpu = "cardwire get";
-          hybrid = "cardwire set hybrid";
-          integrated = "cardwire set integrated";
-          smart = "cardwire set smart";
-          dedicated = "asusctl armoury set gpu_mux_mode 0 && sudo reboot now";
         };
         initContent = ''
           if [ -f "$HOME/.cache/terminal/sequences" ]; then

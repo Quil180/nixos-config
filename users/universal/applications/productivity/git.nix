@@ -17,5 +17,9 @@ _: {
     programs.gh = {
       enable = true;
     };
+
+    home.shellAliases = {
+      g = "git";
+    };
   };
 }

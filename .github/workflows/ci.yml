@@ -4,8 +4,9 @@ name: CI
 # homeConfiguration. The matrices are read from the flake itself (the
 # `targets` job), so a new host or home target is built with no edit here.
 #
-# NOTE: the installer-ISO job was removed along with the `installer/` directory
-# and the `nixosConfigurations.installer` target.
+# The installer ISOs are flake hosts too (system/installer/iso.nix), so their
+# toplevels are on the matrix automatically. The heavy `isoImage` outputs
+# themselves are not CI-built; build `.#iso` / `.#iso-offline` on demand.
 
 on:
   push:

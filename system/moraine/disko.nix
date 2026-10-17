@@ -108,6 +108,9 @@ _: {
       };
     };
 
+    # agenix decrypts with age.identityPaths pointing into /home (workstation);
+    # /home must be mounted before stage-2 activation, i.e. neededForBoot.
+    fileSystems."/home".neededForBoot = true;
     fileSystems."/persist".neededForBoot = true;
   }
 

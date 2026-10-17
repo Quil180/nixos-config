@@ -24,5 +24,16 @@ _: {
           external_display_auto_switch = true;
         };
       };
+
+      environment.shellAliases = lib.mkIf (builtins.elem "asus" tags) {
+        # g14/ASUS-only: GPU mode switching is cardwire's job.
+        # It blocks device nodes instead of unbinding PCI, so no logout is needed;
+        # MUX stays asusctl's (kernel: 0 = dGPU-only, 1 = optimus/hybrid) and wants a reboot.
+        gpu = "cardwire get";
+        hybrid = "cardwire set hybrid";
+        integrated = "cardwire set integrated";
+        smart = "cardwire set smart";
+        dedicated = "asusctl armoury set gpu_mux_mode 0 && sudo reboot now";
+      };
     };
 }

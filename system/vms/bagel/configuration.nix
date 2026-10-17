@@ -41,8 +41,7 @@
       # primary's config over the LAN).
       services.adguardhome = {
         enable = true;
-        host = "0.0.0.0";
-        port = 3000;
+        settings.http.address = "0.0.0.0:3000";
         # Not openFirewall: that opens the web UI to every source, including
         # the internet over the public IPv6 prefix. DNS and the UI are scoped
         # separately below.

@@ -32,13 +32,19 @@
         kicad
         latex
         office
-        pi
+        deepseek-harness
         cpp
         verilog
-        # antigravity
+        antigravity
         stylix
         discord
-        flatpak
+
+        # Flatpak applications (modular: import only what you want)
+        # vkSumi
+        fluxer
+        # warehouse
+        # goverlay
+        # sober
 
         creamlinux
       ];
@@ -93,6 +99,28 @@
           };
         };
       };
+
+      home.shellAliases =
+        let
+          dotfiles = "${config.home.homeDirectory}/.dotfiles";
+        in
+        {
+          # replacing cd with zoxide
+          cd = "z";
+
+          # update aliases
+          updh = "home-manager switch --flake ${dotfiles} -b backup";
+          updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
+          upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
+          updb = "source ~/.config/zsh/.zshrc";
+          upda = "updf && upds && updh && updb";
+
+          # NixOS configuration manager
+          polaris = "${dotfiles}/install.sh";
+
+          # personal SSH
+          vlsi = "export TERM=ansi; ssh -Y yo485591@vlsi.eecs.ucf.edu";
+        };
 
       programs.home-manager.enable = true;
     };

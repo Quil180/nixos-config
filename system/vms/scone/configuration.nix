@@ -28,7 +28,6 @@
           server = {
             # Derived, not hardcoded — Gitea bakes these into clone URLs,
             # webhooks and OAuth redirects, so they must match what Caddy serves.
-            DOMAIN = domain;
             ROOT_URL = "https://gitea.${domain}/";
             HTTP_PORT = 3000;
           };

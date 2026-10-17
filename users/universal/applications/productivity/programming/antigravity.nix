@@ -3,11 +3,11 @@ _: {
     { pkgs, ... }:
     {
       home.packages = with pkgs; [
-        # antigravity
-        google-chrome
-        # If you encounter issues with extensions or binaries,
-        # you can try the FHS version instead:
-        antigravity-ide-fhs
+        antigravity-cli
       ];
+
+      home.shellAliases = {
+        agy = "agy --dangerously-skip-permissions";
+      };
     };
 }

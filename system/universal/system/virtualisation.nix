@@ -1,6 +1,11 @@
 _: {
   flake.nixosModules.virtualisation =
-    { pkgs, username, ... }:
+    {
+      pkgs,
+      config,
+      username,
+      ...
+    }:
     {
       programs.dconf.enable = true;
 
@@ -19,11 +24,32 @@ _: {
           onBoot = "ignore";
           onShutdown = "shutdown";
           qemu = {
-            runAsRoot = false;
+            # runAsRoot = true only stops the module emitting its own
+            # `user = "qemu-libvirtd"` block into qemu.conf (libvirt's config
+            # parser is first-match-wins for duplicate keys, so an earlier
+            # qemu-libvirtd line would silently shadow `user = "quil"` below).
+            # qemu still drops privileges — to the desktop user instead of
+            # qemu-libvirtd, who cannot traverse /home/quil (mode 700). That
+            # way guest media under the home dir (ISOs, disk images) works
+            # without copying anything to /var/lib/libvirt.
+            runAsRoot = true;
+            verbatimConfig = ''
+              namespaces = []
+              user = "${username}"
+              group = "users"
+            '';
             swtpm.enable = true;
           };
         };
       };
+
+      # qemu.conf only takes effect when libvirtd (re)starts; without this,
+      # `nixos-rebuild switch` deploys a new config file but leaves a stale
+      # daemon running (libvirtd.service itself rarely changes), which has
+      # repeatedly caused confusing "Permission denied" failures.
+      systemd.services.libvirtd.restartTriggers = [
+        config.virtualisation.libvirtd.qemu.verbatimConfig
+      ];
 
       environment.systemPackages = [
         # Free rdp

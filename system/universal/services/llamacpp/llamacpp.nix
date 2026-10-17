@@ -15,7 +15,8 @@ _: {
         # ROCm build targeted specifically for the G14's RX 6800S GPU
         package = pkgs.llama-cpp-rocm;
         settings = {
-          hf-repo = "unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_M";
+          # hf-repo = "unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_M";
+          hf-repo = "huihui-ai/Huihui-Qwen3.6-35B-A3B-Claude-4.7-Opus-abliterated-MTP-GGUF:Q4_K";
 
           # Qwen sampling recommendations
           temp = 0.6;
@@ -27,16 +28,19 @@ _: {
 
           # Speculative Decoding (MTP)
           spec-type = "draft-mtp";
-          spec-draft-n-max = 5;
+          spec-draft-n-max = 4;
           spec-draft-p-min = 0.6;
 
           # Server settings
           timeout = 300;
 
+          # Cap generation per request (Qwen3.6 card recommends 32,768 output tokens)
+          n-predict = 32768;
+
           # --- 1. Context Window & KV Cache Optimizations ---
           ctx-size = 131072; # 8192 or 32768 or 192640
-          cache-type-k = "q8_0"; # Quantizes KV cache to save VRAM
-          cache-type-v = "q8_0"; # Essential to keep large contexts off your 8GB VRAM limit
+          cache-type-k = "q4_0"; # Halves KV vs q8_0: 720 MiB vs 1360 MiB at 131072 cells
+          cache-type-v = "q4_0"; # The freed ~640 MiB gets re-spent by fit on resident experts
 
           # --- 2. GPU Offloading & Speed ---
           fit = "on";
@@ -57,7 +61,7 @@ _: {
           cont-batching = true;
           warmup = true;
           reasoning = "auto";
-          reasoning-budget = 2048;
+          reasoning-budget = 8192;
           jinja = true;
         };
       };

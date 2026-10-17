@@ -7,7 +7,7 @@ entire configuration onto a bare machine from one command.
 - Systems: `snowflake` (laptop) and `moraine` (desktop) — see `system/<host>/`
 - Users (home-manager): one target per host, `quil@snowflake` / `quil@moraine`
   (see `users/<user>/`)
-- Secrets: agenix (`secrets/*.age`)
+- Secrets: agenix (`secrets/*.age`), sealed to your user key — see §4
 
 ---
 
@@ -17,33 +17,34 @@ entire configuration onto a bare machine from one command.
 
 - A machine with **Nix + flakes** to build the ISO (any Linux box, or even
   this one). Everything is pinned by `flake.lock`.
-- A **USB stick** (≥ 1 GB; the ISO is ~560 MB).
+- A **USB stick**: a few GB for the online ISO, ≥ 16 GB for the offline
+  variant (it bundles both personal machines' closures, 10–20 GB).
 - The target machine with **UEFI**, and **network access** during install
-  (builds pull from cache.nixos.org).
-- First login relies on an SSH key already authorized in
-  `system/<host>/configuration.nix` (see §2) — e.g. `id_snowflake.pub`.
+  (the online variant builds from cache.nixos.org).
+- Your workstation key **`~/.ssh/id_ed25519`** — the agenix secrets
+  (`quil_password`, `root_password`, `git_identity`, …) are sealed to this
+  key (it's the `user_quil` entry in `secrets/secrets.nix`). The installer
+  verifies `--key` against it and places the key on the fresh system, so
+  first boot decrypts everything with **no rekey step** (§2).
 
 ### 1a. Build the ISO
 
 ```bash
-nix build .#nixosConfigurations.installer.config.system.build.isoImage
+nix build .#iso          # online ISO (~1–2 GB): installs any host
+# or
+nix build .#iso-offline  # offline ISO: prebuilt snowflake + moraine closures
 ```
 
-The ISO lands at `result/iso/nixos-*-x86_64-linux.iso`.
+(`iso` is an alias for `nixosConfigurations.installer.config.system.build.isoImage`.)
 
-**Or let CI build & publish it**: on the **Actions → CI** page, press
-“Run workflow” (optionally set a `release_tag`, `release_notes`, and/or
-`draft`). It builds the ISO and, because it's a manual run, uploads it as
-a **GitHub release** (`installer-<date>-<time>` tag) together with a
-`SHA256SUMS` checksum file. You can then download the ISO directly from
-the release page and flash it (§1b).
+The ISO lands at `result/iso/nixos-*-x86_64-linux.iso`. It contains:
 
-It contains:
-
-- your whole repository (minus `.git`) at `/root/dotfiles`,
+- your whole repository (minus `.git`, wallpapers, editor cruft) at
+  `/etc/dotfiles`,
 - `disko`, `nixos-install`, `nixos-enter`, `nmcli`, `git`, `curl`,
-- the `nixos-install-drive` command, a root login shell, and a banner telling
-  you exactly what to do.
+- the `nixos-install-drive` command, sshd (root + nixos accept
+  `system/keys/id_snowflake.pub`), and a banner telling you exactly what to
+  do.
 
 ### 1b. Flash the USB
 
@@ -62,110 +63,117 @@ Boot the USB on the target machine (UEFI), let the automatic root login run,
 then:
 
 ```
-nixos-install-drive
+nixos-install-drive --host snowflake
 ```
 
-You'll get a live walkthrough:
+You'll get a live walkthrough (11 steps):
 
 1. **network check** — must reach cache.nixos.org; `nmcli` offers Wi-Fi setup.
-2. **device safety** — shows exactly which disk will be erased (parsed from
-   `system/<host>/disko.nix`), refuses if it's mounted/in use.
+2. **key** — locate + verify the agenix user key: `--key` → `~/.ssh/id_ed25519`
+   → first USB partition containing `id_ed25519` → paste into the terminal.
+   The public half must match `user_quil` in `secrets/secrets.nix`.
 3. **flake eval check** — your configuration must evaluate before anything
    destructive happens.
-4. **disko** — partitions & mounts `/mnt` (the layout in
-   `system/<host>/disko.nix`).
-5. **system build + install** — the slow step; then `nixos-install`.
-6. **home-manager** — prebuilt on the ISO, copied into the target store, and
-   activated inside the new system.
-7. **rekey reminder** — agenix secrets are sealed to the *old* host key; this
-   step tells you what to do (see §4).
-8. Done — reboot.
+4. **device safety** — shows exactly which disk will be erased (the device in
+   `system/<host>/disko.nix`, or `--device`), refuses if it's mounted/in use.
+5. **disko** — wipe + partition + mount the target (destroy,format,mount);
+   you type the LUKS passphrase here.
+6. **storage workaround** — redirects `/tmp` and `/nix/store` onto the target
+   disk (live-ISO RAM workaround; the ISO store isn't writable).
+7. **system install** — `nixos-install --no-root-passwd --flake ...#<host>`
+   (offline: installs the prebuilt closure instead — no network, no build).
+8. **key on target** — the verified key lands at
+   `/mnt/home/quil/.ssh/id_ed25519` so agenix decrypts on first boot.
+9. **dotfiles** — `git clone` of the repo → `/mnt/home/quil/.dotfiles`
+   (falls back to copying the bundled flake if the clone fails).
+10. **home-manager** — builds `homeConfigurations."quil@<host>".activationPackage`,
+    `nix copy`s it into the target store, and activates it as `quil`.
+11. **finish** — unmount, close LUKS, print next steps (SSH key, FIDO2 hint).
 
-Options (all optional, defaults come from `installer/iso.nix`):
+Options (all optional; the default host is `snowflake`):
 
 ```
-nixos-install-drive --system snowflake --user quil --device /dev/nvme0n1
-nixos-install-drive --yes                     # skip confirmations
-nixos-install-drive --force                   # reinstall over an existing system
-nixos-install-drive --skip-home               # system only
+nixos-install-drive --host moraine --device /dev/nvme0n1
+nixos-install-drive --key /path/to/id_ed25519   # skip auto-discovery
+nixos-install-drive --yes                        # skip confirmations
+nixos-install-drive --offline                    # from the offline ISO, no network
 nixos-install-drive --help
 ```
 
-**Unattended install** (automation): set `installer.autoStart = true` in
-`installer/iso.nix`, rebuild the ISO, boot; it wipes and installs by itself.
+> `--offline` uses the prebuilt closures + `offline_path` lookup table
+> (`/etc/installer/offline-targets`) and skips steps 1, 3 and 6.
 
-**Without building an ISO**: a plain NixOS ISO can install straight from
-GitHub:
+**Without building an ISO**: from a stock NixOS live ISO, clone the repo and
+point the script at it:
 
 ```bash
-nix run github:Quil180/nixos-config#install -- \
-  --system snowflake --user quil --device /dev/nvme0n1
+git clone git@github.com:Quil180/nixos-config /tmp/dotfiles
+NIXOS_INSTALL_FLAKE=/tmp/dotfiles nix run github:Quil180/nixos-config#install -- \
+  --host snowflake
 ```
 
-### 1d. Change what the ISO installs by default
+### 1d. What the ISO installs by default
 
-In `installer/iso.nix`:
-
-```nix
-installer.system   = "snowflake";   # NixOS config (system/<name>/disko.nix)
-installer.user     = "quil";        # home-manager user (users/<user>/)
-installer.device   = "/dev/nvme0n1";# informational; disko.nix is authoritative
-installer.autoStart = false;        # true = unattended install at boot
-```
+- Default host: `DEFAULT_HOST="snowflake"` in
+  `system/installer/nixos-install-drive.sh`.
+- Default device: read from the host's `disko.nix`; `--device` overrides it
+  via the flake's per-host `diskoConfigurations`.
+- Offline hosts: `offlineHosts = [ "snowflake" "moraine" ]` in `flake.nix`.
 
 ---
 
 ## 2. First boot
 
-- Log in via **SSH** using the pubkey already authorized in
-  `system/<host>/configuration.nix` (SSH host keys changed — accept the new
-  ones). There is **no password** yet (`--no-root-passwd`), and the agenix
-  password secrets can't decrypt until the rekey in §4.
-- Or set a password from the installer before rebooting:
-  `nixos-enter --root /mnt -- passwd quil`
+- Log in via **SSH** with your workstation login key — its public half
+  (`system/keys/id_snowflake.pub`) is authorized for `quil` in the NixOS
+  config (`workstation.nix`), so sshd accepts it on first boot.
+- The user password comes from the agenix secret `quil_password.age`,
+  decrypted with the **`id_ed25519`** key the installer placed at
+  `/home/quil/.ssh/` (it must match `user_quil` in `secrets/secrets.nix`).
+  **Workstations need no rekey** — their secrets are sealed to your user
+  key, not the machine's host key.
+- Optional after first boot — enroll FIDO2 for passwordless LUKS unlock:
+  ```
+  systemd-cryptenroll --fido2-device=auto /dev/disk/by-partlabel/luks
+  ```
+  (the crypttab already has `fido2-device=auto` + `token-timeout=10`)
 
 ---
 
 ## 3. First login housekeeping
 
 ```bash
-# Update the flake pins (optional)
-cd ~/.dotfiles && nix flake update
-
 # Fetch the wallpapers submodule (129 MB, not bundled in the ISO)
-git submodule update --init --recursive
+cd ~/.dotfiles && git submodule update --init --recursive
 
 # In case home-manager activation didn't fully apply:
 home-manager switch --flake ~/.dotfiles#quil@snowflake
+
+# Update the flake pins (optional)
+nix flake update
 ```
 
-The copied checkout has no `.git` (excluded from the ISO bundle) — it's
-seeded with `git init` + the `origin` remote, so `git pull` works once SSH
-keys are set up on the machine.
+`~/.dotfiles` is a real git clone of the repo (or a copy of the bundled
+flake if the clone failed mid-install — then `git init` + add the `origin`
+remote, and `git pull` works once SSH keys are set up).
 
 ---
 
-## 4. Rekey agenix secrets (important!)
+## 4. Secrets model (agenix)
 
-`secrets/*.age` are encrypted to the host pubkeys in `secrets/secrets.nix`.
-A freshly installed machine has a **brand-new SSH host key**, so secrets will
-fail to decrypt until re-encrypted.
+`secrets/*.age` files are sealed to the recipients in `secrets/secrets.nix`:
 
-From any machine that has your age identity (your dev machine, or the new
-box once your SSH key works):
-
-```bash
-# 1. Replace the host key for 'snowflake' in secrets/secrets.nix with the
-#    machine's real key (cat /etc/ssh/ssh_host_ed25519_key.pub on the box).
-# 2. Re-encrypt:
-cd ~/.dotfiles
-nix run github:ryantm/agenix -- -r -i ~/.ssh/id_ed25519
-# or, if agenix is already on PATH:  agenix --rekey -i ~/.ssh/id_ed25519
-# (RULES defaults to ./secrets.nix; -i points at your private SSH key)
-```
-
-Until rekeyed: SSH login works (keys are in the NixOS config), but password
-logins and other sealed secrets may fail.
+- **Workstation secrets** (`quil_password`, `root_password`, `git_identity`,
+  `snowflake`, …) are sealed to **`user_quil`** — your key. The installer
+  places that key on the fresh machine (§1c step 8), so decryption works out
+  of the box. Nothing to do.
+- **Server secrets** use a host-key model: sealed to `user_quil` plus the
+  server's `/etc/ssh/ssh_host_ed25519_key.pub`. When a server is first set
+  up: paste its host key into `hosts` in `secrets/secrets.nix`, then rekey
+  from the `secrets/` directory:
+  ```bash
+  nix run github:ryantm/agenix -- -r -i ~/.ssh/id_ed25519
+  ```
 
 ---
 
@@ -187,15 +195,21 @@ home-manager switch --flake .#quil@snowflake
 ## 6. Layout / troubleshooting
 
 ```
-flake.nix                flake-parts; flake = nixosConfigurations + homeConfigurations
-installer/
-  iso.nix                the installer ISO config (options installer.*)
-  install.sh             the orchestrator (what nixos-install-drive runs)
-  README.md              installer-specific reference
-system/<host>/           per-machine modules; disko.nix = disk layout (AUTH
-                         for what gets wiped!), hardware-configuration.nix
-users/<user>/            home-manager modules
-secrets/                 agenix .age files + secrets.nix (host pubkeys)
+flake.nix                  flake-parts; flake = nixosConfigurations + homeConfigurations
+system/<host>/             per-machine modules; disko.nix = disk layout (AUTH
+                           for what gets wiped!), hardware-configuration.nix
+system/installer/
+  iso.nix                  registers the `installer` NixOS host (the online ISO)
+  nixos-install-drive.sh   the 11-step installer (--help for options)
+system/universal/          shared modules across hosts (workstation, persist, …)
+lib/
+  installer-module.nix     shared ISO module body (online/offline differ only in
+                           the preloaded closures)
+  install-script.nix       packages `nixos-install-drive` (also `nix run .#install`)
+install.sh                 maintenance menu (rebuild system/home, update flake);
+                           fresh installs are `nixos-install-drive`'s job
+users/<user>/              home-manager modules
+secrets/                   agenix .age files + secrets.nix (recipient keys)
 ```
 
 Troubleshooting:
@@ -204,11 +218,11 @@ Troubleshooting:
 |---|---|
 | Install fails at the network check | Connect via `nmcli device wifi connect ...` or ethernet, re-run — everything is safe before the wipe |
 | `nixos-install-drive` refuses: "device is mounted" | You pointed it at the live USB; pick the real disk |
-| Installed system boots but no password works | Secrets not rekeyed yet → §4, or set a password with `nixos-enter --root /mnt -- passwd <user>` from the installer |
+| Installed system boots but the password doesn't work | The agenix `quil_password` secret didn't decrypt — did the installer place your key at `/home/quil/.ssh/id_ed25519`? (that key must match `user_quil` in `secrets/secrets.nix`) |
 | Wallpaper dir empty | `git submodule update --init --recursive` (needs SSH keys) |
-| Reinstall over an existing system | `nixos-install-drive --force` |
-| disk layout wrong | Edit `system/<host>/disko.nix`, then rebuild the ISO |
+| disk layout wrong | Edit `system/<host>/disko.nix`, rebuild the ISO (`.#iso`), rerun |
 
 The installer is strictly safe by default: it refuses mounted disks, refuses
-to proceed if the flake doesn't evaluate, validates the device against
-`disko.nix`, and requires an explicit `--yes` or confirmation for the wipe.
+to proceed if the flake doesn't evaluate, verifies the agenix key before
+touching anything, and requires an explicit `--yes` or confirmation for the
+wipe.

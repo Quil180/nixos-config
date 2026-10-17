@@ -8,5 +8,9 @@ _: {
         gcc # for verilator
         gtkwave # waveform visualizer
       ];
+
+      home.shellAliases = {
+        vivado = "nix run gitlab:doronbehar/nix-xilinx#vivado";
+      };
     };
 }

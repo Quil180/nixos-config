@@ -70,6 +70,11 @@
         inputs.agenix.packages.${system}.default
       ];
 
+      # Allowing unfree packages
+      environment.sessionVariables = {
+        NIXPKGS_ALLOW_UNFREE = "1";
+      };
+
       fonts.packages = with pkgs; [
         font-awesome
         font-awesome_5

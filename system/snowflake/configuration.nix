@@ -53,7 +53,7 @@
         # --- AI Services ---
         hermes
         # ollama
-        # llamacpp  # also pulls in its cardwire GPU coupling
+        # llamacpp
         # openwebui
       ];
 

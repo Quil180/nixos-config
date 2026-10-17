@@ -109,6 +109,11 @@ _: {
       };
     };
 
+    # agenix decrypts in the stage-2 activation script with age.identityPaths
+    # pointing into /home (see workstation); /home must be mounted by then.
+    # On a fresh install without this, the quil/root passwords would fail to
+    # decrypt on first boot.
+    fileSystems."/home".neededForBoot = true;
     fileSystems."/persist".neededForBoot = true;
 
     # root_vg only appears after the LUKS passphrase is entered; without this the
