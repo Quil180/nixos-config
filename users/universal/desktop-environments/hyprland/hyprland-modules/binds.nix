@@ -35,7 +35,8 @@ _: {
       hl.bind(mod .. " + M", hl.dsp.exec_cmd("foot spotify_player"))
       hl.bind(mod .. " + SHIFT + R", hl.dsp.exec_cmd("rog-control-center"))
       hl.bind(mod .. " + ALT + R", hl.dsp.exec_cmd("polychromatic-controller"))
-      hl.bind(mod .. " + V", hl.dsp.exec_cmd(term .. " --hold vivado && notify-send 'Vivado was Started'"))
+      hl.bind(mod .. " + V", hl.dsp.exec_cmd("rofi-cliphist"))
+      hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd(term .. " --hold vivado && notify-send 'Vivado was Started'"))
 
       -- Screenshot Keybinds
       hl.bind(mod .. " + ALT + P", hl.dsp.exec_cmd("grimblast copy area && notify-send 'Zone Copied'"))

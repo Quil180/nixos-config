@@ -39,6 +39,7 @@
         xdg-utils # xwayland support
         hyprpolkitagent # polkit
         cliphist # clipboard history
+        wl-clipboard # clipboard utilities (wl-copy, wl-paste)
         hyprlock # screen locker
       ];
 
