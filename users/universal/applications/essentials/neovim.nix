@@ -11,6 +11,10 @@ _: {
         # Enabling customization of neovim and stable version
         enable = true;
 
+        plugins = with pkgs.vimPlugins; [
+          nvim-lspconfig
+        ];
+
         # setting neovim to be default editor and extra aliases
         defaultEditor = true;
         viAlias = true;
@@ -48,13 +52,7 @@ _: {
         ];
       };
 
-      # Note: neovim config is in a git submodule, so we use absolute paths
-      # to avoid Nix flake visibility issues with submodules
       xdg.configFile = {
-        "nvim/lsp" = {
-          source = neovim/lsp;
-          force = true;
-        };
         "nvim/init.lua" = {
           text = builtins.replaceStrings [ "~/.dotfiles" ] [ dotfilesDir ] (
             builtins.readFile ./neovim/init.lua

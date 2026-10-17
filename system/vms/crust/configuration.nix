@@ -119,7 +119,7 @@
         package = pkgs.caddy.withPlugins {
           plugins = [ "github.com/caddy-dns/porkbun@v0.3.1" ];
           # Obtained via the fakeHash workflow; changes if you bump the plugin.
-          hash = "sha256-iFuoa6k2r3jUPazHHujhB4bBq3Fz0Mv0Tjsr+gxMYQQ=";
+          hash = "sha256-ayBJpLRQtQ7YmTLhMM63ECmvPcQwOPWe6VSCCotPbnA=";
         };
 
         # Declared once globally so every vhost below uses DNS-01.
