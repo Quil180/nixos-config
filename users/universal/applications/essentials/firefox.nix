@@ -7,7 +7,7 @@ _: {
       ...
     }:
     {
-      persist.directories = [ ".mozilla" ];
+      persist.directories = [ ".config/mozilla" ];
 
       programs.firefox = {
         enable = true;

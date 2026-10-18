@@ -12,6 +12,13 @@ let
       ...
     }:
     {
+      # The installed apps and runtimes (else nix-flatpak re-downloads them
+      # every boot) and each app's own data.
+      persist.directories = [
+        ".local/share/flatpak"
+        ".var"
+      ];
+
       xdg.enable = lib.mkDefault true;
 
       services.flatpak = {

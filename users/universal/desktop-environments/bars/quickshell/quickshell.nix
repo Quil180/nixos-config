@@ -8,6 +8,7 @@ _: {
       ...
     }:
     {
+      persist.directories = [ ".config/quickshell" ];
       home.packages = [
         inputs.quickshell.packages.${system}.default
         pkgs.jq # json parsing

@@ -39,8 +39,16 @@ _: {
           "Videos"
           "Desktop"
           "winboat"
-          ".ssh"
-          ".gnupg"
+          # 0700: the VM test showed fresh persist folders default to 0755,
+          # which gpg warns about (and ~/.ssh shouldn't be world-readable).
+          {
+            directory = ".ssh";
+            mode = "0700";
+          }
+          {
+            directory = ".gnupg";
+            mode = "0700";
+          }
           ".config/github-copilot"
           ".config/teamviewer"
           ".local/share/direnv"
@@ -49,10 +57,21 @@ _: {
           ".cache/nix"
           ".cache/tealdeer"
           ".dotfiles"
+          ".claude" # Claude Code: settings, history, project memory
+          ".pi" # pi agent
+          ".config/pi-hashline-edit-pro" # pi extension config
+          ".config/dconf" # settings GTK apps save themselves
+          ".local/state/wireplumber" # default audio devices and volumes
+          ".local/share/applications" # Steam game shortcuts, URL handlers
+          ".local/share/icons" # their icons
         ]
         ++ config.persist.directories;
         files = [
           ".bash_history"
+          # Claude Code's login and global config. A single file is a bind
+          # mount, which a save-by-rename can't replace; if Claude Code ever
+          # fails to save its config, this is why.
+          ".claude.json"
         ]
         ++ config.persist.files;
       };

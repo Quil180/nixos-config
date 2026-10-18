@@ -64,6 +64,9 @@
 
       environment.systemPackages = [ pkgs.btop-rocm ];
 
+      # Making it so that home is ACTUALLY wiped
+      persist.wipeHome = true;
+
       system.stateVersion = "26.11"; # KEEP THIS THE SAME
     };
 

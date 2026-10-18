@@ -21,6 +21,16 @@ _: {
       options.persist = {
         directories = entries "directories";
         files = entries "files";
+        wipeHome = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = ''
+            Also wipe /home on every boot ("erase your darlings" for ~), keeping
+            the previous one in old_homes for 30 days. Only what the users'
+            home persistence lists survives. Needs `persist` and home
+            persistence enabled for every home-manager user (asserted).
+          '';
+        };
       };
     };
 
@@ -32,7 +42,23 @@ _: {
       ...
     }:
     {
-      imports = [ inputs.impermanence.nixosModules.impermanence ];
+      imports = [
+        inputs.impermanence.nixosModules.impermanence
+        # Refuse to wipe a home that has no persistence list.
+        # (In a nested module: `options` may only decide the shape of `config`.)
+        (
+          { options, ... }:
+          {
+            config = lib.optionalAttrs (options ? home-manager) {
+              assertions = lib.mapAttrsToList (name: user: {
+                assertion =
+                  config.persist.wipeHome -> lib.any (root: root.enable) (lib.attrValues user.home.persistence);
+                message = "persist.wipeHome would wipe ${name}'s home, but it has no home persistence enabled (import homeModules.persist in its profile).";
+              }) config.home-manager.users;
+            };
+          }
+        )
+      ];
 
       programs.fuse.userAllowOther = true;
 
@@ -45,7 +71,6 @@ _: {
         hideMounts = true;
         directories = [
           "/etc/nixos"
-          "/etc/ssh"
           "/etc/sudoers.d"
           "/var/db/sudo"
           "/var/log"
@@ -64,11 +89,20 @@ _: {
           "/var/lib/systemd/credential.secret"
           "/etc/machine-id"
         ]
+        # Only sshd's host keys, not all of /etc/ssh: NixOS links sshd_config
+        # and ssh_config into /etc/ssh at boot, and a persisted /etc/ssh mounted
+        # over them would hide them (sshd then fails on a fresh install).
+        ++ lib.optionals config.services.openssh.enable (
+          lib.concatMap (key: [
+            key.path
+            "${key.path}.pub"
+          ]) config.services.openssh.hostKeys
+        )
         ++ config.persist.files;
       };
 
       boot.initrd.systemd.services.wipe-root = {
-        description = "Wipe Root BTRFS Subvolume";
+        description = "Wipe the root (and, with persist.wipeHome, home) BTRFS subvolumes";
         wantedBy = [ "initrd.target" ];
         after = [
           "initrd-root-device.target"
@@ -81,13 +115,6 @@ _: {
           mkdir -p /btrfs_tmp
           mount /dev/root_vg/root /btrfs_tmp
 
-          # Wipe /root
-          if [[ -e /btrfs_tmp/root ]]; then
-              mkdir -p /btrfs_tmp/old_roots
-              timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-              mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-          fi
-
           delete_subvolume_recursively() {
               IFS=$'\n'
               for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
@@ -96,12 +123,23 @@ _: {
               btrfs subvolume delete "$1"
           }
 
-          # Clean up old roots older than 30 days
-          for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-              delete_subvolume_recursively "$i"
-          done
+          # Move subvolume $1 to $2/<its last-modified time>, drop entries of
+          # $2 older than 30 days, and start $1 empty.
+          wipe() {
+              if [[ -e "/btrfs_tmp/$1" ]]; then
+                  mkdir -p "/btrfs_tmp/$2"
+                  timestamp=$(date --date="@$(stat -c %Y "/btrfs_tmp/$1")" "+%Y-%m-%-d_%H:%M:%S")
+                  mv "/btrfs_tmp/$1" "/btrfs_tmp/$2/$timestamp"
+              fi
+              for i in $(find "/btrfs_tmp/$2/" -maxdepth 1 -mindepth 1 -mtime +30 2>/dev/null); do
+                  delete_subvolume_recursively "$i"
+              done
+              btrfs subvolume create "/btrfs_tmp/$1"
+          }
 
-          btrfs subvolume create /btrfs_tmp/root
+          wipe root old_roots
+          ${lib.optionalString config.persist.wipeHome "wipe home old_homes"}
+
           umount /btrfs_tmp
         '';
       };

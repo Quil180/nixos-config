@@ -24,6 +24,9 @@
         topConfig.flake.homeModules.power-management
       ];
 
+      # cliphist's clipboard history (Super+V), kept across reboots.
+      persist.directories = [ ".cache/cliphist" ];
+
       home.packages = with pkgs; [
         # bare essentials
         adwaita-icon-theme

@@ -19,7 +19,7 @@
     {
       imports = with topConfig.flake.homeModules; [
         bash
-        # persist
+        persist
         hyprland
         # chromium
         # creamlinux

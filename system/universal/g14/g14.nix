@@ -1,9 +1,28 @@
 _: {
   flake.nixosModules.g14 =
-    { pkgs, ... }:
+    {
+      pkgs,
+      lib,
+      username,
+      ...
+    }:
     {
       # asusd's profiles, fan curves and LED settings.
       persist.directories = [ "/etc/asusd" ];
+
+      # ROG Control Center (shipped in asusctl) keeps its settings in the
+      # user's home; declarable from here on hosts with home-manager integrated.
+      # (In a nested module: `options` may only decide the shape of `config`.)
+      imports = [
+        (
+          { options, ... }:
+          {
+            config = lib.optionalAttrs (options ? home-manager) {
+              home-manager.users.${username}.persist.directories = [ ".config/rog" ];
+            };
+          }
+        )
+      ];
 
       environment.systemPackages = with pkgs; [
         asusctl

@@ -91,8 +91,10 @@
       ];
 
       age = {
+        # Read during early activation. With persist.wipeHome, ~ is empty
+        # then (its bind mounts come later), so read the key from /persist.
         identityPaths = lib.mkForce [
-          "/home/${username}/.ssh/id_ed25519"
+          ((if config.persist.wipeHome then "/persist" else "") + "/home/${username}/.ssh/id_ed25519")
         ];
         secrets = {
           root_password.file = ../../../secrets/root_password.age;

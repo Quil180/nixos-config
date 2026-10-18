@@ -7,8 +7,14 @@ _: {
       ...
     }:
     {
-      # Plugins, undo history and shada.
-      persist.directories = [ ".local/share/nvim" ];
+      # Plugins (share); undo history, shada and swap (state); the vim.pack
+      # lockfile, nvim-pack-lock.json (config: the whole dir, as nvim may save
+      # it by renaming, which a bind-mounted single file can't take).
+      persist.directories = [
+        ".local/share/nvim"
+        ".local/state/nvim"
+        ".config/nvim"
+      ];
 
       programs.neovim = {
         # Enabling customization of neovim and stable version

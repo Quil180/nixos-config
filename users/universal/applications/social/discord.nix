@@ -9,7 +9,7 @@ _: {
       # Login and Vencord settings.
       persist.directories = [
         ".config/discord"
-        ".config/nixcord"
+        ".config/Vencord"
       ];
 
       programs.nixcord = {
