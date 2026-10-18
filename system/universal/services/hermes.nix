@@ -2,11 +2,21 @@ _: {
   flake.nixosModules.hermes =
     {
       inputs,
+      config,
       ...
     }:
     {
       imports = [
         inputs.hermes-agent.nixosModules.default
+      ];
+
+      # Sessions, memories, cron jobs and the workspace.
+      persist.directories = [
+        {
+          directory = config.services.hermes-agent.stateDir;
+          inherit (config.services.hermes-agent) user group;
+          mode = "2770";
+        }
       ];
 
       # Hermes Agent framework. The model/provider is deliberately host-side:

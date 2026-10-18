@@ -1,5 +1,5 @@
 _: {
-  flake.homeModules.password-manager = { pkgs, ... }: {
+  flake.homeModules.bitwarden = { pkgs, ... }: {
     home.packages = with pkgs; [
       bitwarden-desktop
     ];

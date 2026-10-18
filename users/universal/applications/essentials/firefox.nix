@@ -7,6 +7,8 @@ _: {
       ...
     }:
     {
+      persist.directories = [ ".mozilla" ];
+
       programs.firefox = {
         enable = true;
         package = pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { withPipewire = true; }) { };

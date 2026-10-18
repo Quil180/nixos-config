@@ -6,6 +6,12 @@ _: {
     {
       imports = [ ];
 
+      # Login and Vencord settings.
+      persist.directories = [
+        ".config/discord"
+        ".config/nixcord"
+      ];
+
       programs.nixcord = {
         enable = true;
         discord = {

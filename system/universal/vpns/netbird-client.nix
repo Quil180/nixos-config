@@ -5,8 +5,14 @@ _: {
   # configure. Enrol once with `netbird up`, which signs in through the
   # browser; the login persists in /var/lib/netbird.
   flake.nixosModules.netbird_client =
-    { lib, ... }:
+    { lib, config, ... }:
     {
+      # The login (and the client's keys) for each client, /var/lib/netbird
+      # for the default one.
+      persist.directories = lib.mapAttrsToList (
+        _: client: client.dir.state
+      ) config.services.netbird.clients;
+
       services.netbird = {
         enable = true;
         # "client": accept the LAN route crust advertises (loose reverse-path

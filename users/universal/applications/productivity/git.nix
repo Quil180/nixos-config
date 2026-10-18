@@ -1,5 +1,9 @@
 _: {
   flake.homeModules.git = { config, ... }: {
+    # gh's login, and the agenix-decrypted identity included below.
+    persist.directories = [ ".config/gh" ];
+    persist.files = [ ".local/state/git_identity" ];
+
     # git config
     programs.git = {
       enable = true;

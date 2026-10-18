@@ -106,7 +106,9 @@ nixos-install-drive --help
 ```
 
 > `--offline` uses the prebuilt closures + `offline_path` lookup table
-> (`/etc/installer/offline-targets`) and skips steps 1, 3 and 6.
+> (`/etc/installer/offline-targets`) and skips steps 1, 3 and 6. It cannot be
+> combined with `--device`: the prebuilt disko script always targets the disk
+> in the host's `disko.nix` (`/dev/nvme0n1` for snowflake/moraine).
 
 **Without building an ISO**: from a stock NixOS live ISO, clone the repo and
 point the script at it:

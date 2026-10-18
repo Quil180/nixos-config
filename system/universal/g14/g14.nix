@@ -2,6 +2,9 @@ _: {
   flake.nixosModules.g14 =
     { pkgs, ... }:
     {
+      # asusd's profiles, fan curves and LED settings.
+      persist.directories = [ "/etc/asusd" ];
+
       environment.systemPackages = with pkgs; [
         asusctl
       ];

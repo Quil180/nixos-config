@@ -115,7 +115,7 @@
 
         config =
           let
-            # Upstream home modules and args every home build gets, whether
+            # Home modules and args every home build gets, whether
             # standalone (homeConfigurations) or integrated into a host.
             homeUpstreamModules = [
               inputs.stylix.homeModules.stylix
@@ -123,6 +123,8 @@
               inputs.nixcord.homeModules.nixcord
               inputs.nix-flatpak.homeManagerModules.nix-flatpak
               inputs.agenix.homeManagerModules.default
+              # The home `persist.*` option, so any home module can declare its state.
+              config.flake.homeModules.persistOptions
             ];
             homeArgs =
               {
@@ -200,6 +202,8 @@
                   # `persist`.
                   inputs.agenix.nixosModules.default
                   inputs.disko.nixosModules.disko
+                  # The `persist.*` option, so any module can declare its state.
+                  config.flake.nixosModules.persistOptions
                 ]
                 ++ lib.optional host.integratedHome (integratedHomeModule name host);
               }

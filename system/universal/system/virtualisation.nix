@@ -7,6 +7,9 @@ _: {
       ...
     }:
     {
+      # VM definitions, networks and storage pools.
+      persist.directories = [ "/var/lib/libvirt" ];
+
       programs.dconf.enable = true;
 
       users.users.${username}.extraGroups = [

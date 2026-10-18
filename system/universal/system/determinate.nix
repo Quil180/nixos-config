@@ -2,6 +2,8 @@ _: {
   flake.nixosModules.determinate =
     { pkgs, ... }:
     {
+      persist.directories = [ "/etc/determinate" ];
+
       environment.etc = {
         "nix/nix.custom.conf" = {
           mode = "0755";

@@ -18,23 +18,24 @@
     }:
     {
       imports = with topConfig.flake.homeModules; [
+        bash
         # persist
         hyprland
-        bash
-        chromium
+        # chromium
+        # creamlinux
         firefox
-        music
+        spotify-cli
         neovim
-        password-manager
+        bitwarden
         ranger
         games
         git
-        kicad
+        # kicad
         latex
         office
-        deepseek-harness
-        cpp
-        verilog
+        # deepseek-harness
+        # cpp
+        # verilog
         antigravity
         stylix
         discord
@@ -45,13 +46,13 @@
         # warehouse
         # goverlay
         # sober
-
-        creamlinux
       ];
 
       nixpkgs.config = {
         allowUnfree = true;
       };
+
+      persist.directories = [ ".local/share/zoxide" ];
 
       age = {
         identityPaths = [

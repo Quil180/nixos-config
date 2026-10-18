@@ -1,6 +1,36 @@
 _: {
+  # `persist.directories` / `persist.files`: what a module needs to survive the
+  # root wipe, declared next to the service that needs it, e.g.
+  #   persist.directories = [ "/var/lib/netbird" ];
+  # Declared on every host (flake.nix adds this module to all of them), so a
+  # module can set it unconditionally; it only takes effect on hosts that also
+  # import `persist`. Entries use impermanence's format: a path string, or
+  # { directory = …; user = …; group = …; mode = …; }.
+  flake.nixosModules.persistOptions =
+    { lib, ... }:
+    let
+      entries =
+        what:
+        lib.mkOption {
+          type = with lib.types; listOf (either str (attrsOf anything));
+          default = [ ];
+          description = "System ${what} to keep across the root wipe (only on hosts importing `persist`).";
+        };
+    in
+    {
+      options.persist = {
+        directories = entries "directories";
+        files = entries "files";
+      };
+    };
+
   flake.nixosModules.persist =
-    { inputs, ... }:
+    {
+      inputs,
+      lib,
+      config,
+      ...
+    }:
     {
       imports = [ inputs.impermanence.nixosModules.impermanence ];
 
@@ -9,38 +39,32 @@ _: {
       # system files we want to keep
       fileSystems."/persist".neededForBoot = true;
 
+      # Only what every persisted host needs; service-specific state is
+      # declared by its own module through `persist.directories`.
       environment.persistence."/persist/system" = {
         hideMounts = true;
         directories = [
           "/etc/nixos"
-          "/etc/determinate"
-          "/etc/NetworkManager/system-connections"
           "/etc/ssh"
-          "/etc/asusd"
           "/etc/sudoers.d"
           "/var/db/sudo"
           "/var/log"
-          "/var/lib/bluetooth"
           "/var/lib/nixos"
-          "/var/lib/NetworkManager"
           "/var/lib/systemd/coredump"
-          "/var/lib/libvirt"
-          "/var/lib/logmein-hamachi"
-          "/var/lib/ollama"
           "/var/lib/private"
-          "/var/lib/llama-cpp"
-          "/var/cache/llama-cpp"
-          {
-            directory = "/var/lib/colord";
-            user = "colord";
-            group = "colord";
-            mode = "u=rwx,g=rx,o=";
-          }
-        ];
+        ]
+        ++ lib.optional config.services.colord.enable {
+          directory = "/var/lib/colord";
+          user = "colord";
+          group = "colord";
+          mode = "u=rwx,g=rx,o=";
+        }
+        ++ config.persist.directories;
         files = [
           "/var/lib/systemd/credential.secret"
           "/etc/machine-id"
-        ];
+        ]
+        ++ config.persist.files;
       };
 
       boot.initrd.systemd.services.wipe-root = {

@@ -2,6 +2,9 @@ _: {
   flake.nixosModules.tailscale =
     { lib, ... }:
     {
+      # The node identity and login.
+      persist.directories = [ "/var/lib/tailscale" ];
+
       services.tailscale = {
         enable = true;
         # mkDefault so a host can dial routing features back without hitting a

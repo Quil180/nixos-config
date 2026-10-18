@@ -2,6 +2,9 @@ _: {
   flake.homeModules.bash =
     { config, ... }:
     {
+      # zsh history.
+      persist.directories = [ ".local/share/zsh" ];
+
       # shell config
       programs.zsh = {
         enable = true;

@@ -67,6 +67,7 @@ Install this flake's NixOS + home-manager config onto a bare machine.
 Options:
   --host NAME        NixOS configuration to install (default: $DEFAULT_HOST)
   --device /dev/X    Target disk (default: read from disko.nix). Passed to disko.
+                     Online only: the offline ISO's disko scripts have the disk baked in.
   --key PATH         Path to ~/.ssh/id_ed25519 of the workstation user (quil@snowflake).
                      The agenix secrets are sealed to this key; without it the
                      fresh system can't decrypt passwords on first boot.
@@ -105,6 +106,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 HOST="${HOST:-$DEFAULT_HOST}"
+
+# The offline ISO carries each host's prebuilt disko script, with the disk
+# from its disko.nix baked in; it cannot be retargeted. Refuse up front,
+# before anything is touched, rather than wiping a disk the user didn't name.
+if [[ $OFFLINE -eq 1 && -n "$DEVICE" ]]; then
+  die "--device can't be used with --offline: the prebuilt disko script always targets the disk in system/$HOST/disko.nix. Drop --device, or install online."
+fi
 
 command -v ssh-keygen > /dev/null || die "ssh-keygen not found"
 
@@ -286,8 +294,16 @@ run_disko() {
     local disko_script
     disko_script=$(offline_path disko "$HOST")
     [[ -n "$disko_script" ]] || die "No offline disko script for '$HOST' in $OFFLINE_TARGETS"
-    log_info "Running prebuilt disko (offline): $disko_script"
-    "${extra[@]}" "$disko_script"
+    # The store path is a package; the script itself is under bin/. It takes
+    # only one flag, --yes-wipe-all-disks, as its first argument (--device was
+    # already refused for offline installs).
+    local bin="$disko_script/bin/disko-destroy-format-mount"
+    [[ -x "$bin" ]] || die "Offline disko script missing: $bin"
+    local wipe=()
+    if [[ $YES -eq 1 ]]; then wipe+=(--yes-wipe-all-disks); fi
+    log_info "Running prebuilt disko (offline): $bin"
+    log_info "You will be prompted for the LUKS passphrase when the volume is created."
+    "$bin" "${wipe[@]}"
   else
     log_info "Partitioning with disko (destroy,format,mount) from $FLAKE_DIR#$HOST"
     log_info "You will be prompted for the LUKS passphrase when the volume is created."

@@ -7,11 +7,15 @@
     {
       pkgs,
       lib,
+      config,
       username,
       ...
     }:
     {
       imports = [ topConfig.flake.nixosModules.openwebui ];
+
+      # Ollama's keys and state; the models live under /home (below).
+      persist.directories = [ config.services.ollama.home ];
       # nixpkgs.overlays = [
       # 	(final: prev: {
       # 		# This is the corrected overlay.

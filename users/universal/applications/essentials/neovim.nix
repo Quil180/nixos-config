@@ -7,6 +7,9 @@ _: {
       ...
     }:
     {
+      # Plugins, undo history and shada.
+      persist.directories = [ ".local/share/nvim" ];
+
       programs.neovim = {
         # Enabling customization of neovim and stable version
         enable = true;

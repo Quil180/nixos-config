@@ -1,5 +1,5 @@
 _: {
-  flake.homeModules.music = { pkgs, ... }: {
+  flake.homeModules.spotify-cli = { pkgs, ... }: {
     home.packages = with pkgs; [
       spotify-player
     ];

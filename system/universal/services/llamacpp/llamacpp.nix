@@ -10,6 +10,13 @@ _: {
       # Stops llama-cpp while cardwire has the dGPU blocked (laptops only).
       imports = [ ./_gpu-coupling.nix ];
 
+      # The model cache itself is LLAMA_CACHE under /home (below), which the
+      # root wipe never touches.
+      persist.directories = [
+        "/var/lib/llama-cpp"
+        "/var/cache/llama-cpp"
+      ];
+
       services.llama-cpp = {
         enable = true;
         # ROCm build targeted specifically for the G14's RX 6800S GPU

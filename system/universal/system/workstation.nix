@@ -33,6 +33,12 @@
         };
       };
 
+      # Saved Wi-Fi/VPN connections and NetworkManager's own state.
+      persist.directories = [
+        "/etc/NetworkManager/system-connections"
+        "/var/lib/NetworkManager"
+      ];
+
       networking = {
         networkmanager = {
           enable = true;
