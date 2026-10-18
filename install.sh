@@ -91,6 +91,12 @@ rebuild_home() {
     system_choice=$(prompt_with_default "Which system configuration" "$DEFAULT_SYSTEM")
     user_choice=$(prompt_with_default "Which user configuration" "$DEFAULT_USER")
 
+    # integratedHome hosts (e.g. snowflake) have no standalone target.
+    if [[ $(nix eval "${SCRIPT_DIR}#homeConfigurations" --apply "h: h ? \"${user_choice}@${system_choice}\"" 2>/dev/null) != "true" ]]; then
+        log_error "No standalone home target '${user_choice}@${system_choice}'. If home-manager is integrated into that host, rebuild the system instead."
+        return 1
+    fi
+
     home-manager switch --flake "${SCRIPT_DIR}#${user_choice}@${system_choice}"
     log_success "Home-manager rebuild complete!"
 }
@@ -157,7 +163,7 @@ main() {
 
         case $choice in
             1) rebuild_system; pause ;;
-            2) rebuild_home; pause ;;
+            2) rebuild_home || true; pause ;;
             3) update_flake; pause ;;
             4)
                 clear

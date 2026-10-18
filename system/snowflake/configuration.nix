@@ -67,6 +67,10 @@
       system.stateVersion = "26.11"; # KEEP THIS THE SAME
     };
 
+  # quil's home is built into this system: `upds` activates it, and there is
+  # deliberately no standalone "quil@snowflake" home target.
+  configurations.nixos.snowflake.integratedHome = true;
+
   # Host traits; read by shared modules as the `tags` specialArg.
   configurations.nixos.snowflake.tags = [
     "laptop"

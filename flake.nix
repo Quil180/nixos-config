@@ -86,6 +86,17 @@
                         Suggested vocabulary: "laptop" "desktop" "asus" "rocm".
                       '';
                     };
+                    integratedHome = lib.mkOption {
+                      type = lib.types.bool;
+                      default = false;
+                      description = ''
+                        Build quil's home profile into this host's NixOS
+                        system (home-manager as a NixOS module), so
+                        `nixos-rebuild switch` activates it. Such a host must
+                        NOT also have a standalone "quil@<host>" home target;
+                        the flake refuses to build one.
+                      '';
+                    };
                   };
                 }
               );
@@ -104,6 +115,72 @@
 
         config =
           let
+            # Upstream home modules and args every home build gets, whether
+            # standalone (homeConfigurations) or integrated into a host.
+            homeUpstreamModules = [
+              inputs.stylix.homeModules.stylix
+              inputs.hyprland.homeManagerModules.default
+              inputs.nixcord.homeModules.nixcord
+              inputs.nix-flatpak.homeManagerModules.nix-flatpak
+              inputs.agenix.homeManagerModules.default
+            ];
+            homeArgs =
+              {
+                username,
+                hostname,
+                system,
+                tags,
+              }:
+              {
+                inherit
+                  inputs
+                  username
+                  hostname
+                  system
+                  tags
+                  ;
+                dotfilesDir = "/home/${username}/.dotfiles";
+              };
+
+            # home-manager as a NixOS module, for hosts with integratedHome.
+            # Same profile, upstream modules and args as the standalone target.
+            integratedHomeModule =
+              name: host:
+              { options, ... }:
+              {
+                imports = [ inputs.home-manager.nixosModules.home-manager ];
+
+                config = {
+                  home-manager = {
+                    # Own pkgs, like standalone: the profile and stylix's home
+                    # module both set nixpkgs.* options, which useGlobalPkgs forbids.
+                    useGlobalPkgs = false;
+                    useUserPackages = true;
+                    backupFileExtension = "backup";
+                    extraSpecialArgs = homeArgs {
+                      username = "quil";
+                      hostname = name;
+                      inherit (host) system tags;
+                    };
+                    sharedModules = homeUpstreamModules ++ [
+                      {
+                        # stylix auto-enables Qt theming (qtct + kvantum) only
+                        # under NixOS; keep the home identical to standalone.
+                        # Flip this to true to try it.
+                        stylix.targets.qt.enable = lib.mkDefault false;
+                      }
+                    ];
+                    users.quil = config.flake.homeModules.quil;
+                  };
+                }
+                # stylix's NixOS module would otherwise inject its home module
+                # a second time and mirror the (unset) system theme into it;
+                # the home profile themes itself exactly as it does standalone.
+                // lib.optionalAttrs (options ? stylix) {
+                  stylix.homeManagerIntegration.autoImport = false;
+                };
+              };
+
             nixosConfigurations = lib.mapAttrs (
               name: host:
               nixpkgs.lib.nixosSystem {
@@ -123,7 +200,8 @@
                   # `persist`.
                   inputs.agenix.nixosModules.default
                   inputs.disko.nixosModules.disko
-                ];
+                ]
+                ++ lib.optional host.integratedHome (integratedHomeModule name host);
               }
             ) config.configurations.nixos;
 
@@ -143,27 +221,23 @@
                 # Platform and traits are declared once, on the host entry.
                 system = if host == null then "x86_64-linux" else host.system;
               in
-              inputs.home-manager.lib.homeManagerConfiguration {
-                pkgs = nixpkgs.legacyPackages.${system};
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    username
-                    hostname
-                    system
-                    ;
-                  tags = if host == null then [ ] else host.tags;
-                  dotfilesDir = "/home/${username}/.dotfiles";
-                };
-                modules = [
-                  user.module
-                  inputs.stylix.homeModules.stylix
-                  inputs.hyprland.homeManagerModules.default
-                  inputs.nixcord.homeModules.nixcord
-                  inputs.nix-flatpak.homeManagerModules.nix-flatpak
-                  inputs.agenix.homeManagerModules.default
-                ];
-              }
+              # Two home-manager generations fighting over the same ~ is the
+              # failure this guards against.
+              if host != null && host.integratedHome then
+                throw ''
+                  home target "${name}": host "${hostname}" has integratedHome = true,
+                  so its home is built by `nixos-rebuild switch`. Remove this
+                  standalone target (users/${username}/targets.nix).
+                ''
+              else
+                inputs.home-manager.lib.homeManagerConfiguration {
+                  pkgs = nixpkgs.legacyPackages.${system};
+                  extraSpecialArgs = homeArgs {
+                    inherit username hostname system;
+                    tags = if host == null then [ ] else host.tags;
+                  };
+                  modules = [ user.module ] ++ homeUpstreamModules;
+                }
             ) config.configurations.home;
 
             # Device-overridable disko configs for the installer: disko's
@@ -199,6 +273,9 @@
               "moraine"
             ];
             storePath = drv: builtins.unsafeDiscardStringContext (builtins.toString drv);
+            # Integrated hosts carry their home inside the toplevel; only
+            # standalone ones need a separate activation package.
+            standaloneHome = name: !config.configurations.nixos.${name}.integratedHome;
             toplevelOf = name: storePath nixosConfigurations.${name}.config.system.build.toplevel;
             diskoScriptOf = name: storePath nixosConfigurations.${name}.config.system.build.destroyFormatMount;
             activationOf = name: storePath homeConfigurations."quil@${name}".activationPackage;
@@ -209,22 +286,28 @@
             offlineTargetsText =
               builtins.concatStringsSep "\n" (
                 builtins.concatLists (
-                  map (name: [
-                    "toplevel ${name} ${toplevelOf name}"
-                    "disko ${name} ${diskoScriptOf name}"
-                    "home quil@${name} ${activationOf name}"
-                    "device ${name} ${deviceOf name}"
-                  ]) offlineHosts
+                  map (
+                    name:
+                    [
+                      "toplevel ${name} ${toplevelOf name}"
+                      "disko ${name} ${diskoScriptOf name}"
+                      "device ${name} ${deviceOf name}"
+                    ]
+                    ++ lib.optional (standaloneHome name) "home quil@${name} ${activationOf name}"
+                  ) offlineHosts
                 )
               )
               + "\n";
 
             offlineStoreContents = builtins.concatLists (
-              map (name: [
-                nixosConfigurations.${name}.config.system.build.toplevel
-                nixosConfigurations.${name}.config.system.build.destroyFormatMount
-                homeConfigurations."quil@${name}".activationPackage
-              ]) offlineHosts
+              map (
+                name:
+                [
+                  nixosConfigurations.${name}.config.system.build.toplevel
+                  nixosConfigurations.${name}.config.system.build.destroyFormatMount
+                ]
+                ++ lib.optional (standaloneHome name) homeConfigurations."quil@${name}".activationPackage
+              ) offlineHosts
             );
 
             # Same wiring as the per-host mapAttrs above, so the offline

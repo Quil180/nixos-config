@@ -103,17 +103,24 @@
       home.shellAliases =
         let
           dotfiles = "${config.home.homeDirectory}/.dotfiles";
+          # True when this profile is built into a NixOS host (integratedHome)
+          # rather than by standalone home-manager.
+          integrated = config.submoduleSupport.enable;
         in
         {
           # replacing cd with zoxide
           cd = "z";
 
           # update aliases
-          updh = "home-manager switch --flake ${dotfiles} -b backup";
+          updh =
+            if integrated then
+              "echo 'updh: home-manager is part of the NixOS config on this host, run upds instead' >&2; false"
+            else
+              "home-manager switch --flake ${dotfiles} -b backup";
           updf = "cd ${dotfiles} && nix flake update --flake ${dotfiles}";
           upds = "sudo nixos-rebuild switch --flake ${dotfiles}";
           updb = "source ~/.config/zsh/.zshrc";
-          upda = "updf && upds && updh && updb";
+          upda = if integrated then "updf && upds && updb" else "updf && upds && updh && updb";
 
           # NixOS configuration manager
           polaris = "${dotfiles}/install.sh";
@@ -122,6 +129,7 @@
           vlsi = "export TERM=ansi; ssh -Y yo485591@vlsi.eecs.ucf.edu";
         };
 
-      programs.home-manager.enable = true;
+      # The standalone CLI only; integrated hosts are switched by nixos-rebuild.
+      programs.home-manager.enable = !config.submoduleSupport.enable;
     };
 }

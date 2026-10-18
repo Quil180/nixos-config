@@ -12,10 +12,10 @@
   # Host traits are NOT repeated here: they are declared once on the host's
   # nixos entry (configurations.nixos.<host>.tags) and flow into the matching
   # home target automatically.
-  configurations.home."quil@snowflake".module = {
-    imports = [ topConfig.flake.homeModules.quil ];
-  };
-
+  #
+  # Hosts with `integratedHome = true` (snowflake) get NO target here: their
+  # home is built into the NixOS system and activated by `nixos-rebuild`
+  # (`upds`). The flake throws if one is added back.
   configurations.home."quil@moraine".module = {
     imports = [ topConfig.flake.homeModules.quil ];
   };

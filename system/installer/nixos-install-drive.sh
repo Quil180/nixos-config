@@ -29,6 +29,7 @@
 #      falls back to copying the bundled flake
 #  10. build (or take prebuilt) homeConfigurations."quil@<host>".activationPackage,
 #      nix copy it into the target store and run its /activate as quil
+#      (skipped for integratedHome hosts: the home is in the system closure)
 #  11. unmount, close LUKS, print next steps (incl. FIDO2 enrollment)
 
 set -euo pipefail
@@ -371,10 +372,21 @@ install_home() {
   local act
   local uri="$FLAKE_DIR#homeConfigurations.\"$USER_NAME@$HOST\".activationPackage"
 
+  # Hosts with integratedHome have no standalone target: their home is part
+  # of the system closure and home-manager-$USER_NAME.service activates it on
+  # first boot. The offline targets list omits their `home` line likewise.
   if [[ $OFFLINE -eq 1 ]]; then
-    act=$(offline_path home "$USER_NAME@$HOST") || die "No offline home-manager generation for '$USER_NAME@$HOST'"
+    act=$(offline_path home "$USER_NAME@$HOST")
+    if [[ -z "$act" ]]; then
+      log_info "No standalone home for '$USER_NAME@$HOST' — it is built into the system and activates on first boot."
+      return 0
+    fi
     log_info "Using prebuilt home-manager activationPackage: $act"
   else
+    if [[ $(cd "$FLAKE_DIR" && nix eval .#homeConfigurations --apply "h: h ? \"$USER_NAME@$HOST\"" 2>/dev/null) != "true" ]]; then
+      log_info "No standalone home for '$USER_NAME@$HOST' — it is built into the system and activates on first boot."
+      return 0
+    fi
     log_info "Building $uri ..."
     # --no-link so we never depend on cwd; the store path is what we copy over.
     act=$(cd "$FLAKE_DIR" && nix build --no-link --print-out-paths "$uri" 2> /tmp/home-build.log) \

@@ -44,9 +44,11 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         run: nix build .#nixosConfigurations.snowflake.config.system.build.toplevel --no-link
 
-      - name: Build Home-Manager generation (quil)
+      # snowflake's toplevel above already includes its (integrated) home;
+      # this covers the standalone home-manager path.
+      - name: Build Home-Manager generation (quil@moraine)
         if: steps.check.outputs.changed == 'true'
-        run: nix build '.#homeConfigurations."quil@snowflake".activationPackage' --no-link
+        run: nix build '.#homeConfigurations."quil@moraine".activationPackage' --no-link
 
       - name: Commit and push flake.lock
         if: steps.check.outputs.changed == 'true'

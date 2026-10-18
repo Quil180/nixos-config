@@ -5,8 +5,11 @@ users. The star feature: **a flake-built installer ISO** that installs the
 entire configuration onto a bare machine from one command.
 
 - Systems: `snowflake` (laptop) and `moraine` (desktop) — see `system/<host>/`
-- Users (home-manager): one target per host, `quil@snowflake` / `quil@moraine`
-  (see `users/<user>/`)
+- Users (home-manager): one shared profile (`users/<user>/`), loaded two ways:
+  - **integrated** into the NixOS system on hosts with `integratedHome = true`
+    (`snowflake`): `nixos-rebuild switch` activates it, and `updh` refuses to run
+  - **standalone** `homeConfigurations."quil@<host>"` everywhere else
+    (`quil@moraine`): `home-manager switch` / `updh`
 - Secrets: agenix (`secrets/*.age`), sealed to your user key — see §4
 
 ---
@@ -87,7 +90,9 @@ You'll get a live walkthrough (11 steps):
 9. **dotfiles** — `git clone` of the repo → `/mnt/home/quil/.dotfiles`
    (falls back to copying the bundled flake if the clone fails).
 10. **home-manager** — builds `homeConfigurations."quil@<host>".activationPackage`,
-    `nix copy`s it into the target store, and activates it as `quil`.
+    `nix copy`s it into the target store, and activates it as `quil`. Skipped
+    for `integratedHome` hosts: their home is in the system closure and
+    activates on first boot.
 11. **finish** — unmount, close LUKS, print next steps (SSH key, FIDO2 hint).
 
 Options (all optional; the default host is `snowflake`):
@@ -147,7 +152,8 @@ NIXOS_INSTALL_FLAKE=/tmp/dotfiles nix run github:Quil180/nixos-config#install --
 cd ~/.dotfiles && git submodule update --init --recursive
 
 # In case home-manager activation didn't fully apply:
-home-manager switch --flake ~/.dotfiles#quil@snowflake
+sudo systemctl restart home-manager-quil.service           # snowflake (integrated)
+home-manager switch --flake ~/.dotfiles#quil@moraine -b backup  # standalone hosts
 
 # Update the flake pins (optional)
 nix flake update
@@ -183,11 +189,12 @@ remote, and `git pull` works once SSH keys are set up).
 # Update the flake inputs (all of them, or targeted)
 nix flake update
 
-# Rebuild the system (after cloning on a new machine)
+# Rebuild the system (after cloning on a new machine). On snowflake this also
+# rebuilds and activates the home (integratedHome).
 sudo nixos-rebuild switch --flake .#snowflake
 
-# Rebuild home-manager
-home-manager switch --flake .#quil@snowflake
+# Rebuild home-manager (standalone hosts only, e.g. moraine)
+home-manager switch --flake .#quil@moraine
 ```
 
 ---
