@@ -11,7 +11,7 @@
         netbird_client
         # simple_disko
         # determinate
-        # persist
+        persist
         # proxmox_vm
 
         # --- Hardware Support ---

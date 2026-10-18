@@ -1,8 +1,8 @@
 _: {
   flake.homeModules.git = { config, ... }: {
-    # gh's login, and the agenix-decrypted identity included below.
+    # gh's login. (Not .local/state/git_identity: agenix recreates that
+    # symlink on every activation.)
     persist.directories = [ ".config/gh" ];
-    persist.files = [ ".local/state/git_identity" ];
 
     # git config
     programs.git = {

@@ -367,6 +367,7 @@
                   inherit pkgs lib;
                   diskoPkg = inputs.disko.packages.${system}.disko;
                 };
+                persistMigratePkg = (import ./lib/persist-migrate.nix) { inherit pkgs; };
               in
               {
                 formatter = pkgs.nixfmt;
@@ -387,6 +388,15 @@
                   type = "app";
                   program = "${installPkg}/bin/nixos-install-drive";
                   meta.description = "Installer for fresh machines to install NixOS";
+                };
+
+                # One-time copy of a running machine's state into /persist,
+                # before its first boot with impermanence (`nix run .#persist-migrate`).
+                packages.persist-migrate = persistMigratePkg;
+                apps.persist-migrate = {
+                  type = "app";
+                  program = "${persistMigratePkg}/bin/persist-migrate";
+                  meta.description = "Copy live state into /persist before enabling impermanence";
                 };
 
                 devShells.default = pkgs.mkShell {

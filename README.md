@@ -201,6 +201,29 @@ home-manager switch --flake .#quil@moraine
 
 ---
 
+## 5a. Turning on persistence (impermanence) on an existing machine
+
+With `persist` on, `/` is wiped on every boot and each persisted path is a
+bind mount from `/persist`. Each module declares its own paths
+(`persist.directories` / `persist.files`, system and home). On a machine that
+already has data, `/persist` starts empty, so **copy the live state in first**
+or the first boot hides `~/Documents`, `~/.ssh`, Wi-Fi, host keys, …:
+
+```bash
+# 1. uncomment `persist` in system/<host>/configuration.nix and users/quil/home.nix
+sudo nixos-rebuild boot --flake ~/.dotfiles     # boot, NOT switch / upds
+nix run ~/.dotfiles#persist-migrate -- --dry-run # see what will be copied
+# 2. close the browser, Discord, Steam, editors (a TTY is best), then:
+nix run ~/.dotfiles#persist-migrate
+sudo reboot                                      # straight away
+```
+
+The script only writes under `/persist` (btrfs reflinks: instant, no extra
+space) and never touches the originals; the old `/` stays in `old_roots` for
+30 days. `/home` itself is never wiped.
+
+---
+
 ## 6. Layout / troubleshooting
 
 ```
