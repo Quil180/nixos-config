@@ -24,8 +24,10 @@
 #   7. nixos-install --no-root-passwd --no-channel-copy --flake /etc/dotfiles#<host>
 #      (offline: --system <prebuilt closure> from the offline ISO)
 #   8. place the SSH key at /mnt/home/quil/.ssh/ so agenix decrypts on first boot
-#      (the workstation secrets are sealed to this key — no rekey step)
-#   9. clone the dotfiles repo with the key → /mnt/home/quil/.dotfiles;
+#      (the workstation secrets are sealed to this key — no rekey step);
+#      on hosts with home persistence, also under /mnt/persist/home/quil/
+#   9. clone the dotfiles repo with the key → /mnt/home/quil/.dotfiles
+#      (/mnt/persist/home/quil/.dotfiles with home persistence);
 #      falls back to copying the bundled flake
 #  10. build (or take prebuilt) homeConfigurations."quil@<host>".activationPackage,
 #      nix copy it into the target store and run its /activate as quil
@@ -346,28 +348,62 @@ install_system() {
 }
 
 # --- Steps 8-9: key + dotfiles --------------------------------------------------
-install_key_and_repo() {
-  local target_home="/mnt/home/$USER_NAME"
-  local repo_dir="$target_home/.dotfiles"
-  local pub_file
-  mkdir -p "$target_home/.ssh"
+# The root of the user's enabled home persistence on the target (e.g.
+# /persist), or "" when the host's home isn't persisted.
+PERSIST_ROOT_NIX="cfg: let
+  ps = ((cfg.home-manager.users or { }).$USER_NAME or { }).home.persistence or { };
+  roots = builtins.filter (r: ps.\${r}.enable) (builtins.attrNames ps);
+in if roots == [ ] then \"\" else builtins.head roots"
 
-  # The one thing the installer owes you from the beginning of this whole plan:
-  # put the user key on the new machine so agenix decrypts on first boot.
-  cp "$KEY" "$target_home/.ssh/id_ed25519"
+resolve_persist_root() {
+  if [[ $OFFLINE -eq 1 ]]; then
+    offline_path persisthome "$HOST" || true
+  else
+    nix eval --raw "$FLAKE_DIR#nixosConfigurations.$HOST.config" --apply "$PERSIST_ROOT_NIX" \
+      || die "Could not evaluate $HOST's home persistence."
+  fi
+}
+
+# Put the user key (and its public half) in <home>/.ssh.
+place_key() {
+  local home="$1" pub_file
+  mkdir -p "$home/.ssh"
+  cp "$KEY" "$home/.ssh/id_ed25519"
   if [[ -f "$KEY.pub" ]]; then
-    cp "$KEY.pub" "$target_home/.ssh/id_ed25519.pub"
+    cp "$KEY.pub" "$home/.ssh/id_ed25519.pub"
   else
     pub_file=$(mktemp)
     ssh-keygen -y -f "$KEY" > "$pub_file"
-    cp "$pub_file" "$target_home/.ssh/id_ed25519.pub"
+    cp "$pub_file" "$home/.ssh/id_ed25519.pub"
     rm -f "$pub_file"
   fi
-  chmod 700 "$target_home/.ssh"
-  chmod 600 "$target_home/.ssh/id_ed25519"
-  chmod 644 "$target_home/.ssh/id_ed25519.pub"
-  chown -R 1000:100 "$target_home" 2>/dev/null || true
-  log_success "Key placed at $target_home/.ssh/id_ed25519 (age.identityPaths = /home/quil/.ssh/id_ed25519)."
+  chmod 700 "$home/.ssh"
+  chmod 600 "$home/.ssh/id_ed25519"
+  chmod 644 "$home/.ssh/id_ed25519.pub"
+  chown -R 1000:100 "$home" 2>/dev/null || true
+  log_success "Key placed at $home/.ssh/id_ed25519"
+}
+
+install_key_and_repo() {
+  local target_home="/mnt/home/$USER_NAME"
+  local persist_root persist_home=""
+  persist_root=$(resolve_persist_root)
+
+  # The one thing the installer owes you from the beginning of this whole plan:
+  # put the user key on the new machine so agenix decrypts on first boot.
+  place_key "$target_home"
+
+  # With home persistence, ~/.ssh and ~/.dotfiles are bind mounts from the
+  # persistent root, and with persist.wipeHome ~ itself starts empty every
+  # boot (agenix then reads the key from there too): what goes in ~ only
+  # survives if it is in the persistent copy.
+  if [[ -n "$persist_root" ]]; then
+    persist_home="/mnt$persist_root/home/$USER_NAME"
+    install -d -m 0755 -o root -g root "/mnt$persist_root/home"
+    install -d -m 0700 -o 1000 -g 100 "$persist_home"
+    place_key "$persist_home"
+  fi
+  local repo_dir="${persist_home:-$target_home}/.dotfiles"
 
   export GIT_SSH_COMMAND="ssh -i $KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
   if git clone --recurse-submodules "$GIT_REMOTE" "$repo_dir" 2> /tmp/dotfiles-clone.log; then
@@ -380,7 +416,7 @@ install_key_and_repo() {
     git -C "$repo_dir" remote add origin "$GIT_REMOTE"
     log_warn "Submodules (wallpapers) are missing — run 'git submodule update --init --recursive' after first login."
   fi
-  chown -R 1000:100 "$target_home" 2>/dev/null || true
+  chown -R 1000:100 "$target_home" ${persist_home:+"$persist_home"} 2>/dev/null || true
 }
 
 # --- Step 10: home-manager ------------------------------------------------------
@@ -434,7 +470,8 @@ finish() {
   echo "  Next steps:"
   echo "   1. sudo reboot"
   echo "   2. Log in as '$USER_NAME' — the password comes from agenix (quil_password.age),"
-  echo "      decrypted on first boot with your key at /home/$USER_NAME/.ssh/id_ed25519."
+  echo "      decrypted on first boot with your key at /home/$USER_NAME/.ssh/id_ed25519"
+  echo "      (or /persist/home/$USER_NAME/.ssh/id_ed25519 on hosts with persist.wipeHome)."
   echo "      NO rekey step is needed for the workstations."
   echo "   3. The dotfiles are at /home/$USER_NAME/.dotfiles (clone of $GIT_REMOTE)."
   echo ""

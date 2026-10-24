@@ -11,6 +11,8 @@ entire configuration onto a bare machine from one command.
   - **standalone** `homeConfigurations."quil@<host>"` everywhere else
     (`quil@moraine`): `home-manager switch` / `updh`
 - Secrets: agenix (`secrets/*.age`), sealed to your user key — see §4
+- Impermanence: `/` is wiped every boot on hosts that import `persist`; with
+  `persist.wipeHome` (on for `snowflake`) `/home` is wiped too — see §5a
 
 ---
 
@@ -86,9 +88,13 @@ You'll get a live walkthrough (11 steps):
 7. **system install** — `nixos-install --no-root-passwd --flake ...#<host>`
    (offline: installs the prebuilt closure instead — no network, no build).
 8. **key on target** — the verified key lands at
-   `/mnt/home/quil/.ssh/id_ed25519` so agenix decrypts on first boot.
-9. **dotfiles** — `git clone` of the repo → `/mnt/home/quil/.dotfiles`
-   (falls back to copying the bundled flake if the clone fails).
+   `/mnt/home/quil/.ssh/id_ed25519` so agenix decrypts on first boot. On
+   hosts with home persistence it also goes to
+   `/mnt/persist/home/quil/.ssh/`, as `~/.ssh` is a bind mount from there
+   (and with `persist.wipeHome`, `~` starts empty).
+9. **dotfiles** — `git clone` of the repo → `/mnt/home/quil/.dotfiles`, or
+   `/mnt/persist/home/quil/.dotfiles` with home persistence (falls back to
+   copying the bundled flake if the clone fails).
 10. **home-manager** — builds `homeConfigurations."quil@<host>".activationPackage`,
     `nix copy`s it into the target store, and activates it as `quil`. Skipped
     for `integratedHome` hosts: their home is in the system closure and
@@ -106,7 +112,8 @@ nixos-install-drive --help
 ```
 
 > `--offline` uses the prebuilt closures + `offline_path` lookup table
-> (`/etc/installer/offline-targets`) and skips steps 1, 3 and 6. It cannot be
+> (`/etc/installer/offline-targets`, which also records each host's
+> `persisthome` root) and skips steps 1, 3 and 6. It cannot be
 > combined with `--device`: the prebuilt disko script always targets the disk
 > in the host's `disko.nix` (`/dev/nvme0n1` for snowflake/moraine).
 
@@ -137,6 +144,9 @@ NIXOS_INSTALL_FLAKE=/tmp/dotfiles nix run github:Quil180/nixos-config#install --
 - The user password comes from the agenix secret `quil_password.age`,
   decrypted with the **`id_ed25519`** key the installer placed at
   `/home/quil/.ssh/` (it must match `user_quil` in `secrets/secrets.nix`).
+  On hosts with `persist.wipeHome`, agenix reads the key from
+  `/persist/home/quil/.ssh/id_ed25519` instead, where the installer also
+  placed it.
   **Workstations need no rekey** — their secrets are sealed to your user
   key, not the machine's host key.
 - Optional after first boot — enroll FIDO2 for passwordless LUKS unlock:
@@ -201,16 +211,51 @@ home-manager switch --flake .#quil@moraine
 
 ---
 
-## 5a. Turning on persistence (impermanence) on an existing machine
+## 5a. Persistence (impermanence)
 
-With `persist` on, `/` is wiped on every boot and each persisted path is a
-bind mount from `/persist`. Each module declares its own paths
-(`persist.directories` / `persist.files`, system and home). On a machine that
-already has data, `/persist` starts empty, so **copy the live state in first**
-or the first boot hides `~/Documents`, `~/.ssh`, Wi-Fi, host keys, …:
+With `persist` on, `/` is wiped on every boot (the old one is moved to
+`old_roots`, kept 30 days) and each persisted path is a bind mount from
+`/persist`. Each module declares its own paths:
+
+- **System**: `persist.directories` / `persist.files` in any NixOS module.
+  Only sshd's host keys are persisted from `/etc/ssh` (persisting the whole
+  dir would hide the `sshd_config` NixOS links there).
+- **Home**: `persist.directories` / `persist.files` (relative to `~`) in any
+  home module; the shared list lives in `users/quil/persist.nix`. It only
+  takes effect when the profile imports `persist` (it does, in
+  `users/quil/home.nix`) **and** the home is integrated into a host that
+  imports the system `persist` module: impermanence does the home mounts from
+  NixOS. In a standalone home (`quil@moraine`) the lists are declared but
+  nothing is mounted.
+- **System modules declaring home state**: on `integratedHome` hosts, NixOS
+  modules also add home paths for their apps via
+  `home-manager.users.<user>.persist` (`g14` → ROG Control Center, `amd` →
+  Mesa/RADV shader caches, `hermes` → `~/.hermes`, `netbird_client` → tray UI).
+
+**`persist.wipeHome`** (default off, on for `snowflake`) also wipes `/home`
+every boot, keeping the previous one in `old_homes` for 30 days. Only what the
+home persistence lists survives. Evaluation fails if any home-manager user has
+no home persistence enabled. With it on, agenix reads the user key from
+`/persist/home/<user>/.ssh/id_ed25519`, since `~` is still empty during early
+activation.
+
+Fresh installs handle this on their own: on hosts with home persistence,
+`nixos-install-drive` also puts the key, and the `~/.dotfiles` clone, under
+`/persist/home/quil/` (§1c steps 8–9).
+
+Status: `snowflake` has system persistence, home persistence and `wipeHome`
+on; `moraine` still has `persist` commented out and a standalone home, so
+neither applies there yet (it needs `persist` and `integratedHome = true`).
+
+### Turning it on for an existing machine
+
+On a machine that already has data, `/persist` starts empty, so **copy the
+live state in first** or the first boot hides `~/Documents`, `~/.ssh`, Wi-Fi,
+host keys, …:
 
 ```bash
 # 1. uncomment `persist` in system/<host>/configuration.nix and users/quil/home.nix
+#    (and set `persist.wipeHome = true;` if you want ~ wiped as well)
 sudo nixos-rebuild boot --flake ~/.dotfiles     # boot, NOT switch / upds
 nix run ~/.dotfiles#persist-migrate -- --dry-run # see what will be copied
 # 2. close the browser, Discord, Steam, editors (a TTY is best), then:
@@ -220,7 +265,8 @@ sudo reboot                                      # straight away
 
 The script only writes under `/persist` (btrfs reflinks: instant, no extra
 space) and never touches the originals; the old `/` stays in `old_roots` for
-30 days. `/home` itself is never wiped.
+30 days. Without `wipeHome`, `/home` itself is never wiped; with it, the old
+home stays in `old_homes` for 30 days.
 
 ---
 
@@ -234,13 +280,16 @@ system/installer/
   iso.nix                  registers the `installer` NixOS host (the online ISO)
   nixos-install-drive.sh   the 11-step installer (--help for options)
 system/universal/          shared modules across hosts (workstation, persist, …)
+  system/persist.nix       system impermanence + persist.wipeHome
+  system/persist-migrate.sh  copies live state into /persist (`nix run .#persist-migrate`)
 lib/
   installer-module.nix     shared ISO module body (online/offline differ only in
                            the preloaded closures)
   install-script.nix       packages `nixos-install-drive` (also `nix run .#install`)
 install.sh                 maintenance menu (rebuild system/home, update flake);
                            fresh installs are `nixos-install-drive`'s job
-users/<user>/              home-manager modules
+users/<user>/              home-manager modules (users/quil/persist.nix = home
+                           persistence list)
 secrets/                   agenix .age files + secrets.nix (recipient keys)
 ```
 
@@ -251,6 +300,7 @@ Troubleshooting:
 | Install fails at the network check | Connect via `nmcli device wifi connect ...` or ethernet, re-run — everything is safe before the wipe |
 | `nixos-install-drive` refuses: "device is mounted" | You pointed it at the live USB; pick the real disk |
 | Installed system boots but the password doesn't work | The agenix `quil_password` secret didn't decrypt — did the installer place your key at `/home/quil/.ssh/id_ed25519`? (that key must match `user_quil` in `secrets/secrets.nix`) |
+| Something in `~` is gone after a reboot (wipeHome hosts) | Its path isn't persisted: add it to the app's home module (`persist.directories`) or `users/quil/persist.nix`; the old copy is in `old_homes` for 30 days |
 | Wallpaper dir empty | `git submodule update --init --recursive` (needs SSH keys) |
 | disk layout wrong | Edit `system/<host>/disko.nix`, rebuild the ISO (`.#iso`), rerun |
 

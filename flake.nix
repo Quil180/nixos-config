@@ -284,6 +284,17 @@
             diskoScriptOf = name: storePath nixosConfigurations.${name}.config.system.build.destroyFormatMount;
             activationOf = name: storePath homeConfigurations."quil@${name}".activationPackage;
             deviceOf = name: nixosConfigurations.${name}.config.disko.devices.disk.sdb.device;
+            # The root of quil's enabled home persistence (e.g. /persist), or
+            # null; the installer puts the key and dotfiles under it.
+            persistRootOf =
+              name:
+              let
+                ps =
+                  ((nixosConfigurations.${name}.config.home-manager.users or { }).quil or { }).home.persistence
+                    or { };
+                roots = builtins.filter (r: ps.${r}.enable) (builtins.attrNames ps);
+              in
+              if roots == [ ] then null else builtins.head roots;
 
             # Lines the installer's `offline_path` parser understands:
             #   <type> <key> <store-path-or-device>
@@ -298,6 +309,7 @@
                       "device ${name} ${deviceOf name}"
                     ]
                     ++ lib.optional (standaloneHome name) "home quil@${name} ${activationOf name}"
+                    ++ lib.optional (persistRootOf name != null) "persisthome ${name} ${persistRootOf name}"
                   ) offlineHosts
                 )
               )

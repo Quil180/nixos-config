@@ -49,6 +49,7 @@ DRY_RUN=0
 REFRESH=0
 YES=0
 PLAN=""
+WIPE_HOME=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -58,6 +59,7 @@ while [[ $# -gt 0 ]]; do
     --refresh) REFRESH=1; shift ;;
     --yes|-y)  YES=1; shift ;;
     --plan)    PLAN="${2:?}"; shift 2 ;; # internal: the root half of the run
+    --wipe-home) WIPE_HOME=1; shift ;;   # internal: the host sets persist.wipeHome
     -h|--help) usage; exit 0 ;;
     *) die "unknown option: $1 (try --help)" ;;
   esac
@@ -99,6 +101,9 @@ make_plan() {
   jq -s 'add | unique_by(.live)' <<< "$sys $home" > "$out"
   [[ $(jq length "$out") -gt 0 ]] \
     || die "'$HOST' persists nothing in $FLAKE. Enable \`persist\` in the config first (step 1 in --help)."
+  [[ $(nix eval "$FLAKE#nixosConfigurations.\"$HOST\".config" \
+    --apply 'cfg: cfg.persist.wipeHome or false' 2>/dev/null) == true ]] && WIPE_HOME=1
+  return 0
 }
 
 if [[ -z "$PLAN" ]]; then
@@ -108,6 +113,7 @@ if [[ -z "$PLAN" ]]; then
   args=(--plan "$PLAN" --host "$HOST" --flake "$FLAKE")
   [[ $REFRESH -eq 1 ]] && args+=(--refresh)
   [[ $YES -eq 1 ]] && args+=(--yes)
+  [[ $WIPE_HOME -eq 1 ]] && args+=(--wipe-home)
   # A dry run only reads, so it stays unprivileged.
   [[ $DRY_RUN -eq 1 ]] || exec sudo -- "$0" "${args[@]}"
 fi
@@ -220,12 +226,16 @@ if [[ $failed -gt 0 ]]; then
 fi
 [[ $mismatched -gt 0 ]] && log_warn "$mismatched paths changed while copying; re-run with --refresh after closing what writes to them."
 log_success "Copied $ncopy paths into /persist."
+if [[ $WIPE_HOME -eq 1 ]]; then
+  old_home="the old /home is kept in old_homes for 30 days too (persist.wipeHome)"
+else
+  old_home="the old home folders are still on disk underneath the new mounts"
+fi
 cat <<EOF
 
   Next: reboot now (the generation from 'nixos-rebuild boot' is the default).
   Changes made after this point are not in /persist.
 
   After the reboot, check your files are there. The originals are untouched:
-  the old / is kept in old_roots for 30 days, and the old home folders are
-  still on disk underneath the new mounts.
+  the old / is kept in old_roots for 30 days, and $old_home.
 EOF

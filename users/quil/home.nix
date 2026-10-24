@@ -22,7 +22,7 @@
         persist
         hyprland
         # chromium
-        # creamlinux
+        creamlinux
         firefox
         spotify-cli
         neovim
@@ -30,7 +30,7 @@
         ranger
         games
         git
-        # kicad
+        kicad
         latex
         office
         # deepseek-harness

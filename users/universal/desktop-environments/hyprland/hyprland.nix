@@ -190,6 +190,13 @@
               xray = 1;
               ignore_alpha = 0.2;
             }
+            {
+              match = {
+                namespace = "rofi";
+              };
+              blur = true;
+              ignore_alpha = 0.2;
+            }
           ];
         };
         plugins = [
