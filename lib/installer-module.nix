@@ -81,7 +81,9 @@ extra:
   '';
 
   # Latest kernel so new hardware (e.g. the RX 9070 XT in moraine) works.
+  # OpenZFS is frequently broken on latest kernels; disable ZFS on the ISO.
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.supportedFilesystems.zfs = lib.mkForce false;
 
   # `nix build/eval <path>#...` must work from the ISO.
   nix.settings.experimental-features = [
