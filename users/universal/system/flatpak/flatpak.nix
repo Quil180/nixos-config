@@ -106,6 +106,7 @@ let
       "io.github.benjamimgois.goverlay"
       "org.freedesktop.Platform.VulkanLayer.MangoHud//25.08" # req for goverlay
       "org.freedesktop.Platform.VulkanLayer.vkBasalt//25.08" # req for goverlay
+      "org.freedesktop.Platform.VulkanLayer.lsfgvk//25.08"
     ];
   };
 
@@ -115,9 +116,18 @@ let
   # vkSumi standalone bundle flatpak
   vkSumiModule = mkFlatpakBundle {
     name = "vkSumi";
-    url = "https://github.com/reakjra/vkSumi/releases/download/v0.0.7/vkSumi-25.08.flatpak";
-    sha256 = "sha256-4uDoDcbKG/e9Oc6FAwtcVz4ZmetQDJlg8+bkZf0GtX8=";
+    url = "https://github.com/reakjra/vkSumi/releases/download/v0.1.0/vkSumi-25.08.flatpak";
+    hash = "sha256-ZSyijIH8Xl/cci6n8sXV3S/hi0EVZQJbJsHuTAjbckI=";
   };
+
+  goverlayHomeModule =
+    { ... }:
+    {
+      imports = [
+        generatedFlathubModules.goverlay
+        vkSumiModule
+      ];
+    };
 in
 {
   flake.homeModules = generatedFlathubModules // {
@@ -132,7 +142,8 @@ in
     VkSumi = vkSumiModule;
     Fluxer = generatedFlathubModules.fluxer;
     Warehouse = generatedFlathubModules.warehouse;
-    Goverlay = generatedFlathubModules.goverlay;
+    goverlay = goverlayHomeModule;
+    Goverlay = goverlayHomeModule;
     Sober = generatedFlathubModules.sober;
   };
 }

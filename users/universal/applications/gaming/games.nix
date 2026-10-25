@@ -10,6 +10,10 @@ _: {
         ".steam"
         ".local/share/PrismLauncher"
         ".factorio"
+        ".local/share/goverlay"
+        ".config/goverlay"
+        ".config/vkBasalt"
+        ".config/vkSumi"
       ];
 
       home.packages = with pkgs; [

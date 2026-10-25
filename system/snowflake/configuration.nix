@@ -45,6 +45,7 @@
 
         # --- Applications & Gaming ---
         games
+        # goverlay
         # winboat
         # kiwix
         # teamviewer

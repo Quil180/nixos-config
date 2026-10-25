@@ -23,6 +23,7 @@
 
         # --- Applications & Gaming ---
         games
+        # goverlay
 
         # --- Wired but disabled (mirrors snowflake/configuration.nix) ---
         # cinnamon

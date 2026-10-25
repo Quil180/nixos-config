@@ -1,14 +1,16 @@
-_: {
+{ topConfig, ... }:
+{
   flake.nixosModules.games =
     { pkgs, inputs, ... }:
     {
-      imports = [ inputs.jovian.nixosModules.default ];
+      imports = [
+        inputs.jovian.nixosModules.default
+        topConfig.flake.nixosModules.goverlay
+      ];
 
       environment.systemPackages = with pkgs; [
         # lutris
-        mangohud
         mangojuice
-        goverlay
         steamtinkerlaunch # for modifying steam games
       ];
 
