@@ -35,7 +35,8 @@
         # monitoring
 
         # --- Virtualization & Containers ---
-        virtualisation
+        # virtualisation
+        # winboat
         # docker
 
         # --- VPNs & Networking ---
@@ -46,13 +47,12 @@
         # --- Applications & Gaming ---
         games
         # goverlay
-        # winboat
         # kiwix
         # teamviewer
         # vncviewer
 
         # --- AI Services ---
-        hermes
+        # hermes
         # ollama
         # llamacpp
         # openwebui
