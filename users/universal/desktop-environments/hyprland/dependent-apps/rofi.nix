@@ -71,7 +71,7 @@ _: {
         enable = true;
         package = pkgs.rofi;
         theme = "spotlight";
-        extraConfig = {
+        settings = {
           modi = "drun,run,filebrowser";
           show-icons = true;
           icon-theme = "Papirus-Dark";
