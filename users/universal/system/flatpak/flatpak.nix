@@ -120,6 +120,27 @@ let
     hash = "sha256-ZSyijIH8Xl/cci6n8sXV3S/hi0EVZQJbJsHuTAjbckI=";
   };
 
+  # Fluxer home module: installs Fluxer Flatpak and registers Hyprland global shortcuts
+  fluxerHomeModule =
+    {
+      config,
+      lib,
+      ...
+    }:
+    {
+      imports = [
+        generatedFlathubModules.fluxer
+      ];
+
+      wayland.windowManager.hyprland.extraConfig =
+        lib.mkIf (config.wayland.windowManager.hyprland.enable or false)
+          ''
+            -- Fluxer Push to Talk
+            hl.bind("Alt_L", hl.dsp.global("app.fluxer.Fluxer:voice_push_to_talk"))
+            hl.bind("Alt_R", hl.dsp.global("app.fluxer.Fluxer:voice_push_to_talk"))
+          '';
+    };
+
   goverlayHomeModule =
     { ... }:
     {
@@ -140,7 +161,8 @@ in
     # Convenience aliases for casing & naming flexibility
     "vk-sumi" = vkSumiModule;
     VkSumi = vkSumiModule;
-    Fluxer = generatedFlathubModules.fluxer;
+    fluxer = fluxerHomeModule;
+    Fluxer = fluxerHomeModule;
     Warehouse = generatedFlathubModules.warehouse;
     goverlay = goverlayHomeModule;
     Goverlay = goverlayHomeModule;
