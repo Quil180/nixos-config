@@ -95,7 +95,7 @@ local function smart_format()
   -- Check if any LSP client supports formatting
   local has_lsp_format = false
   for _, client in ipairs(clients) do
-    if client.supports_method("textDocument/formatting") then
+    if client:supports_method("textDocument/formatting") then
       has_lsp_format = true
       break
     end

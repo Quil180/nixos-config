@@ -40,6 +40,7 @@
         # ollama
         # llamacpp
         # openwebui
+        # openmuse
         # determinate
         # persist
         # proxmox_vm

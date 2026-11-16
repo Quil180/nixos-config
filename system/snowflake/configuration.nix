@@ -52,10 +52,11 @@
         # vncviewer
 
         # --- AI Services ---
-        # hermes
+        hermes
         # ollama
         # llamacpp
         # openwebui
+        # openmuse
       ];
 
       networking = {

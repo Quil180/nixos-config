@@ -29,6 +29,9 @@ in
   "root_password.age".publicKeys = users;
   "git_identity.age".publicKeys = users;
   "snowflake.age".publicKeys = users;
+  "openrouter_api_key.age".publicKeys = users;
+  "copilotkit_api_key.age".publicKeys = users;
+  "openmuse_env.age".publicKeys = users;
 
   # Caddy's Porkbun API credentials for the ACME DNS-01 challenge, plus the
   # ACME contact address (kept here so the real mailbox is not in the repo).

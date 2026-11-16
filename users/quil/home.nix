@@ -39,6 +39,7 @@
         antigravity
         stylix
         discord
+        zoom
 
         # Flatpak applications (modular: import only what you want)
         # vkSumi
