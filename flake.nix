@@ -33,10 +33,7 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hermes-agent = {
-      url = "github:NousResearch/hermes-agent";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hermes-agent.url = "github:NousResearch/hermes-agent";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
     creamlinux-installer = {
       type = "github";
