@@ -65,6 +65,9 @@ _: {
 
       systemd.tmpfiles.rules = [
         "d /etc/asusd 0755 root root -"
+        # Disable CPU boost by default on G14 to prevent high-voltage thermal spikes
+        # that saturate the shared vapor chamber and throttle the dGPU.
+        "w /sys/devices/system/cpu/cpufreq/boost - - - - 0"
       ];
 
       # Performance-optimized power settings for 6900HS/6800S
@@ -89,6 +92,21 @@ _: {
       powerManagement = {
         enable = true;
         powertop.enable = true;
+      };
+
+      # Ensure CPU boost stays disabled after waking from sleep
+      systemd.services.disable-cpu-boost-resume = {
+        description = "Disable CPU Boost on Resume";
+        after = [ "sleep.target" ];
+        wantedBy = [ "sleep.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.writeShellScript "disable-cpu-boost" ''
+            if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
+              echo 0 > /sys/devices/system/cpu/cpufreq/boost
+            fi
+          ''}";
+        };
       };
     };
 }

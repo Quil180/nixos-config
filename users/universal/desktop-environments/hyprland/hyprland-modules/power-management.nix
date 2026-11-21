@@ -32,8 +32,11 @@
           ${pkgs.hyprland}/bin/hyprctl keyword decoration:blur:enabled true
           ${pkgs.hyprland}/bin/hyprctl keyword decoration:shadow:enabled true
           ${pkgs.hyprland}/bin/hyprctl keyword animations:enabled true
-          # Set Asus profile to Balanced and restore keyboard
-          ${pkgs.asusctl}/bin/asusctl profile set Balanced
+          # Set Asus profile to Performance with tuned power envelope, and restore keyboard
+          ${pkgs.asusctl}/bin/asusctl profile set Performance
+          ${pkgs.asusctl}/bin/asusctl profile tuning true
+          ${pkgs.asusctl}/bin/asusctl armoury set ppt_platform_sppt 100
+          ${pkgs.asusctl}/bin/asusctl armoury set ppt_apu_sppt 60
           ${pkgs.asusctl}/bin/asusctl leds set med
         }
 
